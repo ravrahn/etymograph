@@ -10,6 +10,7 @@ For anyone interested in the origin of words, Etymograph is a website and API th
 * In the root directory, run ```pip3 install -r requirements.txt```
 
 TODO:
+
 * Database configuration
 * How to run tests
 * Deployment instructions
