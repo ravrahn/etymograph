@@ -1,9 +1,6 @@
 # Etymograph #
 
-### What is this repository for? ###
-
-* For anyone interested in the origin of words, Etymograph is a website and API that shows etymological data in a structured and easy-to-use way.
-* Version 0
+For anyone interested in the origin of words, Etymograph is a website and API that shows etymological data in a structured and easy-to-use way.
 
 ### Setup ###
 
