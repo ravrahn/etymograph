@@ -49,13 +49,13 @@ while file_length > LINE_CAP * iterations:
             line = line.split('\t')
 
             start = line[0].split(':')
-            if line[0] not in words:
+            if line[0] not in words and '[[' not in line[0]:
                 start_word = Word(start[1], start[0])
                 start_word.get_node(graph)
                 words[line[0]] = start_word
 
             end = line[2].split(':')
-            if line[2] not in words:
+            if line[2] not in words and '[[' not in line[2]:
                 end_word = Word(end[1], end[0])
                 end_word.get_node(graph)
                 words[line[2]] = end_word
@@ -66,7 +66,7 @@ while file_length > LINE_CAP * iterations:
                     rel = (line[2], rel_type[0], line[0], rel_type[2])
                 else:
                     rel = (line[0], rel_type[0], line[2], rel_type[2])
-                if rel not in rels:
+                if rel not in rels and '[[' not in line[0] and '[[' not in line[2]:
                     rels.append(rel)
 
             count += 1
