@@ -9,10 +9,10 @@ from word import *
 REL_CONVERTER = { # (name, flip order, directional)
     'etymology': ('root', False, False),
     'etymological_origin_of': ('root', True, False),
-    'etymologically_related': ('etymologically_related', False, True),
+    'etymologically_related': False,
     'is_derived_from': ('derivation', False, False),
     'has_derived_form': ('derivation', True, False),
-    'variant:orthography': ('variant_orthography', False, False)
+    'variant:orthography': ('variant', False, True)
 }
 
 LINE_CAP = 2000
@@ -61,12 +61,13 @@ while file_length > LINE_CAP * iterations:
                 words[line[2]] = end_word
 
             rel_type = REL_CONVERTER[line[1][4:]]
-            if rel_type[1]: # flip order
-                rel = (line[2], rel_type[0], line[0], rel_type[2])
-            else:
-                rel = (line[0], rel_type[0], line[2], rel_type[2])
-            if rel not in rels:
-                rels.append(rel)
+            if rel_type:
+                if rel_type[1]: # flip order
+                    rel = (line[2], rel_type[0], line[0], rel_type[2])
+                else:
+                    rel = (line[0], rel_type[0], line[2], rel_type[2])
+                if rel not in rels:
+                    rels.append(rel)
 
             count += 1
             with t.location(0):
@@ -82,7 +83,6 @@ while file_length > LINE_CAP * iterations:
         end = words[rel[2]]
 
         graph_rel = Relationship(start.get_node(graph), rel[1], end.get_node(graph))
-        
 
         add_rel = graph_rel not in graph_rels
 
