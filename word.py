@@ -1,3 +1,4 @@
+import string
 from py2neo import *
 
 class Word:
@@ -8,25 +9,26 @@ class Word:
      - eng_form: latin-alphabet transliteration of the word.
      - ipa_form: IPA transcription of the word
      - definition: definition of the word'''
+    latin = set(string.ascii_lowercase + string.ascii_uppercase + string.punctuation)
 
-    def __init__(self, name, lang, pronunciation=None, definition=None, latin=None):
-        self.node = None
-        self.props = {}
-        self.props['orig_form'] = name.strip().replace('"', '\\"')
-        self.props['language'] = lang.strip()
+    def __init__(self, *args, **kwargs):
+        if isinstance(args[0], Node):
+            self.node = node
+            self.props = node.properties
+        else:
+            self.node = None
+            self.props = {}
+            self.props['orig_form'] = args[0].strip().replace('"', '\\"')
+            self.props['language'] = args[1].strip()
 
-        if pronunciation not None:
-            self.props['ipa_form'] = pronunciation
-        if definition not None:
-            self.props['definition'] = definition
-        if latin not None:
-            self.props['eng_form'] = latin
-        elif name :
-            self.props['eng_form'] = name
-
-    def __init__(self, node):
-        self.node = node
-        self.props = node.properties
+            if kwargs.get('pronunciation') is not None:
+                self.props['ipa_form'] = kwargs.get('pronunciation')
+            if kwargs.get('definition') is not None:
+                self.props['definition'] = kwargs.get('definition')
+            if kwargs.get('latin') is not None:
+                self.props['eng_form'] = kwargs.get('latin')
+            elif set(args[0]) <= self.latin:
+                self.props['eng_form'] = args[0]
 
     def __eq__(self, other):
         name_matches = other.props['orig_form'] == self.props['orig_form'] 
@@ -57,8 +59,8 @@ class Word:
 
         if results:
             self.node = results[0]['n']
-        else:
-            self.node = Node('Word', name=self.props['name'], lang=self.props['lang'])
+        # else:
+        #     self.node = Node('Word', name=self.props['name'], lang=self.props['lang'])
 
         return self.node
 
@@ -66,7 +68,7 @@ def add_relationship(graph, start, end, rel):
 
     condStart = '{' + ', '.join(['{}: "{}"'.format(prop, value) for prop, value in start.props.items()]) + '}'
     condEnd = '{' + ', '.join(['{}: "{}"'.format(prop, value) for prop, value in end.props.items()]) + '}'
-    query = 'MATCH (a:Word {}),(b:Word {}) MERGE (a)-[r:{} {source:"etymwn"}]-(b) RETURN r'
+    query = 'MATCH (a:Word {}),(b:Word {}) MERGE (a)-[r:{} {{source:"etymwn"}}]-(b) RETURN r'
     query = query.format(condStart, condEnd, rel)
 
     graph.cypher.execute(query)
