@@ -1,6 +1,7 @@
 from py2neo import *
 from word import *
-from flask import Flask, request
+from flask import Flask, request, json
+from io import StringIO
 app = Flask(__name__)
 graph = Graph()
 
@@ -19,9 +20,21 @@ def roots(word): # ET-6
 def descs(word): # ET-7
 	return 'hello {}'.format(word)
 
-@app.route('/<word>/info')
-def info(word): # ET-20
-	return 'hello {}'.format(word)
+@app.route('/<int:wordID>/info')
+def info(wordID): # ET-20
+    try:
+        node = graph.node(wordID)
+        # pull the latest version of the node from the server (needed?)
+        node.pull();
+        # Convert word data to JSON and wrap in a Flask response
+        response = json.jsonify(node.properties)
+        response.status_code = 200 # OK
+    except GraphError:
+        errNum  = 1234 # placeholder error num. TODO: change
+        errDesc = "Word with ID {} could not be found".format(wordID)
+        response = json.jsonify({'error': errNum, 'description': errDesc})
+        response.status_code = 404 # File not found
+    return response
 
 if __name__ == '__main__':
 	app.run(debug=True)
