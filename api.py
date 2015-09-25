@@ -1,24 +1,27 @@
 from py2neo import *
 from word import *
-from flask import Flask
+from flask import Flask, request
 app = Flask(__name__)
 graph = Graph()
 
-@app.route('/search/<string>')
-def search(string): # ET-5
-	return "hello {}".format(string)
+@app.route('/search')
+def search(): # ET-5
+	if 'q' in request.args:
+		return 'hello {}'.format(request.args['q'])
+	else:
+		return 'hello world'
 
-@app.route('/roots/<word>')
+@app.route('/<word>/roots')
 def roots(word): # ET-6
-	return "hello {}".format(word)
+	return 'hello {}'.format(word)
 
-@app.route('/descs/<word>')
+@app.route('/<word>/descs')
 def descs(word): # ET-7
-	return "hello {}".format(word)
+	return 'hello {}'.format(word)
 
-@app.route('/info/<word>')
+@app.route('/<word>/info')
 def info(word): # ET-20
-	return "hello {}".format(word)
+	return 'hello {}'.format(word)
 
 if __name__ == '__main__':
 	app.run(debug=True)
