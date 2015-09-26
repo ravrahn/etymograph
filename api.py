@@ -14,6 +14,8 @@ def search(): # ET-5
 
 @app.route('/<word>/roots')
 def roots(word): # ET-6
+for record in graph.cypher.execute("MATCH (n <id>)-[r:root*1..<number>]->() RETURN n"):
+ 
 	return 'hello {}'.format(word)
 
 @app.route('/<word>/descs')
