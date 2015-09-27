@@ -7,19 +7,32 @@ graph = Graph()
 
 # authenticate('localhost:7474', "neo4j", "__insert-password-here__") 
 
+
+def unsafe_query(query):
+    invalid_substrs = ['CREATE', 'DELETE', 'REMOVE', 'MATCH', 'RETURN', 'SET', 'MERGE']
+    if not query: # blank query
+        return True
+    else:
+        for unwanted in invalid_substrs: # contains cypher code
+            if unwanted in query: 
+                return True
+    return False
+
 @app.route('/search')
 def search(): # ET-5
     # TODO Add try-catch blocks like info()
     if 'q' in request.args:
         search_str = request.args['q']
-        query = "MATCH (n) WHERE n.orig_form =~ '.*{}.*' RETURN n".format(search_str)
+
+        if unsafe_query(search_str): 
+            return "Bad request."
+
+        query = "MATCH (n) WHERE n.orig_form =~ '.*{}.*' RETURN n,id(n)".format(search_str)
         results = {}
         record_list = graph.cypher.execute(query);
-        subgraph = record_list.to_subgraph();
-        for node in subgraph.nodes:
-            uid = node.properties['ID']
-            props = dict((k, v) for k, v in node.properties.items() if k != 'ID')
-            results[uid] = props
+        for record in record_list:
+            uid = record[1]
+            results[uid] = record[0].properties
         response = json.jsonify(results)
         response.status_code = 200
         return response
