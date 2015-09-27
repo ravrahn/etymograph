@@ -4,7 +4,7 @@ from py2neo import *
 class Word:
     '''Representation of a word
     Properties:
-     - lang: language of the word
+     - language: language of the word
      - orig_form: original form (unicode) of the word.
      - eng_form: latin-alphabet transliteration of the word.
      - ipa_form: IPA transcription of the word
