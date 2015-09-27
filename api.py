@@ -5,54 +5,26 @@ from io import StringIO
 app = Flask(__name__)
 graph = Graph()
 
-# authenticate('localhost:7474', "neo4j", "__insert-password-here__") 
-
-
-def unsafe_query(query):
-    invalid_substrs = ['CREATE', 'DELETE', 'REMOVE', 'MATCH', 'RETURN', 'SET', 'MERGE']
-    if not query: # blank query
-        return True
-    else:
-        for unwanted in invalid_substrs: # contains cypher code
-            if unwanted in query: 
-                return True
-    return False
-
 @app.route('/search')
 def search(): # ET-5
-    # TODO Add try-catch blocks like info()
-    if 'q' in request.args:
-        search_str = request.args['q']
-
-        if unsafe_query(search_str): 
-            return "Bad request."
-
-        query = "MATCH (n) WHERE n.orig_form =~ '.*{}.*' RETURN n,id(n)".format(search_str)
-        results = {}
-        record_list = graph.cypher.execute(query);
-        for record in record_list:
-            uid = record[1]
-            results[uid] = record[0].properties
-        response = json.jsonify(results)
-        response.status_code = 200
-        return response
-    else:
-        return "Malformed search request."
+	if 'q' in request.args:
+		return 'hello {}'.format(request.args['q'])
+	else:
+		return 'hello world'
 
 @app.route('/<word>/roots')
 def roots(word): # ET-6
-<<<<<<< HEAD
-    for record in graph.cypher.execute("MATCH (n)-[r:root*..depth]->() WHERE id(n) = id RETURN n"):
- 
-	return 'hello {}'.format(word)
-=======
-    for record in graph.cypher.execute("MATCH (n <id>)-[r:root*1..<number>]->() RETURN n"):
-        return 'hello {}'.format(word)
->>>>>>> cd7e33fd0c24b4384beebce4b7f8e51fd385df54
+    for record in graph.cypher.execute("MATCH (n)-[r:root*..{}]->() WHERE {}(n) = {} RETURN n"):
+ 	if 'q' in request.args:
+		return 'hello {}'.format(request.args['q'])
+	else:
+		emptyStrin = ''
+
+	#return 'hello {}'.format(word)
 
 @app.route('/<word>/descs')
 def descs(word): # ET-7
-    return 'hello {}'.format(word)
+	return 'hello {}'.format(word)
 
 @app.route('/<int:wordID>/info')
 def info(wordID): # ET-20
@@ -71,4 +43,4 @@ def info(wordID): # ET-20
     return response
 
 if __name__ == '__main__':
-    app.run(debug=True)
+	app.run(debug=True)
