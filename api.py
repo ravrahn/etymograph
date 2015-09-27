@@ -5,6 +5,7 @@ from io import StringIO
 app = Flask(__name__)
 graph = Graph()
 
+# authenticate('localhost:7474', "neo4j", "__insert-password-here__") 
 
 @app.route('/search')
 def search(): # ET-5
@@ -19,7 +20,9 @@ def search(): # ET-5
             uid = node.properties['ID']
             props = dict((k, v) for k, v in node.properties.items() if k != 'ID')
             results[uid] = props
-        return json.jsonify(results)
+        response = json.jsonify(results)
+        response.status_code = 200
+        return response
     else:
         return "Malformed search request."
 
