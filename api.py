@@ -41,11 +41,11 @@ def search(): # ET-5
 
 @app.route('/<word>/roots')
 def roots(word): # ET-6
-    for record in graph.cypher.execute("MATCH (n)-[r:root*..{}]->() WHERE {}(n) = {} RETURN n"):
+    for record in graph.cypher.execute("MATCH (n)-[r:root*..{}]->() WHERE id(n) = {} RETURN n"):
     if 'q' in request.args:
         return 'hello {}'.format(request.args['q'])
     else:
-        emptyStrin = ''
+        query = ''
 
     #return 'hello {}'.format(word)
 
