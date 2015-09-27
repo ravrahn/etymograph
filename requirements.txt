@@ -1,3 +1,5 @@
 flask
 py2neo
 blessings
+nose
+sniffer
