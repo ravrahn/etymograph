@@ -1,6 +1,6 @@
 from py2neo import *
 from word import *
-from flask import Flask, request, json
+from flask import Flask, request, json, render_template
 from io import StringIO
 app = Flask(__name__)
 graph = Graph()
@@ -9,6 +9,15 @@ graph = Graph()
 authenticate('localhost:7474', "neo4j", "etymograph") 
 
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
+""" 
+Validates a query
+Returns True if the query is blank or contains unwanted cypher code.
+"""
 def unsafe_query(query):
     invalid_substrs = \
             [':server', 'password', 'CREATE', 'DELETE', 'REMOVE', 'MATCH', 'RETURN', 'SET', 'MERGE']
@@ -21,6 +30,11 @@ def unsafe_query(query):
     return False
 
 
+
+"""
+Search for all words that match a particular substring
+/search?q=<string>
+"""
 @app.route('/search')
 def search(): # ET-5
     try:
@@ -30,6 +44,7 @@ def search(): # ET-5
             if unsafe_query(search_str): 
                 return "Bad request."
 
+            # TODO Validate against queries containing regex?
             query = "MATCH (n) WHERE n.orig_form =~ '.*{}.*' RETURN n,id(n)".format(search_str)
             results = {}
             for record in graph.cypher.execute(query):
