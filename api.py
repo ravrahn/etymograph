@@ -9,6 +9,7 @@ app = Flask(__name__)
 app.config.from_object('config')
 graph = Graph('http://etymograph.com:7474/db/data')
 
+#TODO remove?
 """
 Validates a query
 Returns True if the query is blank or contains unwanted cypher code.
@@ -46,14 +47,16 @@ def search(): # ET-5, ET-19
     if not request.headers['Accept'] == 'application/json':
         frontend_request = True
 
+    #TODO Remove?
     if unsafe_query(search_str):
         return "Bad request."
 
-    query = "MATCH (n) WHERE n.orig_form =~ '.*{}.*' RETURN n,id(n)".format(search_str)
+    query = "MATCH (n) WHERE n.orig_form =~ {sub_str} RETURN n,id(n)"
+    params = { 'sub_str': '.*{}.*'.format(search_str) }
 
     results = {}
     try:
-        results = {uid: node.properties for (node, uid) in graph.cypher.execute(query)}
+        results = {uid: node.properties for (node, uid) in graph.cypher.execute(query, params)}
     except GraphError:
         errDesc = "Error accessing database"
         response = json.jsonify({'error': errDesc})
