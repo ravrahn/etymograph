@@ -7,11 +7,7 @@ from forms import SearchForm
 
 app = Flask(__name__)
 app.config.from_object('config')
-graph = Graph()
-
-# authenticate('localhost:7474', "neo4j", "__insert-password-here__")
-authenticate('localhost:7474', "neo4j", "etymograph")
-
+graph = Graph('http://etymograph.com:7474/db/data')
 
 """
 Validates a query
