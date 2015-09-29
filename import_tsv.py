@@ -21,7 +21,7 @@ iterations = 0
 file_name = sys.argv[1]
 
 t = Terminal()
-graph = Graph()
+graph = Graph('http://etymograph.com:7474/db/data')
 word_count = 0
 
 with open(file_name) as importee:
