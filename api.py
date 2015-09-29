@@ -48,34 +48,34 @@ usage: /search?q=<string>
 @app.route('/search', methods=["GET", "POST"])
 def search(): # ET-5
     search_str = ''
-    if request.args['q']:
-        search_str = request.args['q']
-    else:
+    frontend_request = False
+    if request.method == 'POST':
         search_str = request.form['query']
+        frontend_request = True
+    else:
+        search_str = request.args['q']
+
+    if unsafe_query(search_str):
+        return "Bad request."
+    # TODO Validate against queries containing regex?
+    query = "MATCH (n) WHERE n.orig_form =~ '.*{}.*' RETURN n,id(n)".format(search_str)
 
     try:
-        if 'q' in request.args:
-            search_str = request.args['q']
-
-            if unsafe_query(search_str):
-                return "Bad request."
-
-            # TODO Validate against queries containing regex?
-            query = "MATCH (n) WHERE n.orig_form =~ '.*{}.*' RETURN n,id(n)".format(search_str)
-            results = {}
-            for record in graph.cypher.execute(query):
-                uid = record[1]
-                results[uid] = record[0].properties
-            response = json.jsonify(results)
-            response.status_code = 200
-        else:
-            return "Bad request."
+        results = {uid: node.properties for (node, uid) in graph.cypher.execute(query)}
+        response = json.jsonify(results)
+        response.status_code = 200
     except GraphError:
-        errNum  = 1234 # placeholder error num. TODO: change
         errDesc = "Error accessing database"
-        response = json.jsonify({'error': errNum, 'description': errDesc})
+        response = json.jsonify({'error': errDesc})
         response.status_code = 404
-    return response
+
+    if frontend_request:
+        words = []
+        for _, word in results.items():
+            words.append(word)
+        return render_template('results.html', search_str=search_str, results=words)
+    else:
+        return response
 
 
 @app.route('/<word>/roots')
