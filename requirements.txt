@@ -3,3 +3,5 @@ py2neo
 blessings
 nose
 sniffer
+wtforms
+flask-wtf

@@ -12,26 +12,32 @@ var substringMatcher = function(strs) {
   };
 };
 
-// Bring back the title that was hidden away by clicking elsewhere.
-$(document).click(function(e) {
-  var target = e.target;
-  if (!$(target).is('#search_field')
-    && !$(target).parents().is('#search_field')
-    && !$(target).is('.tt-menu')) {
-    $('#title').slideDown('slow');
-  }
-});
-
 // jQuery
 
 $(document).ready(function(){
 
+  // Hide the title when typing in the search field
+  /*
   $("#search_field").on('mouseenter', function(e){
     if (e.which == 13) {
       //Move the search bar up to the top
     }
     $("#title").slideUp('slow');
   });
+
+  // Bring back the title that was hidden away by clicking elsewhere.
+  $(document).click(function(e) {
+    var target = e.target;
+    if (!$(target).is('#search_field')
+      && !$(target).parents().is('#search_field')
+      && !$(target).is('.tt-menu')) {
+      $('#title').slideDown('slow');
+    }
+  });
+  */
+
+  // Because Jinja2 does not make this easy
+  $("#search_field").attr("placeholder", "Look up the origins of a word...");
 
   // Submitting search field contents
   /*
@@ -58,10 +64,10 @@ $(document).ready(function(){
     //Do something with the response.
     console.log(response);
   });
-*/
+  */
 
 
-/*
+  /*
   var words = new Bloodhound({
       datumTokenizer: function (datum) {
           return Bloodhound.tokenizers.whitespace(datum.value);
@@ -73,7 +79,7 @@ $(document).ready(function(){
       }
   });
   words.initialize();
-*/
+  */
 
 
   // Tags is just an example to get the autocomplete working.
@@ -103,18 +109,18 @@ $(document).ready(function(){
   "Scheme"
   ];
 
-// For bloodhound engine, doesn't work yet.
-/*
-  $('.typeahead').typeahead(null, {
-    displayKey: 'value',
-    source: words.ttAdapter()
-  });
-*/
+  // For bloodhound engine, doesn't work yet.
+  /*
+     $('.typeahead').typeahead(null, {
+     displayKey: 'value',
+     source: words.ttAdapter()
+     });
+  */
 
   $("#search_field").typeahead({
     hint: false,
     highlight: true,
-    minLength: 1
+    minLength: 3
   },
   {
     name: 'tags',

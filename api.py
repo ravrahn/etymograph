@@ -2,19 +2,18 @@ from py2neo import *
 from word import *
 from flask import Flask, request, json, render_template
 from io import StringIO
+
+from forms import SearchForm
+
 app = Flask(__name__)
+app.config.from_object('config')
 graph = Graph()
 
-# authenticate('localhost:7474', "neo4j", "__insert-password-here__") 
-authenticate('localhost:7474', "neo4j", "etymograph") 
+# authenticate('localhost:7474', "neo4j", "__insert-password-here__")
+authenticate('localhost:7474', "neo4j", "etymograph")
 
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-
-""" 
+"""
 Validates a query
 Returns True if the query is blank or contains unwanted cypher code.
 """
@@ -24,24 +23,45 @@ def unsafe_query(query):
     if not query: # blank query
         return True
     else:
-        for unwanted in invalid_substrs: 
-            if unwanted in query: 
+        for unwanted in invalid_substrs:
+            if unwanted in query:
                 return True
     return False
 
 
+@app.route('/results')
+def show_results(search_str):
+    # TODO
+    pass
+
+
+@app.route('/index.html')
+@app.route('/')
+def index():
+    search_field = SearchForm()
+    if search_field.validate_on_submit():
+        #TODO make this point to results
+        return redirect(url_for('search', q=search_field.query.data))
+    return render_template('index.html', form=search_field, landing_title="Etymograph")
+
 
 """
 Search for all words that match a particular substring
-/search?q=<string>
+usage: /search?q=<string>
 """
-@app.route('/search')
+@app.route('/search', methods=["GET", "POST"])
 def search(): # ET-5
+    search_str = ''
+    if request.args['q']:
+        search_str = request.args['q']
+    else:
+        search_str = request.form['query']
+
     try:
         if 'q' in request.args:
             search_str = request.args['q']
 
-            if unsafe_query(search_str): 
+            if unsafe_query(search_str):
                 return "Bad request."
 
             # TODO Validate against queries containing regex?
@@ -54,11 +74,11 @@ def search(): # ET-5
             response.status_code = 200
         else:
             return "Bad request."
-    except GraphError: 
+    except GraphError:
         errNum  = 1234 # placeholder error num. TODO: change
         errDesc = "Error accessing database"
         response = json.jsonify({'error': errNum, 'description': errDesc})
-        response.status_code = 404 
+        response.status_code = 404
     return response
 
 
@@ -72,9 +92,11 @@ def roots(word): # ET-6
 
     #return 'hello {}'.format(word)
 
+
 @app.route('/<word>/descs')
 def descs(word): # ET-7
     return 'hello {}'.format(word)
+
 
 @app.route('/<int:wordID>/info')
 def info(wordID): # ET-20
@@ -91,6 +113,7 @@ def info(wordID): # ET-20
         response = json.jsonify({'error': errNum, 'description': errDesc})
         response.status_code = 404 # File not found
     return response
+
 
 if __name__ == '__main__':
     app.run(debug=True)
