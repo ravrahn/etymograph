@@ -48,8 +48,10 @@ usage: /search?q=<string> or frontend search bar
 """
 @app.route('/search')
 def search(): # ET-5
-    #search_str = request.args['q']
-    search_str = request.args['query']
+    search_str = request.args['q']
+    frontend_request = False
+    if request.headers['Content-Type'] == '':
+        frontend_request = True
 
     if unsafe_query(search_str):
         return "Bad request."
@@ -64,13 +66,16 @@ def search(): # ET-5
         errDesc = "Error accessing database"
         response = json.jsonify({'error': errDesc})
         response.status_code = 404
-    words = [w for w in results.values()]
-    return render_template('results.html', search_str=search_str, results=words)
+
+    if frontend_request:
+        words = [w for w in results.values()]
+        return render_template('results.html', search_str=search_str, results=words)
+    else:
+        response = json.jsonify(results)
+        response.status_code = 200
+        return response
     #payload = {'search_str': search_str, 'results': words}
     #return redirect(url_for('results', payload=payload))
-    #response = json.jsonify(results)
-    #response.status_code = 200
-    #return response
 
 
 @app.route('/<word>/roots')

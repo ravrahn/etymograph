@@ -7,7 +7,7 @@ class SearchForm(Form):
     # I don't know enough about Python3's unicode and regex to tell if the below will work
     # Get the field but validate against any white space
     no_spaces = re.compile(r'^\S+$', re.UNICODE)
-    query = StringField('search_field', id='search_field',
+    q = StringField('search_field', id='search_field',
             validators=[DataRequired(), Regexp(no_spaces)])
 
 """ For later
