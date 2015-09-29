@@ -27,7 +27,9 @@ def unsafe_query(query):
 
 
 @app.route('/results')
-def show_results(search_str, results):
+def show_results(payload):
+    search_str = payload['search_str']
+    results = payload['results']
     return render_template('results.html', search_str=search_str, results=results)
 
 
@@ -42,39 +44,33 @@ def index():
 
 """
 Search for all words that match a particular substring
-usage: /search?q=<string>
+usage: /search?q=<string> or frontend search bar
 """
 @app.route('/search')
 def search(): # ET-5
-    frontend_request = False
     #search_str = request.args['q']
     search_str = request.args['query']
-    frontend_request = True
 
     if unsafe_query(search_str):
         return "Bad request."
 
-
     # TODO Validate against queries containing regex?
     query = "MATCH (n) WHERE n.orig_form =~ '.*{}.*' RETURN n,id(n)".format(search_str)
 
+    results = {}
     try:
         results = {uid: node.properties for (node, uid) in graph.cypher.execute(query)}
-        response = json.jsonify(results)
-        response.status_code = 200
     except GraphError:
         errDesc = "Error accessing database"
         response = json.jsonify({'error': errDesc})
         response.status_code = 404
-
-    if frontend_request:
-        words = []
-        for _, word in results.items():
-            words.append(word)
-        return render_template('results.html', search_str=search_str, results=words)
-        return redirect(url_for('results', search_str=search_str, results=words))
-    else:
-        return response
+    words = [w for w in results.values()]
+    return render_template('results.html', search_str=search_str, results=words)
+    #payload = {'search_str': search_str, 'results': words}
+    #return redirect(url_for('results', payload=payload))
+    #response = json.jsonify(results)
+    #response.status_code = 200
+    #return response
 
 
 @app.route('/<word>/roots')
