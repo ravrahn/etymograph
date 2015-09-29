@@ -7,6 +7,8 @@
         <h3>{{ word['orig_form'] }}</h3>
         <p>{{ word['language'] }}</p>
     </li>
+    {% else %}
+    <h1 align="center">No results</h1>
   {% endfor %}
   </ol>
 {% endblock %}

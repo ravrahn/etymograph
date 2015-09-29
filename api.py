@@ -1,6 +1,6 @@
 from py2neo import *
 from word import *
-from flask import Flask, request, json, render_template
+from flask import Flask, request, json, render_template, redirect, url_for
 from io import StringIO
 
 from forms import SearchForm
@@ -18,6 +18,7 @@ Validates a query
 Returns True if the query is blank or contains unwanted cypher code.
 """
 def unsafe_query(query):
+    # FIXME
     invalid_substrs = \
             [':server', 'password', 'CREATE', 'DELETE', 'REMOVE', 'MATCH', 'RETURN', 'SET', 'MERGE']
     if not query: # blank query
@@ -30,9 +31,8 @@ def unsafe_query(query):
 
 
 @app.route('/results')
-def show_results(search_str):
-    # TODO
-    pass
+def show_results(search_str, results):
+    return render_template('results.html', search_str=search_str, results=results)
 
 
 @app.route('/index.html')
@@ -40,7 +40,6 @@ def show_results(search_str):
 def index():
     search_field = SearchForm()
     if search_field.validate_on_submit():
-        #TODO make this point to results
         return redirect(url_for('search', q=search_field.query.data))
     return render_template('index.html', form=search_field, landing_title="Etymograph")
 
@@ -49,18 +48,17 @@ def index():
 Search for all words that match a particular substring
 usage: /search?q=<string>
 """
-@app.route('/search', methods=["GET", "POST"])
+@app.route('/search')
 def search(): # ET-5
-    search_str = ''
     frontend_request = False
-    if request.method == 'POST':
-        search_str = request.form['query']
-        frontend_request = True
-    else:
-        search_str = request.args['q']
+    #search_str = request.args['q']
+    search_str = request.args['query']
+    frontend_request = True
 
     if unsafe_query(search_str):
         return "Bad request."
+
+
     # TODO Validate against queries containing regex?
     query = "MATCH (n) WHERE n.orig_form =~ '.*{}.*' RETURN n,id(n)".format(search_str)
 
@@ -78,6 +76,7 @@ def search(): # ET-5
         for _, word in results.items():
             words.append(word)
         return render_template('results.html', search_str=search_str, results=words)
+        return redirect(url_for('results', search_str=search_str, results=words))
     else:
         return response
 
