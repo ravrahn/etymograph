@@ -64,7 +64,7 @@ def search(): # ET-5, ET-19
 
     if frontend_request:
         words = [w for w in results.values()]
-        return render_template('results.html', search_str=search_str, results=words)
+        return render_template('results.html', search_str=search_str.capitalize(), results=words)
     else:
         response = json.jsonify(results)
         response.status_code = 200

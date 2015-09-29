@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+<body>
   <h2 align="center">Search results for "{{ search_str }}":</h2>
   <ol>
   {% for word in results %}
@@ -11,4 +12,5 @@
     <h1 align="center">No results</h1>
   {% endfor %}
   </ol>
+</body>
 {% endblock %}
