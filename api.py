@@ -52,28 +52,23 @@ usage: /search?q=<string>
 @app.route('/search', methods=["GET", "POST"])
 def search(): # ET-5
     search_str = ''
-    if request.args['q']:
-        search_str = request.args['q']
-    else:
+    if request.form['query']:
         search_str = request.form['query']
+    else:
+        search_str = request.args['q']
 
     try:
-        if 'q' in request.args:
-            search_str = request.args['q']
-
-            if unsafe_query(search_str):
-                return "Bad request."
-
-            # TODO Validate against queries containing regex?
-            query = "MATCH (n) WHERE n.orig_form =~ '.*{}.*' RETURN n,id(n)".format(search_str)
-            results = {}
-            for record in graph.cypher.execute(query):
-                uid = record[1]
-                results[uid] = record[0].properties
-            response = json.jsonify(results)
-            response.status_code = 200
-        else:
+        if unsafe_query(search_str):
             return "Bad request."
+
+        # TODO Validate against queries containing regex?
+        query = "MATCH (n) WHERE n.orig_form =~ '.*{}.*' RETURN n,id(n)".format(search_str)
+        results = {}
+        for record in graph.cypher.execute(query):
+            uid = record[1]
+            results[uid] = record[0].properties
+        response = json.jsonify(results)
+        response.status_code = 200
     except GraphError:
         errNum  = 1234 # placeholder error num. TODO: change
         errDesc = "Error accessing database"
