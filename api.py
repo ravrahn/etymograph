@@ -5,7 +5,8 @@ from io import StringIO
 app = Flask(__name__)
 graph = Graph()
 
-# authenticate('localhost:7474', "neo4j", "__insert-password-here__") 
+password = "etymograph"
+authenticate('localhost:7474', "neo4j", password) 
 
 @app.route('/search')
 def search(): # ET-5
