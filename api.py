@@ -104,5 +104,31 @@ def info(wordID): # ET-20
     return response
 
 
+@app.route('/<int:word_id>')
+def graph(word_id):
+    roots = json.loads(rootstest(word_id))
+    descs = json.loads(descstest(word_id))
+    string = '<b>' + roots['orig_form'] + '</b>'
+    while roots['roots'] != []:
+        roots = roots['roots'][-1]
+        string = roots['orig_form'] + ' -> ' + string
+    while descs['descs'] != []:
+        descs = descs['descs'][0]
+        string += ' -> ' + descs['orig_form']
+    return string
+
+
+
+@app.route('/rootstest')
+def rootstest(word_id):
+    with open('rootstest.json') as roots:
+        return roots.read()
+
+@app.route('/descstest')
+def descstest(word_id):
+    with open('descstest.json') as descs:
+        return descs.read()
+
+
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,33 @@
+{
+	"id": 601,
+	"language": "ang",
+	"orig_form": "be sidan",
+	"roots": [
+		{
+			"id": 600,
+			"language": "ang",
+			"orig_form": "be",
+			"roots": []
+		},
+		{
+			"id": 604,
+			"language": "ang",
+			"orig_form": "sidan",
+			"roots": [
+				{
+					"id": 6031,
+					"language": "ang",
+					"orig_form": "side",
+					"roots": [
+						{
+							"id": 6033,
+							"language": "p_gem",
+							"orig_form": "sithon",
+							"roots": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
