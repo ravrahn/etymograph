@@ -56,6 +56,10 @@ def search(): # ET-5, ET-19
 
     results = {}
     try:
+        query_results = graph.cypher.execute(query, params) # do a query and put it in "query_results"
+        for (node, uid) in query_result: # loop though query_results in form node and uid
+            results[uid] = node.properties # 
+
         results = {uid: node.properties for (node, uid) in graph.cypher.execute(query, params)}
     except GraphError:
         errDesc = "Error accessing database"
@@ -84,8 +88,26 @@ def roots(word): # ET-6
 
 @app.route('/<word>/descs')
 def descs(word): # ET-7
-    return 'hello {}'.format(word)
+    # Check the word ID is valid
+    try:
+        # Get the node
+        node = graph.node(word)
 
+        # Adding the ID of the word into the hash
+        node.properties["id"] = word
+    except GraphError:
+        errNum  = 1234 # placeholder error num. TODO: change
+        errDesc = ("blah blah")
+        response = json.jsonify({'error': errNum, 'description': errDesc})
+        response.status_code = 404 # File not found
+        return "bad"
+
+    # Get it's decendants
+
+    # Put those decendants into the node.properties hash
+    # e.g. node.properties
+
+    return str(node.properties)
 
 @app.route('/<int:wordID>/info')
 def info(wordID): # ET-20
