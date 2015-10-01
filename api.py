@@ -56,10 +56,6 @@ def search(): # ET-5, ET-19
 
     results = {}
     try:
-        query_results = graph.cypher.execute(query, params) # do a query and put it in "query_results"
-        for (node, uid) in query_result: # loop though query_results in form node and uid
-            results[uid] = node.properties # 
-
         results = {uid: node.properties for (node, uid) in graph.cypher.execute(query, params)}
     except GraphError:
         errDesc = "Error accessing database"
