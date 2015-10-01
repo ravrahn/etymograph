@@ -105,17 +105,10 @@ def info(wordID): # ET-20
 
 
 @app.route('/<int:word_id>')
-def graph(word_id):
-    roots = json.loads(rootstest(word_id))
-    descs = json.loads(descstest(word_id))
-    string = '<b>' + roots['orig_form'] + '</b>'
-    while roots['roots'] != []:
-        roots = roots['roots'][-1]
-        string = roots['orig_form'] + ' -> ' + string
-    while descs['descs'] != []:
-        descs = descs['descs'][0]
-        string += ' -> ' + descs['orig_form']
-    return string
+def show_graph(word_id):
+    roots = rootstest(word_id)
+    descs = descstest(word_id)
+    return render_template('graph.html', roots=roots, descs=descs)
 
 
 
