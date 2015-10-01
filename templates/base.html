@@ -8,8 +8,7 @@
     <script type=text/javascript src="{{url_for('static', filename='js/jquery-2.1.4.min.js') }}"></script>
     <script type=text/javascript src="{{url_for('static', filename='js/typeahead.bundle.js') }}"></script>
     <script type=text/javascript src="{{url_for('static', filename='js/etymograph.main.js') }}"></script>
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon-book.ico') }}">
   </head>
-  <body>
-    {% block content %}{% endblock %}
-  </body>
+  {% block content %}{% endblock %}
 </html>

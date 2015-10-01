@@ -1,4 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h1>Search results for "{{ search_str }}":</h1>
+<body>
+  <h2 align="center">Search results for "{{ search_str }}":</h2>
+  <ol>
+  {% for word in results %}
+    <li>
+        <h3>{{ word['orig_form'] }}</h3>
+        <p>{{ word['language'] }}</p>
+    </li>
+    {% else %}
+    <h1 align="center">No results</h1>
+  {% endfor %}
+  </ol>
+</body>
 {% endblock %}
