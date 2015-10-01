@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<body>
+  <h2 
+    {% set title = word_properties.orig_form or word_properties.eng_form %}
+    align="center">{{ title }}
+    {% if word_properties.eng_form and word_properties.eng_form != title %}
+     ({{ word_properties.eng_form }})
+    {% endif %}
+  </h2>  
+  <center>
+  {# boiletplate code to specify order of display manually #}
+  {# TODO: fix missing fields causing unnecesary newlines in html #}
+  {% if word_properties.ipa_form %} <p>{{ word_properties.ipa_form }}</p> {% endif %}
+  {% if word_properties.language %} <p>{{ word_properties.language }}</p> {% endif %}
+  {# TODO: display language names naturally, not with a code}
+  {% if word_properties.definition %} <p>{{ word_properties.definition }}</p> {% endif %}
+  </center>
+</body>
+{% endblock %}

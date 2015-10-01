@@ -8,6 +8,8 @@ from forms import SearchForm
 app = Flask(__name__)
 app.config.from_object('config')
 graph = Graph('http://etymograph.com:7474/db/data')
+#authenticate('localhost:7474', "neo4j", "etymograph")
+#graph = Graph()
 
 #TODO remove?
 """
@@ -26,6 +28,14 @@ def unsafe_query(query):
                 return True
     return False
 
+def request_wants_json():
+    """returns true if the current request has a JSON application type, false otherwise.
+    This helper function from http://flask.pocoo.org/snippets/45/"""
+    best = request.accept_mimetypes \
+        .best_match(['application/json', 'text/html'])
+    return best == 'application/json' and \
+        request.accept_mimetypes[best] > \
+        request.accept_mimetypes['text/html']
 
 @app.route('/index.html') # ET-19
 @app.route('/')
@@ -105,20 +115,27 @@ def descs(word): # ET-7
 
     return str(node.properties)
 
-@app.route('/<int:wordID>/info')
-def info(wordID): # ET-20
+@app.route('/<int:word_id>/info')
+def info(word_id): # ET-20
     try:
-        node = graph.node(wordID)
+        node = graph.node(word_id)
         # pull the latest version of the node from the server (needed?)
-        node.pull();
-        # Convert word data to JSON and wrap in a Flask response
-        response = json.jsonify(node.properties)
-        response.status_code = 200 # OK
+        node.pull();       
+        if request_wants_json():
+             # Convert word data to JSON and wrap in a Flask response
+            response = json.jsonify(node.properties)
+            response.status_code = 200 # OK
+        else:
+            # Non-JSON request, return info page
+            response = render_template('info.html', word_properties=node.properties)
     except GraphError:
-        errNum  = 1234 # placeholder error num. TODO: change
-        errDesc = "Word with ID {} could not be found".format(wordID)
-        response = json.jsonify({'error': errNum, 'description': errDesc})
-        response.status_code = 404 # File not found
+        if request_wants_json():
+            errNum  = 1234 # placeholder error num. TODO: change
+            errDesc = "Word with ID {} could not be found".format(word_id)
+            response = json.jsonify({'error':errNum, 'description':errDesc})
+            response.status_code = 404 # File not found
+        else:
+            return "This should not happen" #TODO better error needed
     return response
 
 
