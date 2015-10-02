@@ -78,10 +78,8 @@ def roots(word): # ET-6
         return 'hello {}'.format(request.args['q'])
     else:
         query = ''
-
-    #return 'hello {}'.format(word)
-
-
+   
+    
 @app.route('/<word>/descs')
 def descs(word): # ET-7
     return 'hello {}'.format(word)
