@@ -89,13 +89,13 @@ def roots(word): # ET-6
     else:
         query = ''
     try:
-	node = graph.node(word)
-	node.properties["id"] = word
+        node = graph.node(word)
+        node.properties["id"] = word
     except GraphError:
-	errRoot = ("errrror")
-	response = json.jsonify({'error':errNum,'description':errRoot})
-	response.status_code = 404
-	return "bad"
+        errRoot = ("errrror")
+        response = json.jsonify({'error':errNum,'description':errRoot})
+        response.status_code = 404
+        return "bad"
 
     return str(node.properties)
    
