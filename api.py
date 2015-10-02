@@ -88,6 +88,16 @@ def roots(word): # ET-6
         return 'hello {}'.format(request.args['q'])
     else:
         query = ''
+    try:
+	node = graph.node(word)
+	node.properties["id"] = word
+    except GraphError:
+	errRoot = ("errrror")
+	response = json.jsonify({'error':errNum,'description':errRoot})
+	response.status_code = 404
+	return "bad"
+
+   return str(node.properties)
    
     
 @app.route('/<word>/descs')
