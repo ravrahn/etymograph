@@ -97,7 +97,7 @@ def roots(word): # ET-6
 	response.status_code = 404
 	return "bad"
 
-   return str(node.properties)
+    return str(node.properties)
    
     
 @app.route('/<word>/descs')
