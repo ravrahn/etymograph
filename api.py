@@ -84,10 +84,13 @@ def search(): # ET-5, ET-19
 @app.route('/<int:word>/roots')
 def roots(word): # ET-6
     q = ("MATCH (n)-[r:root*..{}]->() WHERE id(n) = {} RETURN n")
-    if 'q' in request.args:
+    if 'depth' in request.args:
+	depth = request.args['depth']
         return 'hello {}'.format(request.args['q'])
     else:
-        query = ''
+        depth = ''
+    execution = graph.cypher.execute(q.format(depth,word))
+    execution = json.jsonify
     try:
         node = graph.node(word)
         node.properties["id"] = word
