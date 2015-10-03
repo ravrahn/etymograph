@@ -81,7 +81,7 @@ def search(): # ET-5, ET-19
         return response
 
 
-@app.route('/<word>/roots')
+@app.route('/<int:word>/roots')
 def roots(word): # ET-6
     q = ("MATCH (n)-[r:root*..{}]->() WHERE id(n) = {} RETURN n")
     if 'q' in request.args:
@@ -92,7 +92,7 @@ def roots(word): # ET-6
         node = graph.node(word)
         node.properties["id"] = word
     except GraphError:
-	errNum  = 1234
+        errNum  = 1234
         errRoot = ("errrror")
         response = json.jsonify({'error':errNum,'description':errRoot})
         response.status_code = 404
