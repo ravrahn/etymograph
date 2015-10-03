@@ -5,11 +5,11 @@ from io import StringIO
 
 from forms import SearchForm
 
+import model
+
 app = Flask(__name__)
 app.config.from_object('config')
 graph = Graph('http://etymograph.com:7474/db/data')
-#authenticate('localhost:7474', "neo4j", "etymograph")
-#graph = Graph()
 
 #TODO remove?
 """
