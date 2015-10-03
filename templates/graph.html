@@ -3,7 +3,7 @@
 <body>
     <svg width="1000" height="500"></svg>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
-    <script src="http://cpettitt.github.io/project/dagre-d3/latest/dagre-d3.js"></script>
+    <script src="http://cpettitt.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
     <script>
         function makeLabel(lang, orig_form) {
             return lang + ": " + orig_form;
@@ -32,7 +32,7 @@
         function addRoot(g, root, parent) {
             var rootLabel = makeLabel(root.language, root.orig_form);
             g.setNode(root.id, { label: rootLabel });
-            g.setEdge(root.id, parent)
+            g.setEdge(root.id, parent, { lineInterpolate: "bundle" });
             if (root.roots !== undefined) {
                 root.roots.forEach(function(r) { addRoot(g, r, root.id) });
             }
