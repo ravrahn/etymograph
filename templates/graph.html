@@ -25,52 +25,68 @@
          .attr("height", height + margin.top + margin.bottom)
           .append("g")
          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        root = roots;
           
-        update(root);
+        update(roots);
 
         function update(source) {
 
-          // Compute the new tree layout.
-          var nodes = tree.nodes(root).reverse(),
-           links = tree.links(nodes);
+            var treeRoots = toTreeRoots(source, null)
 
-          // Normalize for fixed-depth.
-          nodes.forEach(function(d) { d.y = d.depth * 180; });
+            // Compute the new tree layout.
+            var nodes = tree.nodes(treeRoots),
+                links = tree.links(nodes);
 
-          // Declare the nodesâ€¦
-          var node = svg.selectAll("g.node")
-           .data(nodes, function(d) { return d.id || (d.id = ++i); });
+            // Normalize for fixed-depth.
+            var maxDepth = 0;
+            nodes.forEach(function(d) { maxDepth = Math.max(d.depth, maxDepth) });
+            nodes.forEach(function(d) { d.y = (180 * maxDepth) + (d.depth * -180); });
 
-          // Enter the nodes.
-          var nodeEnter = node.enter().append("g")
-           .attr("class", "node")
-           .attr("transform", function(d) { 
-            return "translate(" + d.y + "," + d.x + ")"; });
+            // Declare the nodesâ€¦
+            var node = svg.selectAll("g.node")
+                .data(nodes, function(d) { return d.id || (d.id = ++i); });
 
-          nodeEnter.append("circle")
-           .attr("r", 10)
-           .style("fill", "#fff");
+            // Enter the nodes.
+            var nodeEnter = node.enter().append("g")
+               .attr("class", "node")
+               .attr("transform", function(d) { 
+                return "translate(" + d.y + "," + d.x + ")"; 
+            });
 
-          nodeEnter.append("text")
-           .attr("x", function(d) { 
-            return d.roots ? -13 : 13; })
-           .attr("dy", ".35em")
-           .attr("text-anchor", function(d) { 
-            return d.roots ? "end" : "start"; })
-           .text(function(d) { return d.orig_form; })
-           .style("fill-opacity", 1);
+            nodeEnter.append("circle")
+               .attr("r", 10)
+               .style("fill", "#fff");
 
-          // Declare the linksâ€¦
-          var link = svg.selectAll("path.link")
-           .data(links, function(d) { return d.target.id; });
+            nodeEnter.append("text")
+               .attr("x", function(d) { 
+                return d.children ? -13 : 13; })
+               .attr("dy", ".35em")
+               .attr("text-anchor", function(d) { 
+                return d.children ? "end" : "start"; })
+               .text(function(d) { return d.orig_form; })
+               .style("fill-opacity", 1);
 
-          // Enter the links.
-          link.enter().insert("path", "g")
-           .attr("class", "link")
-           .attr("d", diagonal);
+            // Declare the links
+            var link = svg.selectAll("path.link")
+               .data(links, function(d) { return d.target.id; });
 
+            // Enter the links.
+            link.enter().insert("path", "g")
+               .attr("class", "link")
+               .attr("d", diagonal);
+
+        }
+
+        function toTreeRoots(tree, parent) {
+            tree['parent'] = parent
+            tree['children'] = []
+            if (tree['roots'] != undefined) {
+                for (var i=0; i < tree['roots'].length; i++) {
+                    root = tree['roots'][i]
+                    tree['children'].push(toTreeRoots(root, tree['orig_form']))
+                }
+            }
+            delete tree['roots']
+            return tree
         }
     </script>
 </body>
