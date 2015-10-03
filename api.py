@@ -92,6 +92,7 @@ def roots(word): # ET-6
         node = graph.node(word)
         node.properties["id"] = word
     except GraphError:
+	errNum  = 1234
         errRoot = ("errrror")
         response = json.jsonify({'error':errNum,'description':errRoot})
         response.status_code = 404
