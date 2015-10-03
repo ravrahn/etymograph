@@ -1,93 +1,88 @@
 {% extends 'base.html' %}
 {% block content %}
 <body>
-
+    <svg width="1000" height="500"></svg>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <script src="http://cpettitt.github.io/project/dagre-d3/latest/dagre-d3.js"></script>
     <script>
+        function makeLabel(lang, orig_form) {
+            return lang + ": " + orig_form;
+        }
+
+        // Get data from the templates
         var roots = {{ roots|safe }};
         var descs = {{ descs|safe }};
+        // This is ugly but it's just temporary while we sort out MVC
+        var info = roots;
 
-        // ************** Generate the tree diagram  *****************
-        var margin = {top: 20, right: 120, bottom: 20, left: 120},
-         width = 960 - margin.right - margin.left,
-         height = 500 - margin.top - margin.bottom;
-         
-        var i = 0;
 
-        var tree = d3.layout.tree()
-         .size([height, width]);
+        // convert roots and descs into a single dagre graph
+        var g = new dagreD3.graphlib.Graph()
+            .setGraph({
+                nodesep: 70,
+                ranksep: 50,
+                rankdir: "LR",
+                marginx: 20,
+                marginy: 20
+            })
+            .setDefaultEdgeLabel(function() { return {}; });;
 
-        var diagonal = d3.svg.diagonal()
-         .projection(function(d) { return [d.y, d.x]; });
+        g.setNode(info.id, { label: makeLabel(info.language, info.orig_form), class: 'origin'});
 
-        var svg = d3.select("body").append("svg")
-         .attr("width", width + margin.right + margin.left)
-         .attr("height", height + margin.top + margin.bottom)
-          .append("g")
-         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-          
-        update(roots);
-
-        function update(source) {
-
-            var treeRoots = toTreeRoots(source, null)
-
-            // Compute the new tree layout.
-            var nodes = tree.nodes(treeRoots),
-                links = tree.links(nodes);
-
-            // Normalize for fixed-depth.
-            var maxDepth = 0;
-            nodes.forEach(function(d) { maxDepth = Math.max(d.depth, maxDepth) });
-            nodes.forEach(function(d) { d.y = (180 * maxDepth) + (d.depth * -180); });
-
-            // Declare the nodesâ€¦
-            var node = svg.selectAll("g.node")
-                .data(nodes, function(d) { return d.id || (d.id = ++i); });
-
-            // Enter the nodes.
-            var nodeEnter = node.enter().append("g")
-               .attr("class", "node")
-               .attr("transform", function(d) { 
-                return "translate(" + d.y + "," + d.x + ")"; 
-            });
-
-            nodeEnter.append("circle")
-               .attr("r", 10)
-               .style("fill", "#fff");
-
-            nodeEnter.append("text")
-               .attr("x", function(d) { 
-                return d.children ? -13 : 13; })
-               .attr("dy", ".35em")
-               .attr("text-anchor", function(d) { 
-                return d.children ? "end" : "start"; })
-               .text(function(d) { return d.orig_form; })
-               .style("fill-opacity", 1);
-
-            // Declare the links
-            var link = svg.selectAll("path.link")
-               .data(links, function(d) { return d.target.id; });
-
-            // Enter the links.
-            link.enter().insert("path", "g")
-               .attr("class", "link")
-               .attr("d", diagonal);
-
-        }
-
-        function toTreeRoots(tree, parent) {
-            tree['parent'] = parent
-            tree['children'] = []
-            if (tree['roots'] != undefined) {
-                for (var i=0; i < tree['roots'].length; i++) {
-                    root = tree['roots'][i]
-                    tree['children'].push(toTreeRoots(root, tree['orig_form']))
-                }
+        function addRoot(g, root, parent) {
+            var rootLabel = makeLabel(root.language, root.orig_form);
+            g.setNode(root.id, { label: rootLabel });
+            g.setEdge(root.id, parent)
+            if (root.roots !== undefined) {
+                root.roots.forEach(function(r) { addRoot(g, r, root.id) });
             }
-            delete tree['roots']
-            return tree
+
         }
+
+        function addDesc(g, desc, parent) {
+            var descLabel = makeLabel(desc.language, desc.orig_form);
+            g.setNode(desc.id, { label: descLabel });
+            g.setEdge(parent, desc.id);
+            if (desc.descs !== undefined) {
+                desc.descs.forEach(function(d) { addDesc(g, d, desc.id) });
+            }
+        }
+
+        roots.roots.forEach(function(r) { addRoot(g, r, info.id) });
+        descs.descs.forEach(function(d) { addDesc(g, d, info.id) });
+
+        // Draw the graph
+        // Create the renderer
+        var render = new dagreD3.render();
+
+        // Set up an SVG group so that we can translate the final graph.
+        var svg = d3.select("svg"),
+            svgGroup = svg.append("g");
+
+        // Run the renderer. This is what draws the final graph.
+        render(d3.select("svg g"), g);
+        
     </script>
+    <style>
+        g.origin text {
+            font-weight: 800;
+        }
+        text {
+            font-weight: 300;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+            font-size: 14px;
+        }
+
+        .node rect {
+            stroke: #999;
+            fill: #fff;
+            stroke-width: 1.5px;
+        }
+
+        .edgePath path {
+            stroke: #333;
+            stroke-width: 1.5px;
+        }
+    </style>
 </body>
 {% endblock %}
