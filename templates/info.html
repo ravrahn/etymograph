@@ -12,8 +12,11 @@
   {# boiletplate code to specify order of display manually #}
   {# TODO: fix missing fields causing unnecesary newlines in html #}
   {% if word_properties.ipa_form %} <p>{{ word_properties.ipa_form }}</p> {% endif %}
-  {% if word_properties.language %} <p>{{ word_properties.language }}</p> {% endif %}
-  {# TODO: display language names naturally, not with a code #}
+  {% if word_properties.lang_name %} 
+    <p>{{ word_properties.lang_name }}</p> 
+  {% else %}
+    {% if word_properties.language %} <p>{{ word_properties.language }}</p> {% endif %}
+  {% endif %}
   {% if word_properties.definition %} <p>{{ word_properties.definition }}</p> {% endif %}
   </center>
 </body>
