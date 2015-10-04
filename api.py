@@ -130,24 +130,27 @@ def descs(word): # ET-7
 @app.route('/<int:word_id>/info')
 def info(word_id): # ET-20
     try:
-        node = graph.node(word_id)
-        # pull the latest version of the node from the server (needed?)
-        node.pull();       
-        if request_wants_json():
-             # Convert word data to JSON and wrap in a Flask response
-            response = json.jsonify(node.properties)
-            response.status_code = 200 # OK
-        else:
-            # Non-JSON request, return info page
-            response = render_template('info.html', word_properties=node.properties)
-    except GraphError:
+        info = model.info(word_id)               
+    except model.WordNotFoundException as e:
         if request_wants_json():
             errNum  = 1234 # placeholder error num. TODO: change
-            errDesc = "Word with ID {} could not be found".format(word_id)
+            errDesc = str(e)
             response = json.jsonify({'error':errNum, 'description':errDesc})
-            response.status_code = 404 # File not found
+            response.status_code = 404 #file not found
+            return response
         else:
-            return "This should not happen" #TODO better error needed
+            # display file not found page TODO make template for this
+            error_page = render_template('info.html', word_properties={'orig_form':'File not found'})
+            return error_page, 404       
+        
+    # No problems encountered
+    if request_wants_json():
+         # Convert word data to JSON and wrap in a Flask response
+        response = json.jsonify(info)
+        response.status_code = 200 # OK
+    else:
+        # Non-JSON request, return info page
+        response = render_template('info.html', word_properties=info)
     return response
 
 

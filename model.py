@@ -3,6 +3,12 @@ from word import *
 
 graph = Graph('http://etymograph.com:7474/db/data')
 
+class WordNotFoundException(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+    def __str__(self):
+        return self.msg
+
 def roots(word_id, depth):
 	'''
 	This function should return a recursive dictionary of roots
@@ -18,11 +24,17 @@ def descs(word_id, depth):
 	return {}
 
 def info(word_id):
-	'''
-	This function should return a dictionary of information about a word
-	given a word's id.
-	'''
-	return {}
+    '''
+    This function should return a dictionary of information about a word
+    given a word's id.
+    '''
+    try:
+        node = graph.node(word_id)
+        # pull the latest version of the node from the server (needed?)
+        node.pull();        
+    except GraphError:
+        raise WordNotFoundException("Word with ID {} not found".format(word_id))
+    return node.properties
 
 def search(query):
 	'''
