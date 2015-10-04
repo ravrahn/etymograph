@@ -1,6 +1,6 @@
 from py2neo import *
 from word import *
-from flask import Flask, request, json, render_template, redirect, url_for
+from flask import Flask, request, json, render_template, redirect, url_for, abort
 from io import StringIO
 
 from forms import SearchForm
@@ -140,8 +140,7 @@ def info(word_id): # ET-20
             return response
         else:
             # display file not found page TODO make template for this
-            error_page = render_template('info.html', word_properties={'orig_form':'File not found'})
-            return error_page, 404       
+            abort(404)      
         
     # No problems encountered
     if request_wants_json():
