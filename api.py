@@ -101,8 +101,8 @@ def roots(word_id): # ET-6
     return response
    
     
-@app.route('/<word>/descs')
-def descs(word): # ET-7
+@app.route('/<int:word_id>/descs')
+def descs(word_id): # ET-7
     if 'depth' in request.args:
         try:
             depth = int(request.args['depth'])
