@@ -81,27 +81,18 @@ def search(): # ET-5, ET-19
         return response
 
 
-@app.route('/<int:word>/roots')
-def roots(word): # ET-6
-    q = ("MATCH (n)-[r:root*..{}]->() WHERE id(n) = {} RETURN n")
+@app.route('/<int:word_id>/roots')
+def roots(word_id): # ET-6
+    # q = ("MATCH (n)-[r:root*..{}]->() WHERE id(n) = {} RETURN n")
     if 'depth' in request.args:
-        depth = request.args['depth']
-        return 'hello {}'.format(request.args['q'])
+        depth = int(request.args['depth'])
     else:
-        depth = ''
-        execution = graph.cypher.execute(q.format(depth,word))
-        execution = json.jsonify
-    try:
-        node = graph.node(word)
-        node.properties["id"] = word
-    except GraphError:
-        errNum  = 1234
-        errRoot = ("errrror")
-        response = json.jsonify({'error':errNum,'description':errRoot})
-        response.status_code = 404
-        return "bad"
+        depth = None
 
-    return str(node.properties)
+    response = json.jsonify(model.roots(word_id, depth=depth))
+    response.status_code = 200
+
+    return response
    
     
 @app.route('/<word>/descs')
