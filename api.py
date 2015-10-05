@@ -80,12 +80,21 @@ def search(): # ET-5, ET-19
 @app.route('/<int:word_id>/roots')
 def roots(word_id): # ET-6
     if 'depth' in request.args:
-        depth = int(request.args['depth'])
+        try:
+            depth = int(request.args['depth'])
+        except ValueError:
+            response = json.jsonify({ 'error': 'Invalid depth' })
+            response.status_code = 400
+            return response
     else:
         depth = None
 
-    response = json.jsonify(model.roots(word_id, depth=depth))
-    response.status_code = 200
+    try:
+        response = json.jsonify(model.roots(word_id, depth=depth))
+        response.status_code = 200
+    except model.WordNotFoundException:
+        response = json.jsonify({ 'error': 'Word not found' })
+        response.status_code = 404
 
     return response
    
@@ -93,16 +102,23 @@ def roots(word_id): # ET-6
 @app.route('/<word>/descs')
 def descs(word): # ET-7
     if 'depth' in request.args:
-        depth = int(request.args['depth'])
+        try:
+            depth = int(request.args['depth'])
+        except ValueError:
+            response = json.jsonify({ 'error': 'Invalid depth' })
+            response.status_code = 400
+            return response
     else:
         depth = None
 
-    response = json.jsonify(model.descs(word_id, depth=depth))
-    response.status_code = 200
+    try:
+        response = json.jsonify(model.descs(word_id, depth=depth))
+        response.status_code = 200
+    except model.WordNotFoundException:
+        response = json.jsonify({ 'error': 'Word not found' })
+        response.status_code = 404
 
     return response
-
-    return str(node.properties)
 
 @app.route('/<int:word_id>/info')
 def info(word_id): # ET-20
@@ -131,9 +147,12 @@ def info(word_id): # ET-20
 
 @app.route('/<int:word_id>')
 def show_graph(word_id):
-    word_roots = model.roots(word_id)
-    word_descs = model.descs(word_id)
-    return render_template('graph.html', roots=word_roots, descs=word_descs)
+    try:
+        word_roots = model.roots(word_id)
+        word_descs = model.descs(word_id)
+        return render_template('graph.html', roots=word_roots, descs=word_descs)
+    except model.WordNotFoundException:
+        abort(404)
 
 
 if __name__ == '__main__':
