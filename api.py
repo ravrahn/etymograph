@@ -82,6 +82,8 @@ def roots(word_id): # ET-6
     if 'depth' in request.args:
         try:
             depth = int(request.args['depth'])
+            if depth < 0:
+                raise ValueError
         except ValueError:
             response = json.jsonify({ 'error': 'Invalid depth' })
             response.status_code = 400
@@ -104,6 +106,8 @@ def descs(word): # ET-7
     if 'depth' in request.args:
         try:
             depth = int(request.args['depth'])
+            if depth < 0:
+                raise ValueError
         except ValueError:
             response = json.jsonify({ 'error': 'Invalid depth' })
             response.status_code = 400
