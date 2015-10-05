@@ -18,9 +18,7 @@ def roots(word_id, depth=None):
 	given a word's id and a depth.
 	'''
 	word_info = info(word_id)
-
 	word_info['id'] = word_id
-
 	word_info['roots'] = []
 
 	if depth == 0:
@@ -78,3 +76,8 @@ def lang_decode(code):
             return names[code]
         else:
             raise KeyError("Could not find a language with the code '{}'").format(code)
+
+        
+def descstest(word_id):
+    with open('descstest.json') as descs:
+        return descs.read()

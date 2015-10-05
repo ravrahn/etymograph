@@ -83,7 +83,6 @@ def search(): # ET-5, ET-19
 
 @app.route('/<int:word_id>/roots')
 def roots(word_id): # ET-6
-    # q = ("MATCH (n)-[r:root*..{}]->() WHERE id(n) = {} RETURN n")
     if 'depth' in request.args:
         depth = int(request.args['depth'])
     else:
@@ -151,21 +150,9 @@ def info(word_id): # ET-20
 
 @app.route('/<int:word_id>')
 def show_graph(word_id):
-    word_roots = rootstest(word_id)
-    word_descs = descstest(word_id)
+    word_roots = model.roots(word_id)
+    word_descs = model.descstest(word_id)
     return render_template('graph.html', roots=word_roots, descs=word_descs)
-
-
-
-@app.route('/rootstest')
-def rootstest(word_id):
-    with open('rootstest.json') as roots:
-        return roots.read()
-
-@app.route('/descstest')
-def descstest(word_id):
-    with open('descstest.json') as descs:
-        return descs.read()
 
 
 if __name__ == '__main__':
