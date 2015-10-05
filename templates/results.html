@@ -3,11 +3,11 @@
 <body>
   <h2 align="center">Search results for "{{ search_str }}":</h2>
   <ol>
-  {% for word in results %}
-    <li>
-        <h3>{{ word['orig_form'] }}</h3>
-        <p>{{ word['language'] }}</p>
-    </li>
+  {% for id in results %}
+          <li>
+              <a href="/{{ id }}"> <h3>{{ results[id]['orig_form'] }}</h3> </a>
+              <p>{{ results[id]['language'] }}</p>
+          </li>
     {% else %}
     <h1 align="center">No results</h1>
   {% endfor %}

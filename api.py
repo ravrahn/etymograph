@@ -53,9 +53,6 @@ usage: /search?q=<string> or frontend search bar
 @app.route('/search')
 def search(): # ET-5, ET-19
     search_str = request.args['q']
-    frontend_request = False
-    if not request.headers['Accept'] == 'application/json':
-        frontend_request = True
 
     #TODO Remove?
     if unsafe_query(search_str):
@@ -72,9 +69,8 @@ def search(): # ET-5, ET-19
         response = json.jsonify({'error': errDesc})
         response.status_code = 404
 
-    if frontend_request:
-        words = [w for w in results.values()]
-        return render_template('results.html', search_str=search_str.capitalize(), results=words)
+    if request.accept_mimetypes['application/json']:
+        return render_template('results.html', search_str=search_str.capitalize(), results=results)
     else:
         response = json.jsonify(results)
         response.status_code = 200
