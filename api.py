@@ -96,24 +96,15 @@ def roots(word_id): # ET-6
     
 @app.route('/<word>/descs')
 def descs(word): # ET-7
-    # Check the word ID is valid
-    try:
-        # Get the node
-        node = graph.node(word)
+    if 'depth' in request.args:
+        depth = int(request.args['depth'])
+    else:
+        depth = None
 
-        # Adding the ID of the word into the hash
-        node.properties["id"] = word
-    except GraphError:
-        errNum  = 1234 # placeholder error num. TODO: change
-        errDesc = ("blah blah")
-        response = json.jsonify({'error': errNum, 'description': errDesc})
-        response.status_code = 404 # File not found
-        return "bad"
+    response = json.jsonify(model.descs(word_id, depth=depth))
+    response.status_code = 200
 
-    # Get it's decendants
-
-    # Put those decendants into the node.properties hash
-    # e.g. node.properties
+    return response
 
     return str(node.properties)
 

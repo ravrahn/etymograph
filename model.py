@@ -43,7 +43,26 @@ def descs(word_id, depth=None):
 	This function should return a recursive dictionary of descendants
 	given a word's id and a depth.
 	'''
-	return {}
+	word_info = info(word_id)
+	word_info['id'] = word_id
+	word_info['descs'] = []
+
+	if depth == 0:
+		return word_info
+
+	query = 'MATCH (e)-[r:root]->(n) WHERE id(n) = {id} RETURN id(e)'
+
+	results = graph.cypher.execute(query, {'id': word_id})
+
+	for result in results:
+		node_id = result[0]
+		if depth is not None:
+			new_depth = depth - 1
+		else:
+			new_depth = None
+		word_info['descs'].append(descs(node_id, depth=new_depth))
+
+	return word_info
 
 def info(word_id):
     '''
