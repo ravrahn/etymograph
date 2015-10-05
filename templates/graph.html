@@ -5,8 +5,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
     <script src="http://cpettitt.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
     <script>
-        function makeLabel(lang, orig_form) {
-            return lang + ": " + orig_form;
+        function makeLabel(lang, orig_form, id) {
+            return '<a href="/'+id+'/info">' + lang + ": " + orig_form + '</a>';
         }
 
         // Get data from the templates
@@ -27,11 +27,11 @@
             })
             .setDefaultEdgeLabel(function() { return {}; });;
 
-        g.setNode(info.id, { label: makeLabel(info.language, info.orig_form), class: 'origin'});
+        g.setNode(info.id, {labelType:'html', label: makeLabel(info.language, info.orig_form, info.id),  class: 'origin'});
 
         function addRoot(g, root, parent) {
-            var rootLabel = makeLabel(root.language, root.orig_form);
-            g.setNode(root.id, { label: rootLabel });
+            var rootLabel = makeLabel(root.language, root.orig_form, root.id);
+            g.setNode(root.id, {labelType:'html', label: rootLabel });
             g.setEdge(root.id, parent, { lineInterpolate: "bundle" });
             if (root.roots !== undefined) {
                 root.roots.forEach(function(r) { addRoot(g, r, root.id) });
@@ -40,8 +40,8 @@
         }
 
         function addDesc(g, desc, parent) {
-            var descLabel = makeLabel(desc.language, desc.orig_form);
-            g.setNode(desc.id, { label: descLabel });
+            var descLabel = makeLabel(desc.language, desc.orig_form, desc.id);
+            g.setNode(desc.id, {labelType:'html', label: descLabel });
             g.setEdge(parent, desc.id);
             if (desc.descs !== undefined) {
                 desc.descs.forEach(function(d) { addDesc(g, d, desc.id) });
