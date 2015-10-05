@@ -140,14 +140,8 @@ def info(word_id): # ET-20
             return response
         else:
             # display file not found page
-            abort(404)      
-        
-    # No problems encountered
-    if 'language' in info:
-        try:
-            info['lang_name'] = model.lang_decode(info['language'])
-        except KeyError:
-            pass
+            abort(404)
+            
     if request_wants_json():
         # Convert word data to JSON and wrap in a Flask response
         response = json.jsonify(info)

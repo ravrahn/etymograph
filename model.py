@@ -37,7 +37,14 @@ def info(word_id):
         node.pull();        
     except GraphError:
         raise WordNotFoundException("Word with ID {} not found".format(word_id))
-    return node.properties
+    info = node.properties
+    # Adds a human-readable name to the information
+    if 'language' in info:
+        try:
+            info['lang_name'] = lang_decode(info['language'])
+        except KeyError:
+            pass
+    return info
 
 def search(query):
 	'''
