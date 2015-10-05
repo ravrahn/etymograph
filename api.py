@@ -136,7 +136,7 @@ def info(word_id): # ET-20
 @app.route('/<int:word_id>')
 def show_graph(word_id):
     word_roots = model.roots(word_id)
-    word_descs = model.descstest(word_id)
+    word_descs = model.descs(word_id)
     return render_template('graph.html', roots=word_roots, descs=word_descs)
 
 
