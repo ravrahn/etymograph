@@ -55,7 +55,7 @@ html {
   box-sizing: border-box;
 }
 
-h1, h2, h3, h4, h5, p {
+h1, h2, h3, h4, h5, p, a {
   color: #2a2b2b;
   font-family: "Bentham", serif;
   font-style: normal;
@@ -64,6 +64,7 @@ h1, h2, h3, h4, h5, p {
   margin-bottom: 0.5rem;
   margin-top: 0.2rem;
   text-shadow: 0px 7px 7px rgba(0, 0, 0, 0.40);
+  text-decoration: none;
 }
 
 h1 {
@@ -103,13 +104,21 @@ body.index {
   overflow: hidden;
 }
 
-a p {
-  color: #c0bdb6;
+p.result {
+  font-size: 1.50em;
+  text-decoration: none;
+  text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
 }
 
-.cover  {
-  height:100vh;
-  width:100%;
+a {
+  text-decoration: underline;
+  -webkit-text-decoration-color: #2a2b2b;
+  -moz-text-decoration-color: #2a2b2b;
+  text-decoration-color: #2a2b2b;
+  -webkit-text-decoration-color: #a70200;
+  -moz-text-decoration-color: #a70200;
+  text-decoration-color: #a70200;
+  text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.10);
 }
 
 ::selection {
@@ -128,6 +137,15 @@ a p {
   border-right: 0;
 }
 
+.flex-form {
+  display:flex;
+}
+
+.cover  {
+  height:100vh;
+  width:100%;
+}
+
 .cover {
   display:flex;
   justify-content:center;
@@ -135,10 +153,6 @@ a p {
   flex-direction: column;
   position: relative;
   margin: -150px 0;
-}
-
-.flex-form {
-  display:flex;
 }
 
 input[type="text"] {
@@ -239,4 +253,3 @@ ol li:before {
 ol:after {
   border-right: 3px solid #A70200;
 }
-

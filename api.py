@@ -69,7 +69,7 @@ def search(): # ET-5, ET-19
         response = json.jsonify({'error': errDesc})
         response.status_code = 404
 
-    if request.accept_mimetypes['application/json']:
+    if not request_wants_json():
         return render_template('results.html', search_str=search_str.capitalize(), results=results)
     else:
         response = json.jsonify(results)
