@@ -5,6 +5,8 @@ import json
 graph = Graph('http://etymograph.com:7474/db/data')
 # Language codes from data from www.sil.org/iso639-3/
 lang_code_file = 'lang_names.json'
+with open(lang_code_file, 'r') as f:
+    names = json.load(f)
 
 class WordNotFoundException(Exception):
     def __init__(self, msg):
@@ -116,12 +118,12 @@ def lang_decode(code):
     Given an ISO 639-3 language code,
     returns the name of the language with that code
     '''
-    with open(lang_code_file, 'r') as f:
-        names = json.load(f)
-        if code in names:
-            return names[code]
-        else:
-            raise KeyError("Could not find a language with the code '{}'").format(code)
+    # with open(lang_code_file, 'r') as f:
+    #     names = json.load(f)
+    if code in names:
+        return names[code]
+    else:
+        raise KeyError("Could not find a language with the code '{}'").format(code)
 
 
 def descstest(word_id):
