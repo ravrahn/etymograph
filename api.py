@@ -53,9 +53,6 @@ usage: /search?q=<string> or frontend search bar
 @app.route('/search')
 def search(): # ET-5, ET-19
     search_str = request.args['q']
-    frontend_request = False
-    if not request.headers['Accept'] == 'application/json':
-        frontend_request = True
 
     #TODO Remove?
     if unsafe_query(search_str):
@@ -72,9 +69,8 @@ def search(): # ET-5, ET-19
         response = json.jsonify({'error': errDesc})
         response.status_code = 404
 
-    if frontend_request:
-        words = [w for w in results.values()]
-        return render_template('results.html', search_str=search_str.capitalize(), results=words)
+    if not request_wants_json():
+        return render_template('results.html', search_str=search_str.capitalize(), results=results)
     else:
         response = json.jsonify(results)
         response.status_code = 200
@@ -84,38 +80,49 @@ def search(): # ET-5, ET-19
 @app.route('/<int:word_id>/roots')
 def roots(word_id): # ET-6
     if 'depth' in request.args:
-        depth = int(request.args['depth'])
+        try:
+            depth = int(request.args['depth'])
+            if depth < 0:
+                raise ValueError
+        except ValueError:
+            response = json.jsonify({ 'error': 'Invalid depth' })
+            response.status_code = 400
+            return response
     else:
         depth = None
 
-    response = json.jsonify(model.roots(word_id, depth=depth))
-    response.status_code = 200
+    try:
+        response = json.jsonify(model.roots(word_id, depth=depth))
+        response.status_code = 200
+    except model.WordNotFoundException:
+        response = json.jsonify({ 'error': 'Word not found' })
+        response.status_code = 404
 
     return response
    
     
-@app.route('/<word>/descs')
-def descs(word): # ET-7
-    # Check the word ID is valid
+@app.route('/<int:word_id>/descs')
+def descs(word_id): # ET-7
+    if 'depth' in request.args:
+        try:
+            depth = int(request.args['depth'])
+            if depth < 0:
+                raise ValueError
+        except ValueError:
+            response = json.jsonify({ 'error': 'Invalid depth' })
+            response.status_code = 400
+            return response
+    else:
+        depth = None
+
     try:
-        # Get the node
-        node = graph.node(word)
+        response = json.jsonify(model.descs(word_id, depth=depth))
+        response.status_code = 200
+    except model.WordNotFoundException:
+        response = json.jsonify({ 'error': 'Word not found' })
+        response.status_code = 404
 
-        # Adding the ID of the word into the hash
-        node.properties["id"] = word
-    except GraphError:
-        errNum  = 1234 # placeholder error num. TODO: change
-        errDesc = ("blah blah")
-        response = json.jsonify({'error': errNum, 'description': errDesc})
-        response.status_code = 404 # File not found
-        return "bad"
-
-    # Get it's decendants
-
-    # Put those decendants into the node.properties hash
-    # e.g. node.properties
-
-    return str(node.properties)
+    return response
 
 @app.route('/<int:word_id>/info')
 def info(word_id): # ET-20
@@ -144,9 +151,12 @@ def info(word_id): # ET-20
 
 @app.route('/<int:word_id>')
 def show_graph(word_id):
-    word_roots = model.roots(word_id)
-    word_descs = model.descstest(word_id)
-    return render_template('graph.html', roots=word_roots, descs=word_descs)
+    try:
+        word_roots = model.roots(word_id)
+        word_descs = model.descs(word_id)
+        return render_template('graph.html', roots=word_roots, descs=word_descs)
+    except model.WordNotFoundException:
+        abort(404)
 
 
 if __name__ == '__main__':
