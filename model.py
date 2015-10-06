@@ -71,8 +71,7 @@ def info(word_id):
     '''
     try:
         node = graph.node(word_id)
-        # pull the latest version of the node from the server (needed?)
-        node.pull();        
+        node.pull();
     except GraphError:
         raise WordNotFoundException("Word with ID {} not found".format(word_id))
     info = node.properties
@@ -85,15 +84,36 @@ def info(word_id):
     return info
 
 def search(query):
-	'''
-	This function should return an array of search results given
-	a string to search for.
-	'''
-	return []
+    '''
+    This function should return a list of tuples of the form
+    (id, properties) for search results given a string to search for.
+    '''
+
+    #TODO Remove?
+    if unsafe_query(query):
+        return [(-1, {'error': 'Invalid request'})]
+
+    cypher_query = "MATCH (n) WHERE n.orig_form =~ {sub_str} RETURN n,id(n)"
+    params = { 'sub_str': '.*{}.*'.format(query) }
+
+    results = {}
+    try:
+        results = {uid: node.properties for (node, uid) in graph.cypher.execute(cypher_query, params)}
+    except GraphError:
+        return [(-1, {'error': 'Invalid request'})]
+
+    def sort_alpha(tup):
+        k, v = tup
+        return v['orig_form']
+
+    results = sorted(results.items(), key=sort_alpha)
+    print(results)
+
+    return results
 
 def lang_decode(code):
     '''
-    Given an ISO 639-3 language code, 
+    Given an ISO 639-3 language code,
     returns the name of the language with that code
     '''
     with open(lang_code_file, 'r') as f:
@@ -103,7 +123,25 @@ def lang_decode(code):
         else:
             raise KeyError("Could not find a language with the code '{}'").format(code)
 
-        
+
 def descstest(word_id):
     with open('descstest.json') as descs:
         return descs.read()
+
+
+#TODO remove?
+"""
+Validates a query
+Returns True if the query is blank or contains unwanted cypher code.
+"""
+def unsafe_query(query):
+    # FIXME
+    invalid_substrs = \
+            [':server', 'password', 'CREATE', 'DELETE', 'REMOVE', 'MATCH', 'RETURN', 'SET', 'MERGE']
+    if not query: # blank query
+        return True
+    else:
+        for unwanted in invalid_substrs:
+            if unwanted in query:
+                return True
+    return False

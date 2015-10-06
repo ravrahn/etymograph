@@ -6,27 +6,12 @@ from io import StringIO
 from forms import SearchForm
 
 import model
+import collections
 
 app = Flask(__name__)
 app.config.from_object('config')
 graph = Graph('http://etymograph.com:7474/db/data')
 
-#TODO remove?
-"""
-Validates a query
-Returns True if the query is blank or contains unwanted cypher code.
-"""
-def unsafe_query(query):
-    # FIXME
-    invalid_substrs = \
-            [':server', 'password', 'CREATE', 'DELETE', 'REMOVE', 'MATCH', 'RETURN', 'SET', 'MERGE']
-    if not query: # blank query
-        return True
-    else:
-        for unwanted in invalid_substrs:
-            if unwanted in query:
-                return True
-    return False
 
 def request_wants_json():
     """returns true if the current request has a JSON application type, false otherwise.
@@ -41,10 +26,7 @@ def request_wants_json():
 @app.route('/')
 def index():
     search_field = SearchForm()
-    if search_field.validate_on_submit():
-        return redirect(url_for('search', q=search_field.query.data))
     return render_template('index.html', form=search_field, landing_title="Etymograph")
-
 
 """
 Search for all words that match a particular substring
@@ -53,27 +35,14 @@ usage: /search?q=<string> or frontend search bar
 @app.route('/search')
 def search(): # ET-5, ET-19
     search_str = request.args['q']
-
-    #TODO Remove?
-    if unsafe_query(search_str):
-        return "Bad request."
-
-    query = "MATCH (n) WHERE n.orig_form =~ {sub_str} RETURN n,id(n)"
-    params = { 'sub_str': '.*{}.*'.format(search_str) }
-
-    results = {}
-    try:
-        results = {uid: node.properties for (node, uid) in graph.cypher.execute(query, params)}
-    except GraphError:
-        errDesc = "Error accessing database"
-        response = json.jsonify({'error': errDesc})
-        response.status_code = 404
+    results = model.search(search_str)
 
     if not request_wants_json():
-        return render_template('results.html', search_str=search_str.capitalize(), results=results)
+        return render_template('results.html',
+                search_str=search_str.capitalize(),
+                results=results)
     else:
         response = json.jsonify(results)
-        response.status_code = 200
         return response
 
 
@@ -99,8 +68,8 @@ def roots(word_id): # ET-6
         response.status_code = 404
 
     return response
-   
-    
+
+
 @app.route('/<int:word_id>/descs')
 def descs(word_id): # ET-7
     if 'depth' in request.args:
@@ -127,7 +96,7 @@ def descs(word_id): # ET-7
 @app.route('/<int:word_id>/info')
 def info(word_id): # ET-20
     try:
-        info = model.info(word_id)               
+        info = model.info(word_id)
     except model.WordNotFoundException as e:
         if request_wants_json():
             errNum  = 1234 # placeholder error num. TODO: change
@@ -138,7 +107,7 @@ def info(word_id): # ET-20
         else:
             # display file not found page
             abort(404)
-            
+
     if request_wants_json():
         # Convert word data to JSON and wrap in a Flask response
         response = json.jsonify(info)

@@ -3,11 +3,11 @@
 <body>
     <h2 align="center">Search results for "{{ search_str }}":</h2>
     <ol>
-        {% for id in results %}
+        {% for id, props in results %}
         <li>
-            <p class="result">{{ results[id]['orig_form'] }}</p>
+            <p class="result">{{ props['orig_form'] }}</p>
             <a href="/{{ id }}">Show graph</a>
-            <p>{{ results[id]['language'] }}</p>
+            <p>{{ props['language'] }}</p>
         </li>
         {% else %}
         <h1 align="center">No results</h1>
