@@ -62,6 +62,14 @@
         // Run the renderer. This is what draws the final graph.
         render(d3.select("svg g"), g);
         
+        $("g.node").click(function() {
+            $(".selected").attr("class", "node");
+            $( this ).attr("class", "selected");
+            console.log("Class changed");
+            //$( this ).css('stroke-width: 3px')
+            //return false;
+        });
+        
     </script>
     <style>
         g.origin rect {
@@ -77,6 +85,12 @@
             stroke: #999;
             fill: #fff;
             stroke-width: 1.5px;
+        }
+        
+        .selected rect {
+            stroke: #000;
+            fill: #fff;
+            stroke-width: 3px;
         }
 
         .edgePath path {
