@@ -6,7 +6,18 @@
     <script src="http://cpettitt.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
     <script>
         function makeLabel(word) {
-            return '<div class="lang-name">' + word.lang_name + '</div><div><a href="/'+word.id+'">' + word.orig_form + '</a></div>';
+            return hiddenInfo(word)+'<div class="lang-name">' + word.lang_name + '</div><div><a href="/'+word.id+'">' + word.orig_form + '</a></div>';
+        }
+        
+        function hiddenInfo(word){
+            var info = '<div class="data"';
+            info += 'data-eng_form="'+word.eng_form+'" ';            
+            info += 'data-orig_form="'+word.orig_form+'" ';
+            info += 'data-lang_name="'+word.lang_name+'" ';
+            info += 'data-ipa_form="'+word.ipa_form+'" ';
+            info += 'data-definition="'+word.definition+'" ';
+            info +='></div>';
+            return info;
         }
 
         // Get data from the templates
@@ -68,8 +79,6 @@
             }
             $( this ).attr("class", "selected " + $(this).attr("class"));
             console.log("Class changed");
-            //$( this ).css('stroke-width: 3px')
-            //return false;
         });
         
     </script>
