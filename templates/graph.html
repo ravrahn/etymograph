@@ -63,8 +63,10 @@
         render(d3.select("svg g"), g);
         
         $("g.node").click(function() {
-            $(".selected").attr("class", "node");
-            $( this ).attr("class", "selected");
+            if ($('.selected').length !== 0) {
+                $(".selected").attr("class", $(".selected").attr("class").replace('selected', ''));
+            }
+            $( this ).attr("class", "selected " + $(this).attr("class"));
             console.log("Class changed");
             //$( this ).css('stroke-width: 3px')
             //return false;
