@@ -28,12 +28,12 @@ def index():
     search_field = SearchForm()
     return render_template('index.html', form=search_field, landing_title="Etymograph")
 
-"""
-Search for all words that match a particular substring
-usage: /search?q=<string> or frontend search bar
-"""
 @app.route('/search')
 def search(): # ET-5, ET-19
+    """
+    Search for all words that match a particular substring
+    usage: /search?q=<string> or frontend search bar
+    """
     search_str = request.args['q']
     results = model.search(search_str)
 
