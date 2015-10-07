@@ -1,6 +1,7 @@
 from py2neo import *
 from word import *
 import json
+from flask import abort
 
 graph = Graph('http://etymograph.com:7474/db/data')
 # Language codes from data from www.sil.org/iso639-3/
@@ -15,56 +16,56 @@ class WordNotFoundException(Exception):
         return self.msg
 
 def roots(word_id, depth=None):
-	'''
-	This function should return a recursive dictionary of roots
-	given a word's id and a depth.
-	'''
-	word_info = info(word_id)
-	word_info['id'] = word_id
-	word_info['roots'] = []
+    '''
+    This function should return a recursive dictionary of roots
+    given a word's id and a depth.
+    '''
+    word_info = info(word_id)
+    word_info['id'] = word_id
+    word_info['roots'] = []
 
-	if depth == 0:
-		return word_info
+    if depth == 0:
+            return word_info
 
-	query = 'MATCH (n)-[r:root]->(e) WHERE id(n) = {id} RETURN id(e)'
+    query = 'MATCH (n)-[r:root]->(e) WHERE id(n) = {id} RETURN id(e)'
 
-	results = graph.cypher.execute(query, {'id': word_id})
+    results = graph.cypher.execute(query, {'id': word_id})
 
-	for result in results:
-		node_id = result[0]
-		if depth is not None:
-			new_depth = depth - 1
-		else:
-			new_depth = None
-		word_info['roots'].append(roots(node_id, depth=new_depth))
+    for result in results:
+            node_id = result[0]
+            if depth is not None:
+                    new_depth = depth - 1
+            else:
+                    new_depth = None
+            word_info['roots'].append(roots(node_id, depth=new_depth))
 
-	return word_info
+    return word_info
 
 def descs(word_id, depth=None):
-	'''
-	This function should return a recursive dictionary of descendants
-	given a word's id and a depth.
-	'''
-	word_info = info(word_id)
-	word_info['id'] = word_id
-	word_info['descs'] = []
+    '''
+    This function should return a recursive dictionary of descendants
+    given a word's id and a depth.
+    '''
+    word_info = info(word_id)
+    word_info['id'] = word_id
+    word_info['descs'] = []
 
-	if depth == 0:
-		return word_info
+    if depth == 0:
+            return word_info
 
-	query = 'MATCH (e)-[r:root]->(n) WHERE id(n) = {id} RETURN id(e)'
+    query = 'MATCH (e)-[r:root]->(n) WHERE id(n) = {id} RETURN id(e)'
 
-	results = graph.cypher.execute(query, {'id': word_id})
+    results = graph.cypher.execute(query, {'id': word_id})
 
-	for result in results:
-		node_id = result[0]
-		if depth is not None:
-			new_depth = depth - 1
-		else:
-			new_depth = None
-		word_info['descs'].append(descs(node_id, depth=new_depth))
+    for result in results:
+            node_id = result[0]
+            if depth is not None:
+                    new_depth = depth - 1
+            else:
+                    new_depth = None
+            word_info['descs'].append(descs(node_id, depth=new_depth))
 
-	return word_info
+    return word_info
 
 def info(word_id):
     '''
@@ -91,12 +92,11 @@ def search(query):
     (id, properties) for search results given a string to search for.
     '''
 
-    #TODO Remove?
-    if unsafe_query(query):
-        return [(-1, {'error': 'Invalid request'})]
+    if not query:
+        abort(400)
 
     cypher_query = "MATCH (n) WHERE n.orig_form =~ {sub_str} RETURN n,id(n)"
-    params = { 'sub_str': '.*{}.*'.format(query) }
+    params = { 'sub_str': '(?i).*{}.*'.format(query) }
 
     results = {}
     try:
@@ -109,7 +109,6 @@ def search(query):
         return v['orig_form']
 
     results = sorted(results.items(), key=sort_alpha)
-    print(results)
 
     return results
 
@@ -131,19 +130,15 @@ def descstest(word_id):
         return descs.read()
 
 
-#TODO remove?
-"""
-Validates a query
-Returns True if the query is blank or contains unwanted cypher code.
-"""
-def unsafe_query(query):
-    # FIXME
-    invalid_substrs = \
-            [':server', 'password', 'CREATE', 'DELETE', 'REMOVE', 'MATCH', 'RETURN', 'SET', 'MERGE']
+def invalid_query(query):
+    """
+    Validates a query for blank input and numbers.
+    """
     if not query: # blank query
         return True
-    else:
-        for unwanted in invalid_substrs:
-            if unwanted in query:
-                return True
-    return False
+
+    try: # Invalid if no exception thrown.
+        float(query) or int(query)
+        return True
+    except ValueError:
+        return False
