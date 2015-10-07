@@ -1,6 +1,7 @@
 from py2neo import *
 from word import *
 import json
+from difflib import SequenceMatcher
 from flask import abort
 
 graph = Graph('http://etymograph.com:7474/db/data')
@@ -106,7 +107,8 @@ def search(query):
 
     def sort_alpha(tup):
         k, v = tup
-        return v['orig_form']
+        m = SequenceMatcher(None, v['orig_form'], query)
+        return 1/m.quick_ratio()
 
     results = sorted(results.items(), key=sort_alpha)
 
