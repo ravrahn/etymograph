@@ -7,10 +7,45 @@ from forms import SearchForm
 
 import model
 import collections
+from flask_oauthlib.client import OAuth
+
+oauth = OAuth()
+facebook = oauth.remote_app('facebook',
+    base_url='https://graph.facebook.com/',
+    request_token_url=None,
+    access_token_url='/oauth/access_token',
+    authorize_url='https://www.facebook.com/dialog/oauth',
+    consumer_key=1490053241290663,
+    consumer_secret='460470cd0827caa33ba93d47d4f7874d',
+    request_token_params={'scope': 'email'}
+)
 
 app = Flask(__name__)
 app.config.from_object('config')
-graph = Graph('http://etymograph.com:7474/db/data')
+app.config['SERVER_NAME'] = 'localhost:5000'
+
+@app.route('/login')
+def login():
+    print(url_for('oauth_authorized'))
+    return facebook.authorize(callback=url_for('oauth_authorized',
+            next=request.args.get('next') or request.referrer or None, _external=True))
+
+@app.route('/oauth-authorized')
+def oauth_authorized():
+    next_url = request.args.get('next') or url_for('index')
+    resp = facebook.authorized_response()
+    if resp is None:
+        flash(u'You denied the request to sign in.')
+        return redirect(next_url)
+
+    session['facebook_token'] = (
+        resp['oauth_token'],
+        resp['oauth_token_secret']
+    )
+    session['facebook_user'] = resp['screen_name']
+
+    flash('You were signed in as %s' % resp['screen_name'])
+    return redirect(next_url)
 
 
 def request_wants_json():
