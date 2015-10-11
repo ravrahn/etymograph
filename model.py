@@ -127,11 +127,6 @@ def lang_decode(code):
         raise KeyError("Could not find a language with the code '{}'").format(code)
 
 
-def descstest(word_id):
-    with open('descstest.json') as descs:
-        return descs.read()
-
-
 def invalid_query(query):
     """
     Validates a query for blank input and numbers.
