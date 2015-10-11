@@ -141,15 +141,25 @@ a {
   display:flex;
 }
 
-.flex-center {
-  display:flex;
-  height:100vh;
-  width:100%;
-  justify-content:center;
-  align-items:center;
+.flex-center-landing {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   position: relative;
-  /*margin: -150px 0;*/
+  padding-bottom: 200px; /* Arbitrary amount */
+}
+
+.flex-center {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
 }
 
 input[type="text"] {
