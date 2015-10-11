@@ -49,6 +49,16 @@ def oauth_authorized():
     flash('Logged in as id=%s name=%s redirect=%s' % (me.data['id'], me.data['name'], request.args.get('next')))
     return redirect(next_url)
 
+@app.route('/user')
+def user_area():
+    if 'oauth_token' in session:
+        me = facebook.get('/me')
+        pic = facebook.get('/me/picture?redirect=false')
+        print(me.data)
+        return '<div><img src="%s"><span>%s</span></div>' % (pic.data['data']['url'], me.data['name'])
+    else:
+        return 'log in pls'
+
 
 def request_wants_json():
     """returns true if the current request has a JSON application type, false otherwise.
