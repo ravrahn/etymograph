@@ -53,6 +53,20 @@ def login_authorized():
     flash('Logged in as %s' % (me.data['name']))
     return redirect(next_url)
 
+@app.route('/logout')
+def logout():
+    next_url = request.args.get('next') or url_for('index')
+    session.clear()
+    return redirect(next_url)
+
+@app.route('/profile/delete')
+def delete_profile():
+    next_url = request.args.get('next') or url_for('index')
+    uid = facebook.get('/me').data['id']
+    logout()
+    permissions = facebook.delete('/{}/permissions'.format(uid), format=None)
+    return redirect(next_url)
+
 def user_area():
     ''' Returns the "user area" - a login button if you're not logged in
         or a profile pic and your name if you are'''
