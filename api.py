@@ -62,9 +62,12 @@ def logout():
 @app.route('/profile/delete')
 def delete_profile():
     next_url = request.args.get('next') or url_for('index')
-    uid = facebook.get('/me').data['id']
-    permissions = facebook.delete('/{}/permissions'.format(uid), format=None)
-    logout()
+    me = facebook.get('/me')
+    if me is not None:
+        uid = me.data['id']
+        success = facebook.delete('/{}/permissions'.format(uid), format=None)
+        if success:
+            logout()
     return redirect(next_url)
 
 def user_area():
@@ -73,7 +76,6 @@ def user_area():
     if 'oauth_token' in session:
         me = facebook.get('/me')
         pic = facebook.get('/me/picture?redirect=false')
-        print(me.data)
         return render_template('loggedin.html', user_pic_url=pic.data['data']['url'], user_name=me.data['name'])
     else:
         return render_template('loggedout.html')
