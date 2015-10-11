@@ -114,6 +114,13 @@ def search(query):
 
     return results
 
+
+
+def add_user(user):
+    user_node = graph.merge_one('User', property_key='id', property_value=user['id'])
+    user_node.properties['name'] = user['name']
+    user_node.push()
+
 def lang_decode(code):
     '''
     Given an ISO 639-3 language code,
@@ -125,11 +132,6 @@ def lang_decode(code):
         return names[code]
     else:
         raise KeyError("Could not find a language with the code '{}'").format(code)
-
-
-def descstest(word_id):
-    with open('descstest.json') as descs:
-        return descs.read()
 
 
 def invalid_query(query):
