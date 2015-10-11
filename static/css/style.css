@@ -152,7 +152,7 @@ a {
   align-items:center;
   flex-direction: column;
   position: relative;
-  margin: -150px 0;
+  /*margin: -150px 0;*/
 }
 
 input[type="text"] {
