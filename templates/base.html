@@ -11,6 +11,7 @@
     <link rel="icon" href="{{ url_for('static', filename='img/favicon-book.ico') }}">
   </head>
   <body class="{{ body_class }}">
+  <div class="user_area">{{ user_area()|safe }}</div>
   {% block content %}{% endblock %}
   </body>
 </html>

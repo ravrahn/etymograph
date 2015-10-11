@@ -24,6 +24,7 @@ app = Flask(__name__)
 app.config.from_object('config')
 app.config['SERVER_NAME'] = 'localhost:5000'
 
+
 @facebook.tokengetter
 def get_facebook_oauth_token():
     return session.get('oauth_token')
@@ -46,19 +47,19 @@ def oauth_authorized():
 
     session['oauth_token'] = (resp['access_token'], '')
     me = facebook.get('/me')
-    flash('Logged in as id=%s name=%s redirect=%s' % (me.data['id'], me.data['name'], request.args.get('next')))
+    flash('Logged in as %s' % (me.data['name']))
     return redirect(next_url)
 
-@app.route('/user')
 def user_area():
     if 'oauth_token' in session:
         me = facebook.get('/me')
         pic = facebook.get('/me/picture?redirect=false')
         print(me.data)
-        return '<div><img src="%s"><span>%s</span></div>' % (pic.data['data']['url'], me.data['name'])
+        return render_template('loggedin.html', user_pic_url=pic.data['data']['url'], user_name=me.data['name'])
     else:
-        return 'log in pls'
+        return render_template('loggedout.html')
 
+app.jinja_env.globals.update(user_area=user_area)
 
 def request_wants_json():
     """returns true if the current request has a JSON application type, false otherwise.
