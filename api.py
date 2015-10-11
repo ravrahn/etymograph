@@ -1,6 +1,6 @@
 from py2neo import *
 from word import *
-from flask import Flask, request, json, render_template, redirect, url_for, abort
+from flask import Flask, request, json, render_template, redirect, url_for, abort, flash
 from io import StringIO
 
 from forms import SearchForm
