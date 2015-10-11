@@ -63,8 +63,8 @@ def logout():
 def delete_profile():
     next_url = request.args.get('next') or url_for('index')
     uid = facebook.get('/me').data['id']
-    logout()
     permissions = facebook.delete('/{}/permissions'.format(uid), format=None)
+    logout()
     return redirect(next_url)
 
 def user_area():
