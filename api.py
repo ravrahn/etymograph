@@ -31,11 +31,11 @@ def get_facebook_oauth_token():
 
 @app.route('/login')
 def login():
-    return facebook.authorize(callback=url_for('oauth_authorized',
+    return facebook.authorize(callback=url_for('login_authorized',
             next=request.args.get('next') or request.referrer or None, _external=True))
 
 @app.route('/login/authorized')
-def oauth_authorized():
+def login_authorized():
     next_url = request.args.get('next') or url_for('index')
     resp = facebook.authorized_response()
     if resp is None:
@@ -47,10 +47,15 @@ def oauth_authorized():
 
     session['oauth_token'] = (resp['access_token'], '')
     me = facebook.get('/me')
+
+    model.add_user(me.data)
+
     flash('Logged in as %s' % (me.data['name']))
     return redirect(next_url)
 
 def user_area():
+    ''' Returns the "user area" - a login button if you're not logged in
+        or a profile pic and your name if you are'''
     if 'oauth_token' in session:
         me = facebook.get('/me')
         pic = facebook.get('/me/picture?redirect=false')
