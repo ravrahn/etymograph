@@ -1,22 +1,19 @@
-{% extends 'base.html' %}
+{% extends 'search.html' %}
 {% block content %}
-<body>
-  <h2 
-    {% set title = word_properties.orig_form or word_properties.eng_form %}
-    align="center">{{ title }}
-    {% if word_properties.eng_form and word_properties.eng_form != title %}
-     ({{ word_properties.eng_form }})
-    {% endif %}
-  </h2>  
-  <center>
-  {# TODO: fix missing fields causing unnecesary newlines in html #}
-  {% if word_properties.ipa_form %} <p>{{ word_properties.ipa_form }}</p> {% endif %}
-  {% if word_properties.lang_name %} 
+<h2 
+{% set title = word_properties.orig_form or word_properties.eng_form %}
+align="center">{{ title }}
+{% if word_properties.eng_form and word_properties.eng_form != title %}
+ ({{ word_properties.eng_form }})
+{% endif %}
+</h2>  
+<center>
+    {% if word_properties.ipa_form %} <p>{{ word_properties.ipa_form }}</p> {% endif %}
+    {% if word_properties.lang_name %} 
     <p>{{ word_properties.lang_name }}</p> 
-  {% else %}
+    {% else %}
     {% if word_properties.language %} <p>{{ word_properties.language }}</p> {% endif %}
-  {% endif %}
-  {% if word_properties.definition %} <p>{{ word_properties.definition }}</p> {% endif %}
-  </center>
-</body>
+    {% endif %}
+    {% if word_properties.definition %} <p>{{ word_properties.definition }}</p> {% endif %}
+</center>
 {% endblock %}

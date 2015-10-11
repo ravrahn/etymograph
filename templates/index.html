@@ -1,12 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-<body class="index">
-  <div class="cover">
-    <h1 id="title">{{ landing_title }}</h1>
-    <form action="{{ url_for('search') }}" method="GET">
-      <!-- {{ form.hidden_tag() }} -->
-      {{ form.q(class_="typeahead") }}
-    </form>
-  </div>
-</body>
+<div class="cover">
+<h1 id="title">{{ landing_title }}</h1>
+<form action="{{ url_for('search') }}" method="GET">
+  <!-- {{ form.hidden_tag() }} -->
+  {{ form.q(class_="typeahead") }}
+</form>
+</div>
 {% endblock %}
