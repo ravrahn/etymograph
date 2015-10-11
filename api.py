@@ -1,13 +1,13 @@
 from py2neo import *
 from word import *
-from flask import Flask, request, json, render_template, redirect, url_for, abort
+from flask import Flask, request, json, render_template, redirect, url_for, abort, session, flash
 from io import StringIO
 
 from forms import SearchForm
 
 import model
 import collections
-from flask_oauthlib.client import OAuth
+from flask_oauthlib.client import OAuth, OAuthException
 
 oauth = OAuth()
 facebook = oauth.remote_app('facebook',
@@ -24,27 +24,29 @@ app = Flask(__name__)
 app.config.from_object('config')
 app.config['SERVER_NAME'] = 'localhost:5000'
 
+@facebook.tokengetter
+def get_facebook_oauth_token():
+    return session.get('oauth_token')
+
 @app.route('/login')
 def login():
-    print(url_for('oauth_authorized'))
     return facebook.authorize(callback=url_for('oauth_authorized',
             next=request.args.get('next') or request.referrer or None, _external=True))
 
-@app.route('/oauth-authorized')
+@app.route('/login/authorized')
 def oauth_authorized():
     next_url = request.args.get('next') or url_for('index')
     resp = facebook.authorized_response()
     if resp is None:
-        flash(u'You denied the request to sign in.')
+        flash(u'Login failed.')
         return redirect(next_url)
 
-    session['facebook_token'] = (
-        resp['oauth_token'],
-        resp['oauth_token_secret']
-    )
-    session['facebook_user'] = resp['screen_name']
+    if isinstance(resp, OAuthException):
+            return 'Access denied: %s' % resp.message
 
-    flash('You were signed in as %s' % resp['screen_name'])
+    session['oauth_token'] = (resp['access_token'], '')
+    me = facebook.get('/me')
+    flash('Logged in as id=%s name=%s redirect=%s' % (me.data['id'], me.data['name'], request.args.get('next')))
     return redirect(next_url)
 
 
