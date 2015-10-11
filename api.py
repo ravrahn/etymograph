@@ -57,7 +57,9 @@ def login_authorized():
 def logout():
     next_url = request.args.get('next') or url_for('index')
     session.clear()
-    return redirect(next_url)
+    resp = redirect(next_url)
+    resp.set_cookie('session', '', expires=0)
+    return resp
 
 @app.route('/profile/delete')
 def delete_profile():
@@ -67,7 +69,7 @@ def delete_profile():
         uid = me.data['id']
         success = facebook.delete('/{}/permissions'.format(uid), format=None)
         if success:
-            logout()
+            return logout()
     return redirect(next_url)
 
 def user_area():
