@@ -1,151 +1,149 @@
 {% extends 'base.html' %}
 {% block content %}
-<body>
-    <svg width="1500" height="1000"></svg>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
-    <script src="http://cpettitt.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
-    {# This is where the word info goes (js writes the inner HTML) #}
-    <div id="infobar" style="right:100%"></div>
-    <script>
-        function makeLabel(word) {
-            return hiddenInfo(word)+'<div class="lang-name">' + word.lang_name + '</div><div><a href="/'+word.id+'">' + word.orig_form + '</a></div>';
-        }
+<svg width="1500" height="1000"></svg>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+<script src="http://cpettitt.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
+{# This is where the word info goes (js writes the inner HTML) #}
+<div id="infobar" style="right:100%"></div>
+<script>
+    function makeLabel(word) {
+        return hiddenInfo(word)+'<div class="lang-name">' + word.lang_name + '</div><div><a href="/'+word.id+'">' + word.orig_form + '</a></div>';
+    }
+    
+    function hiddenInfo(word){
+        var info = '<div class="data"';
+        info += 'id='+word.id+' ';              
+        info += 'data-orig_form="'+word.orig_form+'" ';
         
-        function hiddenInfo(word){
-            var info = '<div class="data"';
-            info += 'id='+word.id+' ';              
-            info += 'data-orig_form="'+word.orig_form+'" ';
-            
-            if(word.eng_form !== undefined){
-                info += 'data-eng_form="'+word.eng_form+'" ';
-            } 
-            if(word.lang_name !== undefined){
-                info += 'data-lang_name="'+word.lang_name+'" ';
-            }
-            if(word.ipa_form !== undefined){
-                info += 'data-ipa_form="'+word.ipa_form+'" ';
-            }
-            if(word.definition !== undefined){
-                info += 'data-definition="'+word.definition+'" ';
-            }
-            info +='></div>';
-            return info;
+        if(word.eng_form !== undefined){
+            info += 'data-eng_form="'+word.eng_form+'" ';
+        } 
+        if(word.lang_name !== undefined){
+            info += 'data-lang_name="'+word.lang_name+'" ';
+        }
+        if(word.ipa_form !== undefined){
+            info += 'data-ipa_form="'+word.ipa_form+'" ';
+        }
+        if(word.definition !== undefined){
+            info += 'data-definition="'+word.definition+'" ';
+        }
+        info +='></div>';
+        return info;
+    }
+
+    // Get data from the templates
+    var roots = {{ roots|safe }};
+    var descs = {{ descs|safe }};
+    // This is ugly but it's just temporary while we sort out MVC
+    var info = roots;
+
+
+    // convert roots and descs into a single dagre graph
+    var g = new dagreD3.graphlib.Graph()
+        .setGraph({
+            nodesep: 70,
+            ranksep: 50,
+            rankdir: "LR",
+            marginx: 20,
+            marginy: 20
+        })
+        .setDefaultEdgeLabel(function() { return {}; });;
+
+    g.setNode(info.id, {id: info.id, labelType:'html', label: makeLabel(info),  class: 'origin'});
+
+    function addRoot(g, root, parent) {
+        var rootLabel = makeLabel(root);
+        g.setNode(root.id, {id: root.id, labelType:'html', label: rootLabel });
+        g.setEdge(root.id, parent, { lineInterpolate: "bundle" });
+        if (root.roots !== undefined) {
+            root.roots.forEach(function(r) { addRoot(g, r, root.id) });
         }
 
-        // Get data from the templates
-        var roots = {{ roots|safe }};
-        var descs = {{ descs|safe }};
-        // This is ugly but it's just temporary while we sort out MVC
-        var info = roots;
+    }
 
-
-        // convert roots and descs into a single dagre graph
-        var g = new dagreD3.graphlib.Graph()
-            .setGraph({
-                nodesep: 70,
-                ranksep: 50,
-                rankdir: "LR",
-                marginx: 20,
-                marginy: 20
-            })
-            .setDefaultEdgeLabel(function() { return {}; });;
-
-        g.setNode(info.id, {id: info.id, labelType:'html', label: makeLabel(info),  class: 'origin'});
-
-        function addRoot(g, root, parent) {
-            var rootLabel = makeLabel(root);
-            g.setNode(root.id, {id: root.id, labelType:'html', label: rootLabel });
-            g.setEdge(root.id, parent, { lineInterpolate: "bundle" });
-            if (root.roots !== undefined) {
-                root.roots.forEach(function(r) { addRoot(g, r, root.id) });
-            }
-
+    function addDesc(g, desc, parent) {
+        var descLabel = makeLabel(desc);
+        g.setNode(desc.id, {id: desc.id, labelType:'html', label: descLabel });
+        g.setEdge(parent, desc.id);
+        if (desc.descs !== undefined) {
+            desc.descs.forEach(function(d) { addDesc(g, d, desc.id) });
         }
+    }
 
-        function addDesc(g, desc, parent) {
-            var descLabel = makeLabel(desc);
-            g.setNode(desc.id, {id: desc.id, labelType:'html', label: descLabel });
-            g.setEdge(parent, desc.id);
-            if (desc.descs !== undefined) {
-                desc.descs.forEach(function(d) { addDesc(g, d, desc.id) });
-            }
+    roots.roots.forEach(function(r) { addRoot(g, r, info.id) });
+    descs.descs.forEach(function(d) { addDesc(g, d, info.id) });
+
+    // Draw the graph
+    // Create the renderer
+    var render = new dagreD3.render();
+
+    // Set up an SVG group so that we can translate the final graph.
+    var svg = d3.select("svg"),
+        svgGroup = svg.append("g");
+
+    // Run the renderer. This is what draws the final graph.
+    render(d3.select("svg g"), g);
+    
+    $("g.node").click(function() {
+        if ($('.selected').length !== 0) {
+            $(".selected").attr("class", $(".selected").attr("class").replace('selected', ''));
         }
-
-        roots.roots.forEach(function(r) { addRoot(g, r, info.id) });
-        descs.descs.forEach(function(d) { addDesc(g, d, info.id) });
-
-        // Draw the graph
-        // Create the renderer
-        var render = new dagreD3.render();
-
-        // Set up an SVG group so that we can translate the final graph.
-        var svg = d3.select("svg"),
-            svgGroup = svg.append("g");
-
-        // Run the renderer. This is what draws the final graph.
-        render(d3.select("svg g"), g);
-        
-        $("g.node").click(function() {
-            if ($('.selected').length !== 0) {
-                $(".selected").attr("class", $(".selected").attr("class").replace('selected', ''));
-            }
-            $( this ).attr("class", "selected " + $(this).attr("class"));
-            // Get data from the graph node
-            var id = $( this ).attr("id");            
-            var orig_form = $("div#"+ id +".data").attr("data-orig_form");
-            var eng_form = $("div#"+ id +".data").attr("data-eng_form");
-            var lang_name = $("div#"+ id +".data").attr("data-lang_name");
-            var ipa_form = $("div#"+ id +".data").attr("data-ipa_form");
-            var definition = $("div#"+id+".data").attr("data-definition");
-            // Construct the html to go inside the info sidebar
-            // TODO ugly, not visible without scrolling, not in a sidebar
-            var info = "<p>" + orig_form;
-            if (eng_form !== undefined){
-                info += "<p> English Transliteration: " + eng_form;
-            }
-            if (ipa_form !== undefined){
-                info += "<p> Pronounciation: " + ipa_form;
-            }
-            if (lang_name !== undefined){
-                info += "<p> Language: "+ lang_name;
-            }
-            if (definition !== undefined){
-                info += "<p> Definition: "+ definition;
-            }
-            $("#infobar").html(info);
-        });
-        
-    </script>
-    <style>
-        g.origin rect {
-            stroke: #000;
+        $( this ).attr("class", "selected " + $(this).attr("class"));
+        // Get data from the graph node
+        var id = $( this ).attr("id");            
+        var orig_form = $("div#"+ id +".data").attr("data-orig_form");
+        var eng_form = $("div#"+ id +".data").attr("data-eng_form");
+        var lang_name = $("div#"+ id +".data").attr("data-lang_name");
+        var ipa_form = $("div#"+ id +".data").attr("data-ipa_form");
+        var definition = $("div#"+id+".data").attr("data-definition");
+        // Construct the html to go inside the info sidebar
+        // TODO ugly, not visible without scrolling, not in a sidebar
+        var info = "<p>" + orig_form;
+        if (eng_form !== undefined){
+            info += "<p> English Transliteration: " + eng_form;
         }
-        text {
-            font-weight: 300;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
-            font-size: 14px;
+        if (ipa_form !== undefined){
+            info += "<p> Pronounciation: " + ipa_form;
         }
+        if (lang_name !== undefined){
+            info += "<p> Language: "+ lang_name;
+        }
+        if (definition !== undefined){
+            info += "<p> Definition: "+ definition;
+        }
+        $("#infobar").html(info);
+    });
+    
+</script>
+<style>
+    g.origin rect {
+        stroke: #000;
+    }
+    text {
+        font-weight: 300;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+        font-size: 14px;
+    }
 
-        .node rect {
-            stroke: #999;
-            fill: #fff;
-            stroke-width: 1.5px;
-        }
-        
-        .selected rect {
-            stroke: #000;
-            fill: #fff;
-            stroke-width: 3px;
-        }
+    .node rect {
+        stroke: #999;
+        fill: #fff;
+        stroke-width: 1.5px;
+    }
+    
+    .selected rect {
+        stroke: #000;
+        fill: #fff;
+        stroke-width: 3px;
+    }
 
-        .edgePath path {
-            stroke: #333;
-            stroke-width: 1.5px;
-        }
+    .edgePath path {
+        stroke: #333;
+        stroke-width: 1.5px;
+    }
 
-        .lang-name {
-            font-size: 0.75rem;
-        }
-    </style>
-</body>
+    .lang-name {
+        font-size: 0.75rem;
+    }
+</style>
 {% endblock %}

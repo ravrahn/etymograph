@@ -5,3 +5,4 @@ nose
 sniffer
 wtforms
 flask-wtf
+Flask-OAuthlib

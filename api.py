@@ -73,7 +73,7 @@ def request_wants_json():
 @app.route('/')
 def index():
     search_field = SearchForm()
-    return render_template('index.html', form=search_field, landing_title="Etymograph")
+    return render_template('index.html', form=search_field, landing_title="Etymograph", body_class="index")
 
 @app.route('/search')
 def search(): # ET-5, ET-19
@@ -87,7 +87,7 @@ def search(): # ET-5, ET-19
     if not request_wants_json():
         return render_template('results.html',
                 search_str=search_str.capitalize(),
-                results=results)
+                results=results, body_class="search")
     else:
         response = json.jsonify(results)
         return response
@@ -161,7 +161,7 @@ def info(word_id): # ET-20
         response.status_code = 200 # OK
     else:
         # Non-JSON request, return info page
-        response = render_template('info.html', word_properties=info)
+        response = render_template('info.html', word_properties=info, body_class="info", form=SearchForm())
     return response
 
 
@@ -170,7 +170,7 @@ def show_graph(word_id):
     try:
         word_roots = model.roots(word_id)
         word_descs = model.descs(word_id)
-        return render_template('graph.html', roots=word_roots, descs=word_descs)
+        return render_template('graph.html', roots=word_roots, descs=word_descs, body_class="graph")
     except model.WordNotFoundException:
         abort(404)
 
