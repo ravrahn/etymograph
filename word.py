@@ -13,8 +13,8 @@ class Word:
 
     def __init__(self, *args, **kwargs):
         if isinstance(args[0], Node):
-            self.node = node
             self.props = node.properties
+            self.get_node()
         else:
             self.node = None
             self.props = {}
@@ -53,12 +53,13 @@ class Word:
             return self.node
 
         cond = '{' + ', '.join(['{}: "{}"'.format(prop, value) for prop, value in self.props.items()]) + '}'
-        query = 'MERGE (n:Word {}) RETURN n'
+        query = 'MERGE (n:Word {}) RETURN n, id(n)'
         query = query.format(cond)
         results = graph.cypher.execute(query)
 
         if results:
-            self.node = results[0]['n']
+            self.node = results[0][0]
+            self.id = results[0][1]
         # else:
         #     self.node = Node('Word', name=self.props['name'], lang=self.props['lang'])
 
