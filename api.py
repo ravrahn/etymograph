@@ -64,9 +64,9 @@ def logout():
 @app.route('/profile/delete')
 def delete_profile():
     next_url = request.args.get('next') or url_for('index')
-    me = facebook.get('/me')
+    me = get_user()
     if me is not None:
-        uid = me.data['id']
+        uid = me['id']
         success = facebook.delete('/{}/permissions'.format(uid), format=None)
         if success:
             return logout()
@@ -76,13 +76,23 @@ def user_area():
     ''' Returns the "user area" - a login button if you're not logged in
         or a profile pic and your name if you are'''
     if 'oauth_token' in session:
-        me = facebook.get('/me')
+        me = get_user()
         pic = facebook.get('/me/picture?redirect=false')
-        return render_template('loggedin.html', user_pic_url=pic.data['data']['url'], user_name=me.data['name'])
+        return render_template('loggedin.html', user_pic_url=pic.data['data']['url'], user_name=me['name'])
     else:
         return render_template('loggedout.html')
 
 app.jinja_env.globals.update(user_area=user_area)
+
+def get_user():
+    try:
+        me = facebook.get('/me')
+    except OAuthException:
+        return None
+    if me is None:
+        return None
+    else:
+        return me.data
 
 def request_wants_json():
     """returns true if the current request has a JSON application type, false otherwise.
