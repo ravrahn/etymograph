@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*- 
 from py2neo import *
 from word import *
 from flask import Flask, request, json, render_template, redirect, url_for, abort, session, flash
