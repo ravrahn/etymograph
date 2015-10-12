@@ -1,6 +1,6 @@
 from py2neo import *
 from word import *
-import json
+import json, time
 from difflib import SequenceMatcher
 from flask import abort
 
@@ -113,6 +113,17 @@ def search(query):
     results = sorted(results.items(), key=sort_alpha)
 
     return results
+
+
+def add_word(user, word):
+    word.get_node(graph)
+    user_node = graph.find_one('User', property_key='id', property_value=user['id'])
+    creation_time = int(time.time())
+    created = Relationship(user_node, 'created', word.node, time=creation_time)
+    graph.create(created)
+
+    return word.id
+
 
 
 def add_user(user):
