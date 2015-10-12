@@ -199,6 +199,17 @@ def info(word_id): # ET-20
     return response
 
 
+@app.route('/addtest')
+def add_test():
+    word = Word('doot', 'eng', definition='the sound of good calcium', ipa_form='duːt')
+    me = get_user()
+    if me is not None:
+        word_id = model.add_word(me, word)
+        return redirect('/{}'.format(word_id))
+    else:
+        abort(403)
+
+
 @app.route('/<int:word_id>')
 def show_graph(word_id):
     try:
