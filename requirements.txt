@@ -6,3 +6,4 @@ sniffer
 wtforms
 flask-wtf
 Flask-OAuthlib
+flask-webtest
