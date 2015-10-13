@@ -208,7 +208,13 @@ def add_word():
         form = AddWordForm(request.form)
 
         if request.method == 'POST':
-            word = Word(request.form)
+            # convert the request's ImmutableMultiDict to a dict
+            word_data = {}
+            for key in request.form:
+                if key != 'csrf_token':
+                    word_data[key] = request.form[key]
+            # add the word to the database
+            word = Word(word_data)
             word_id = model.add_word(me, word)
             return redirect('/{}'.format(word_id))
 

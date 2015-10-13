@@ -21,3 +21,7 @@ class LoginForm(Form): # For later
 class AddWordForm(Form):
     orig_form = StringField('Word')
     language = StringField('Language')
+    definition = StringField('Definition')
+    ipa_form = StringField('IPA Transcription')
+    eng_form = StringField('Latin Transliteration')
+
