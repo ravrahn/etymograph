@@ -20,7 +20,6 @@ $(document).ready(function(){
   // Start Bloodhound search engine
   var words = new Bloodhound({
       datumTokenizer: function (datum) {
-			console.log(datum.value);
           return Bloodhound.tokenizers.whitespace(datum.value);
       },
       queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -28,10 +27,6 @@ $(document).ready(function(){
         url: '/search?q=^%QUERY',
         wildcard: '%QUERY'
       },
-      sorter: function(itemA, itemB) {
-		console.log(itemA);
-		console.log(itemB);
-      }
   });
   words.initialize();
 
