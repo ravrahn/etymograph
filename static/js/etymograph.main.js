@@ -32,7 +32,7 @@ $(document).ready(function(){
 
   words.initialize();
 
-  $("#search_field").typeahead(null, {
+  $("#search_field").typeahead({
     hint: false,
     highlight: true,
     minLength: 3,
