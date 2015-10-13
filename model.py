@@ -26,19 +26,19 @@ def roots(word_id, depth=None):
     word_info['roots'] = []
 
     if depth == 0:
-            return word_info
+        return word_info
 
     query = 'MATCH (n)-[r:root]->(e) WHERE id(n) = {id} RETURN id(e)'
 
     results = graph.cypher.execute(query, {'id': word_id})
 
     for result in results:
-            node_id = result[0]
-            if depth is not None:
-                    new_depth = depth - 1
-            else:
-                    new_depth = None
-            word_info['roots'].append(roots(node_id, depth=new_depth))
+        node_id = result[0]
+        if depth is not None:
+            new_depth = depth - 1
+        else:
+            new_depth = None
+        word_info['roots'].append(roots(node_id, depth=new_depth))
 
     return word_info
 
@@ -52,19 +52,19 @@ def descs(word_id, depth=None):
     word_info['descs'] = []
 
     if depth == 0:
-            return word_info
+        return word_info
 
     query = 'MATCH (e)-[r:root]->(n) WHERE id(n) = {id} RETURN id(e)'
 
     results = graph.cypher.execute(query, {'id': word_id})
 
     for result in results:
-            node_id = result[0]
-            if depth is not None:
-                    new_depth = depth - 1
-            else:
-                    new_depth = None
-            word_info['descs'].append(descs(node_id, depth=new_depth))
+        node_id = result[0]
+        if depth is not None:
+            new_depth = depth - 1
+        else:
+            new_depth = None
+        word_info['descs'].append(descs(node_id, depth=new_depth))
 
     return word_info
 
