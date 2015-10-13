@@ -140,7 +140,7 @@ def lang_decode(code):
     if code in names:
         return names[code]
     else:
-        raise KeyError("Could not find a language with the code '{}'").format(code)
+        raise KeyError("Could not find a language with the code '{}'".format(code))
 
 
 def invalid_query(query):
