@@ -128,6 +128,11 @@ a {
   background: #c0bdb6;
 }
 
+svg {
+    display:block;
+    margin: auto;
+}
+
 .flex-form {
   z-index: 10;
   position: relative;
@@ -141,15 +146,31 @@ a {
   display:flex;
 }
 
-.flex-center-landing {
-  display: flex;
-  height: 100vh;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  position: relative;
+#landing {
   padding-bottom: 200px; /* Arbitrary amount */
+}
+
+.flex-login {
+    display: flex;
+    flex-direction: row;
+    order: 2;
+    justify-content:flex-end;
+    align-self: flex-end;
+}
+
+.flex-upleft {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-basis: 400px;
+}
+
+.flex-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-basis: 100%;
+  text-align: center;
 }
 
 .flex-center {

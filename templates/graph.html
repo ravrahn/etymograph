@@ -1,23 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
-<svg width="1500" height="1000"></svg>
+<div class="flex-center">
+    <svg width="1500px" height="1000px"></svg>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
 <script src="http://cpettitt.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
 {# This is where the word info goes (js writes the inner HTML) #}
-<div id="infobar" style="right:100%"></div>
+<div id="infobar"></div>
 <script>
     function makeLabel(word) {
         return hiddenInfo(word)+'<div class="lang-name">' + word.lang_name + '</div><div><a href="/'+word.id+'">' + word.orig_form + '</a></div>';
     }
-    
+
     function hiddenInfo(word){
         var info = '<div class="data"';
-        info += 'id='+word.id+' ';              
+        info += 'id='+word.id+' ';
         info += 'data-orig_form="'+word.orig_form+'" ';
-        
+
         if(word.eng_form !== undefined){
             info += 'data-eng_form="'+word.eng_form+'" ';
-        } 
+        }
         if(word.lang_name !== undefined){
             info += 'data-lang_name="'+word.lang_name+'" ';
         }
@@ -83,14 +85,14 @@
 
     // Run the renderer. This is what draws the final graph.
     render(d3.select("svg g"), g);
-    
+
     $("g.node").click(function() {
         if ($('.selected').length !== 0) {
             $(".selected").attr("class", $(".selected").attr("class").replace('selected', ''));
         }
         $( this ).attr("class", "selected " + $(this).attr("class"));
         // Get data from the graph node
-        var id = $( this ).attr("id");            
+        var id = $( this ).attr("id");
         var orig_form = $("div#"+ id +".data").attr("data-orig_form");
         var eng_form = $("div#"+ id +".data").attr("data-eng_form");
         var lang_name = $("div#"+ id +".data").attr("data-lang_name");
@@ -113,7 +115,6 @@
         }
         $("#infobar").html(info);
     });
-    
 </script>
 <style>
     g.origin rect {
@@ -130,7 +131,7 @@
         fill: #fff;
         stroke-width: 1.5px;
     }
-    
+
     .selected rect {
         stroke: #000;
         fill: #fff;
