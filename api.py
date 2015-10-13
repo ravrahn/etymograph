@@ -4,7 +4,7 @@ from word import *
 from flask import Flask, request, json, render_template, redirect, url_for, abort, session, flash
 from io import StringIO
 
-from forms import SearchForm
+from forms import *
 
 import model
 import collections
@@ -200,13 +200,19 @@ def info(word_id): # ET-20
     return response
 
 
-@app.route('/addtest')
-def add_test():
-    word = Word('doot', 'eng', definition='the sound of good calcium', ipa_form='duːt')
+
+@app.route('/add/word', methods=['GET', 'POST'])
+def add_word():
     me = get_user()
     if me is not None:
-        word_id = model.add_word(me, word)
-        return redirect('/{}'.format(word_id))
+        form = AddWordForm(request.form)
+
+        if request.method == 'POST':
+            word = Word(request.form)
+            word_id = model.add_word(me, word)
+            return redirect('/{}'.format(word_id))
+
+        return render_template('addword.html', form=form)
     else:
         abort(403)
 

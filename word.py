@@ -13,8 +13,11 @@ class Word:
 
     def __init__(self, *args, **kwargs):
         if isinstance(args[0], Node):
-            self.props = node.properties
+            self.props = args[0].properties
             self.get_node()
+        elif isinstance(args[0], dict):
+            self.props = args[0]
+            self.node = None
         else:
             self.node = None
             self.props = {}

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% from "_formhelpers.html" import render_field %}
+{% block content %}
+<h2>Add a word</h2>
+<form action="{{ url_for('add_word') }}" method="POST">
+{{ render_field(form.orig_form) }}
+{{ render_field(form.language) }}
+<button type="submit" >Submit</form>
+</form>
+{% endblock %}

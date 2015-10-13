@@ -16,3 +16,8 @@ class LoginForm(Form): # For later
    password = StringField('password', validators[DataRequired()])
    remember_me = BooleanField('remember_me', default=False)
 """
+
+
+class AddWordForm(Form):
+    orig_form = StringField('Word')
+    language = StringField('Language')
