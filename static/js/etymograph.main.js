@@ -33,12 +33,15 @@ $(document).ready(function(){
   words.initialize();
 
   $("#search_field").typeahead({
-    hint: false,
-    highlight: true,
-    minLength: 3,
-	displayKey: 'orig_form',
-    source: words,
-	limit: 10
+	  hint: false,
+	  highlight: true,
+	  minLength: 3,
+  },
+  {
+	  name: 'words',
+	  displayKey: 'orig_form',
+	  source: words,
+	  limit: 10
   });
 
 });
