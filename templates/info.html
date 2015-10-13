@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
 {% set title = word_properties.orig_form or word_properties.eng_form %}
-    <div class="flex-upleft">
+<div class="flex-parent">
+    <div class="flex-content">
       <form action="{{ url_for('search') }}" method="GET">
         <!-- {{ form.hidden_tag() }} -->
         {{ form.q(class_="typeahead") }}
@@ -35,4 +36,5 @@
         $(".user_area").attr("id", "flex-login");
         $(".user_area").insertAfter(".flex-upleft");
     </script>
+</div>
 {% endblock %}
