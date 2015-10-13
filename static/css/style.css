@@ -1,5 +1,5 @@
 /*
-  General Theme
+    Font declarations
 */
 
 @font-face {
@@ -50,6 +50,10 @@
   src: local('Fira Sans'), local('FiraSans-Regular'), url(https://fonts.gstatic.com/s/firasans/v5/EjsrzDkQUQCDwsBtLpcVQVtXRa8TVwTICgirnJhmVJw.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
 }
+
+/*
+    General styling
+*/
 
 html {
   box-sizing: border-box;
@@ -128,15 +132,18 @@ a {
   background: #c0bdb6;
 }
 
+/*
+    Graph detail
+*/
+
 svg {
     display:block;
     margin: auto;
 }
 
 /*
-	Common (non-landing) page template flex css
+	Common (non-landing) template flexbox stuff
 */
-
 
 /* Top level container*/
 .flex-parent {
@@ -181,6 +188,7 @@ svg {
   position: relative;
 }
 
+/* Landing form text input */
 input[type="text"] {
   color: #c0bdb6;
   font-family: 'Fira Sans', sans-serif;
@@ -244,6 +252,8 @@ input[type="text"] {
   margin: 0;
 }
 
+/* Results list numbering */
+/* not happy with how it looks; will change. */
 ol {
   list-style-type: none;
 
@@ -275,7 +285,6 @@ ol li:before {
   content: counter(li-counter);
   counter-increment: li-counter;
 }
-
 ol:after {
   border-right: 3px solid #A70200;
 }
