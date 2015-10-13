@@ -158,7 +158,7 @@ svg {
 	flex: 1 100%;
 }
 .flex-login {
-    order: 2;
+    /*order: 2;*/
 }
 .flex-content {
   text-align: center;
