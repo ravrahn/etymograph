@@ -42,4 +42,13 @@ $(document).ready(function(){
       source: words.ttAdapter(),
 	  limit: 5
   });
+
+  $('.twitter-typeahead')
+   .on('mouseenter', '.tt-suggestion', function(e){
+      $('.tt-cursor', $(this).closest('.tt-menu')).removeClass('tt-cursor');
+      $(this).addClass('tt-cursor');
+   })                  
+   .on('mouseleave', '.tt-menu', function(e){
+      $('.tt-cursor', $(this).closest('.tt-menu')).removeClass('tt-cursor');
+   });
 });
