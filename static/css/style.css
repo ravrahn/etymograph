@@ -128,6 +128,15 @@ a {
   background: #c0bdb6;
 }
 
+svg {
+    display:block;
+    margin: auto;
+}
+
+/*
+	Flex positioning for primary search
+	CURRENTLY UNUSED
+*/
 .flex-form {
   z-index: 10;
   position: relative;
@@ -141,17 +150,39 @@ a {
   display:flex;
 }
 
-.flex-center-landing {
-  display: flex;
-  height: 100vh;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  position: relative;
-  padding-bottom: 200px; /* Arbitrary amount */
+/*
+	Common (non-landing) page template flex css
+*/
+
+
+/* Top level container*/
+.flex-parent {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-content: space-between;
+	flex-flow: row wrap;
 }
 
+/* flex children */
+.flex-login .flex-content {
+	flex: 1 100%;
+}
+.flex-login {
+    order: 2;
+}
+.flex-content {
+  text-align: center;
+}
+
+/* landing page detail */
+#landing {
+  padding-bottom: 200px; /* Arbitrary qty */
+}
+
+/* Dead centered flex object */
 .flex-center {
   display: flex;
   height: 100vh;
