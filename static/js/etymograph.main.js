@@ -41,7 +41,7 @@ $(document).ready(function(){
 	  name: 'words',
 	  displayKey: 'orig_form',
 	  source: words,
-	  limit: 10
+	  limit: 10 
   });
 
 });
