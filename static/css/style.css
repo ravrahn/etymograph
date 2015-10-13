@@ -134,23 +134,6 @@ svg {
 }
 
 /*
-	Flex positioning for primary search
-	CURRENTLY UNUSED
-*/
-.flex-form {
-  z-index: 10;
-  position: relative;
-}
-
-.flex-form > *:last-child {
-  border-right: 0;
-}
-
-.flex-form {
-  display:flex;
-}
-
-/*
 	Common (non-landing) page template flex css
 */
 
@@ -164,10 +147,14 @@ svg {
 	justify-content: space-between;
 	align-content: space-between;
 	flex-flow: row wrap;
+	padding: 10px;
 }
 
 /* flex children */
-.flex-login .flex-content {
+.flex-login .flex-form {
+	flex: 1 50%;
+}
+.flex-content {
 	flex: 1 100%;
 }
 .flex-login {
@@ -175,6 +162,7 @@ svg {
 }
 .flex-content {
   text-align: center;
+	padding-bottom: 200px;
 }
 
 /* landing page detail */

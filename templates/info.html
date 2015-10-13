@@ -2,39 +2,38 @@
 {% block content %}
 {% set title = word_properties.orig_form or word_properties.eng_form %}
 <div class="flex-parent">
-    <div class="flex-content">
+    <div class="flex-form">
       <form action="{{ url_for('search') }}" method="GET">
         <!-- {{ form.hidden_tag() }} -->
         {{ form.q(class_="typeahead") }}
       </form>
     </div>
 
-    <div class="flex-content">
+    <div class="flex-content flex-center">
         <h2>{{ title }}
             {% if word_properties.eng_form and word_properties.eng_form != title %}
                 ({{ word_properties.eng_form }})
             {% endif %}
         </h2>
+		{% if word_properties.ipa_form %} 
+			<p>{{ word_properties.ipa_form }}</p> 
+		{% endif %}
+		{% if word_properties.lang_name %}
+			<p>{{ word_properties.lang_name }}</p>
+		{% else %}
+		{% if word_properties.language %} 
+			<p>{{ word_properties.language }}</p>
+		{% endif %}
+		{% endif %}
+		{% if word_properties.definition %} 
+			<p>{{ word_properties.definition }}</p>
+		{% endif %}
     </div>
 
-    <div class="flex-content">
-    {% if word_properties.ipa_form %} 
-        <p>{{ word_properties.ipa_form }}</p> 
-    {% endif %}
-    {% if word_properties.lang_name %}
-        <p>{{ word_properties.lang_name }}</p>
-    {% else %}
-    {% if word_properties.language %} 
-        <p>{{ word_properties.language }}</p>
-    {% endif %}
-    {% endif %}
-    {% if word_properties.definition %} 
-        <p>{{ word_properties.definition }}</p>
-    {% endif %}
-    </div>
     <script>
         $(".user_area").attr("id", "flex-login");
-        $(".user_area").insertAfter(".flex-upleft");
+		$(".flex-parent").prepend($(".user_area"));
+		$(".flex-parent").prepend($(".flex-form"));
     </script>
 </div>
 {% endblock %}
