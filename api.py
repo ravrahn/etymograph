@@ -120,9 +120,11 @@ def search(): # ET-5, ET-19
     results = model.search(search_str)
 
     if not request_wants_json():
+        search_field = SearchForm()
         return render_template('results.html',
-                search_str=search_str.capitalize(),
-                results=results, body_class="search")
+			form=search_field,
+			search_str=search_str.capitalize(),
+			results=results, body_class="search")
     else:
         response = json.jsonify(results)
         return response
@@ -228,7 +230,8 @@ def show_graph(word_id):
     try:
         word_roots = model.roots(word_id)
         word_descs = model.descs(word_id)
-        return render_template('graph.html', roots=word_roots, descs=word_descs, body_class="graph")
+        search_field = SearchForm()
+        return render_template('graph.html', form=search_field, roots=word_roots, descs=word_descs, body_class="graph")
     except model.WordNotFoundException:
         abort(404)
 
