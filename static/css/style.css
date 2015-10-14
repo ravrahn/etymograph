@@ -60,7 +60,7 @@ html {
     text-decoration: none;
 }
 
-h1, h2, h3, h4, h5, p, a {
+h1, h2, h3, h4, h5, p, a, label {
   color: #2a2b2b;
   font-family: "Minion-pro", serif;
   font-style: normal;
@@ -267,7 +267,6 @@ input.reg-form {
 }
 
 div.addword-form-title {
-    align-text: left;
     margin: 5px 0 5px 0;
 }
 .addword-form {
