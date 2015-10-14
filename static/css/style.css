@@ -2,14 +2,6 @@
     Font declarations
 */
 
-@font-face {
-  font-family: 'Bentham';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Bentham'), local('Bentham-Regular'), url(https://fonts.gstatic.com/s/bentham/v6/SVc3EWThHQ2hzWZPpEYHFw.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-
 /* cyrillic-ext */
 @font-face {
   font-family: 'Fira Sans';
@@ -59,12 +51,18 @@ html {
   box-sizing: border-box;
 }
 
-#logo-text {
-    font-weight: 400;
+.logo-text {
+    font-weight: 600; /* 600 has a good commanding presence without being too obnoxious like 800 or too thing like 400*/
+                      /* at least for the upperleft position  ~Ryan Spencer*/
     font-size: 2.125em;
     padding-left: 10px;
     margin-top: -5px;
     text-decoration: none;
+}
+
+.user-pic {
+    height: 25px;
+    width: 25px;
 }
 
 h1, h2, h3, h4, h5, p, a {
@@ -200,10 +198,16 @@ svg {
   position: relative;
 }
 
+.user_area {
+    padding-right: 10px;
+    margin-top: 7px;
+}
+
 /* Landing form text input */
 input[type="text"] {
   color: #c0bdb6;
   font-family: 'Fira Sans', sans-serif;
+  font-weight: 400;
   background: #2a2b2b;
   width: 500px;
   height: 50px;
@@ -237,14 +241,13 @@ input[type="text"] {
   box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
   text-align: left;
 }
-#reg-form {
-    align: center;
+.reg-form {
   color: #c0bdb6;
   font-family: 'Fira Sans', sans-serif;
   width: 300px;
   height: 2em;
   border: 2px;
-  margin: 2px 0;
+  margin: auto;
   padding: 2px 5px;
   background: #2a2b2b;
   font-size: 1em;
@@ -255,7 +258,6 @@ input[type="text"] {
   box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
   text-align: left;
 }
-
 /*
   overriden typeahead.js stuff
 */
