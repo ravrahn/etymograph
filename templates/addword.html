@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% from "_formhelpers.html" import render_field %}
 {% block content %}
-<div class="flex-pad-third"></div>
 <div class="flex-inner-content">
     <h2 align="center">Add a word</h2>
     <form action="{{ url_for('add_word') }}" method="POST">
@@ -14,5 +13,4 @@
         <button type="submit" class="addword-submit">Submit</form>
     </form>
 </div>
-<div class="flex-pad-third"></div>
 {% endblock %}
