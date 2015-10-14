@@ -3,7 +3,7 @@
 {% block content %}
 <div class="flex-pad-third"></div>
 <div class="flex-inner-content">
-    <h2>Add a word</h2>
+    <h2 align="center">Add a word</h2>
     <form action="{{ url_for('add_word') }}" method="POST">
         {% for field in form %}
         {% if field.id != "csrf_token" %}

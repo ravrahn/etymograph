@@ -176,7 +176,7 @@ svg {
 }
 .flex-inner-content {
     display: block;
-    width: 600px;
+    width: 300px;
     text-align: center;
 }
 .flex-login {
@@ -268,6 +268,7 @@ input.reg-form {
 
 div.addword-form-title {
     margin: 5px 0 5px 0;
+    text-align: left;
 }
 .addword-form {
     padding-bottom: 5px;
