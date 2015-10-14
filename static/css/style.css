@@ -163,23 +163,25 @@ svg {
 
 /* flex children */
 .flex-login .flex-form .flex-pad {
-	flex: 1 50%;
+  flex: 1 50%;
 }
 .flex-content {
-	flex: 1 100%;
+  flex: 1 100%;
 }
 .flex-inner-content {
-    width: 30%;
-    margin: 0 auto;
+  width: 30%;
+  margin: 0 auto;
 }
 .flex-login {
-    /* order: 1 */
+  /* order: 1 */
 }
+
 .flex-content {
-    align-items: stretch;
-    height: 100vh;
-    width: 100vw;
-    position: relative;
+  align-items: stretch;
+  height: 1000000px;
+  width: 100vw;
+  position: relative;
+  overflow: auto;
 }
 
 /* landing page detail */
