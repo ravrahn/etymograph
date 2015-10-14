@@ -151,17 +151,14 @@ svg {
 
 /* Top level container*/
 .flex-parent {
-	display: flex;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -webkit-flex;
-	flex-direction: row;
-	justify-content: flex-start;
-	flex-wrap: wrap;
-	justify-content: space-between;
-	align-content: space-between;
-	flex-flow: row wrap;
-	padding: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: space-between;
+  flex-flow: row wrap;
+  padding: 10px;
 }
 
 /* flex children */
