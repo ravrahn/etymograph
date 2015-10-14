@@ -108,7 +108,8 @@ def search(query):
     def sort_alpha(tup):
         k, v = tup
         m = SequenceMatcher(None, v['orig_form'], query)
-        return 1/m.quick_ratio()
+        ratio = m.quick_ratio() + 0.0001
+        return 1/ratio
 
     results = sorted(results.items(), key=sort_alpha)
 

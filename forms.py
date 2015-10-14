@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
 from wtforms import StringField, BooleanField
-from wtforms.validators import DataRequired, Regexp
+from wtforms.validators import *
 import re
 
 class SearchForm(Form):
@@ -19,8 +19,8 @@ class LoginForm(Form): # For later
 
 
 class AddWordForm(Form):
-    orig_form = StringField('Word')
-    language = StringField('Language')
+    orig_form = StringField('Word', [InputRequired()])
+    language = StringField('Language', [InputRequired()])
     definition = StringField('Definition')
     ipa_form = StringField('IPA Transcription')
     eng_form = StringField('Latin Transliteration')
