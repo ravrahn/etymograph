@@ -108,7 +108,7 @@ def search(query):
     def sort_alpha(tup):
         k, v = tup
         m = SequenceMatcher(None, v['orig_form'], query)
-        ratio = m.quick_ratio() + 0.0001
+        ratio = m.quick_ratio() + 0.0001 # cheap hack to avoid /0 errors
         return 1/ratio
 
     results = sorted(results.items(), key=sort_alpha)
@@ -117,6 +117,7 @@ def search(query):
 
 
 def add_word(user, word):
+    ''' Add a word to the database, given a user and the word to add '''
     word.get_node(graph)
     user_node = graph.find_one('User', property_key='id', property_value=user['id'])
     creation_time = int(time.time())
@@ -125,7 +126,19 @@ def add_word(user, word):
 
     return word.id
 
+def add_relationship(user, word, root, **kwargs):
+    ''' Add a relationship to the database, given the user and two words
+    Give the relationship arbitrary properties described in **kwargs'''
+    word.get_node(graph)
+    root.get_node(graph)
+    rel = Relationship(word.node, 'root', root.node, **kwargs)
+    graph.create(rel)
+    creation_time = int(time.time())
+    user_node = graph.find_one('User', property_key='id', property_value=user['id'])
+    created = Relationship(user_node, 'created_rel', word.node, time=creation_time, root=root.id)
+    graph.create(created)
 
+    return word.id
 
 def add_user(user):
     user_node = graph.merge_one('User', property_key='id', property_value=user['id'])

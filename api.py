@@ -229,6 +229,18 @@ def add_word():
         abort(403)
 
 
+@app.route('/add/root/<int:word_id>/<int:root_id>/<source>', methods=['GET', 'POST'])
+def add_root(word_id, root_id, source):
+    me = get_user()
+    if me is not None:
+        word = Word(word_id, model.graph)
+        root = Word(root_id, model.graph)
+        ret = model.add_relationship(me, word, root, source=source)
+        return redirect('/{}'.format(word_id))
+    else:
+        abort(403)
+
+
 @app.route('/<int:word_id>')
 def show_graph(word_id):
     try:
