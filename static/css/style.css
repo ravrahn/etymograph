@@ -132,6 +132,10 @@ a {
   text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.10);
 }
 
+a:hover {
+    color: #fff;
+}
+
 ::selection {
   background: #c0bdb6;
 }
@@ -173,6 +177,7 @@ svg {
     justify-content: center;
 }
 .flex-login {
+    /* order: 1 */
 }
 .flex-content {
   text-align: center;
