@@ -43,11 +43,16 @@ $(document).ready(function(){
 	  limit: 5
   });
 
+  /*
+   Steal highlight back; workaround for latest typeahead highlight issue
+   between .tt-suggestion and .tt-cursor. Without this, both highlighting (from
+   keyboard and from mouse) can coexist.
+  */
   $('.twitter-typeahead')
    .on('mouseenter', '.tt-suggestion', function(e){
       $('.tt-cursor', $(this).closest('.tt-menu')).removeClass('tt-cursor');
       $(this).addClass('tt-cursor');
-   })                  
+   })
    .on('mouseleave', '.tt-menu', function(e){
       $('.tt-cursor', $(this).closest('.tt-menu')).removeClass('tt-cursor');
    });
