@@ -61,13 +61,13 @@ html {
 
 h1, h2, h3, h4, h5, p, a {
   color: #2a2b2b;
-  font-family: "Bentham", serif;
+  font-family: "Minion-pro", serif;
   font-style: normal;
   font-weight: normal;
   line-height: 1.4;
   margin-bottom: 0.5rem;
   margin-top: 0.2rem;
-  text-shadow: 0px 7px 7px rgba(0, 0, 0, 0.40);
+  text-shadow: 0px 7px 7px rgba(0, 0, 0, 0.20);
   text-decoration: none;
 }
 
@@ -163,6 +163,7 @@ svg {
 }
 .flex-content {
 	flex: 1 100%;
+    justify-content: center;
 }
 .flex-login {
     /*order: 2;*/
@@ -204,6 +205,43 @@ input[type="text"] {
   -webkit-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.59);
   -moz-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.59);
   box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.59);
+}
+
+/*
+    Alternate text field layouts
+*/
+#upleft-search {
+  color: #c0bdb6;
+  font-family: 'Fira Sans', sans-serif;
+  width: 400px;
+  height: 2em;
+  border: 2px;
+  margin: 2px 0;
+  padding: 0px 5px;
+  background: #2a2b2b;
+  font-size: 1em;
+  outline: none;
+  -webkit-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
+  -moz-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
+  box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
+  text-align: left;
+}
+#reg-form {
+  color: #c0bdb6;
+  font-family: 'Fira Sans', sans-serif;
+  width: 300px;
+  height: 2em;
+  border: 2px;
+  margin: 2px 0;
+  padding: 2px 5px;
+  background: #2a2b2b;
+  font-size: 1em;
+  line-height: 15px;
+  outline: none;
+  -webkit-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
+  -moz-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
+  box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
+  text-align: left;
 }
 
 /*

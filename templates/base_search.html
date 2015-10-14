@@ -4,6 +4,8 @@
         <meta charset="UTF-8">
         <meta http-equiv="refresh" content="300">
         <title>Etymograph | A page!</title>
+        <script src="https://use.typekit.net/tct7oag.js"></script>
+        <script>try{Typekit.load({ async: true });}catch(e){}</script>
         <link rel="stylesheet" href="{{url_for('static', filename='css/style.css') }}">
         <script type=text/javascript src="{{url_for('static', filename='js/jquery-2.1.4.min.js') }}"></script>
         <script type=text/javascript src="{{url_for('static', filename='js/typeahead.bundle.js') }}"></script>
@@ -15,7 +17,7 @@
             <div class="flex-form">
                 <form action="{{ url_for('search') }}" method="GET">
                     <!-- {{ search_form.hidden_tag() }} -->
-                    {{ search_form.q(class_="typeahead") }}
+                    {{ search_form.q(class_="typeahead", id="upleft-search") }}
                 </form>
             </div>
             <div class="user_area flex-login">
