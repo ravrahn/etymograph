@@ -1,15 +1,17 @@
-{% extends 'base_search.html' %}
+{% extends 'base.html' %}
 {% block content %}
 <h2 align="center">Search results for "{{ search_str }}":</h2>
-<ol>
-    {% for id, props in results %}
-    <li>
-        <p class="result">{{ props['orig_form'] }}</p>
-        <a href="/{{ id }}">Show graph</a>
-        <p>{{ props['language'] }}</p>
-    </li>
+    {% if results %}
+        <ol>
+        {% for id, props in results %}
+            <li>
+                <p class="result">{{ props['orig_form'] }}</p>
+                <a href="/{{ id }}">Show graph</a>
+                <p>{{ props['language'] }}</p>
+            </li>
+        {% endfor %}
+        </ol>
     {% else %}
-    <h1 align="center">No results</h1>
-    {% endfor %}
-</ol>
+        <h1 align="center">No results</h1>
+    {% endif %}
 {% endblock %}

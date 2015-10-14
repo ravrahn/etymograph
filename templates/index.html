@@ -1,10 +1,34 @@
-{% extends 'base.html' %}
-{% block content %}
-<div class="flex-center" id="landing">
-<h1 id="title">{{ landing_title }}</h1>
-<form action="{{ url_for('search') }}" method="GET">
-  <!-- {{ form.hidden_tag() }} -->
-  {{ form.q(class_="typeahead") }}
-</form>
-</div>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <!-- <meta http-equiv="refresh" content="300"> -->
+    <title>Etymograph | Welcome!</title>
+    <script src="https://use.typekit.net/tct7oag.js"></script>
+    <script>try{Typekit.load({ async: true });}catch(e){}</script>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css') }}">
+    <script type=text/javascript src="{{url_for('static', filename='js/jquery-2.1.4.min.js') }}"></script>
+    <script type=text/javascript src="{{url_for('static', filename='js/typeahead.bundle.js') }}"></script>
+    <script type=text/javascript src="{{url_for('static', filename='js/etymograph.main.js') }}"></script>
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon-book.ico') }}">
+  </head>
+  <body class="{{ body_class }}">
+      <div class="flex-parent">
+          <!-- if we don't like the title above the search bar for the landing
+               we could put the tytle in this flex pad -->
+          <div class="flex-pad">
+              <a class="logo-text" href={{ url_for('index') }}>
+                  {{ landing_title }}
+              </a>
+          </div>
+          <div class="user_area">{{ user_area()|safe }}</div>
+          <div class="flex-center" id="landing">
+              <!-- <h1 id="title">{{ landing_title }}</h1> -->
+              <form action="{{ url_for('search') }}" method="GET">
+                  <!-- {{ form.hidden_tag() }} -->
+                  {{ form.q(class_="typeahead") }}
+              </form>
+          </div>
+      </div>
+  </body>
+</html>

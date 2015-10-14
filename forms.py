@@ -19,8 +19,8 @@ class LoginForm(Form): # For later
 
 
 class AddWordForm(Form):
-    orig_form = StringField('Word', [InputRequired()])
-    language = StringField('Language', [InputRequired()])
+    orig_form = StringField('Word', validators=[InputRequired()])
+    language = StringField('Language', validators=[InputRequired()])
     definition = StringField('Definition')
     ipa_form = StringField('IPA Transcription')
     eng_form = StringField('Latin Transliteration')

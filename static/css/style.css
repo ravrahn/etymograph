@@ -2,14 +2,6 @@
     Font declarations
 */
 
-@font-face {
-  font-family: 'Bentham';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Bentham'), local('Bentham-Regular'), url(https://fonts.gstatic.com/s/bentham/v6/SVc3EWThHQ2hzWZPpEYHFw.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
-}
-
 /* cyrillic-ext */
 @font-face {
   font-family: 'Fira Sans';
@@ -59,15 +51,24 @@ html {
   box-sizing: border-box;
 }
 
-h1, h2, h3, h4, h5, p, a {
+.logo-text {
+    font-weight: 600; /* 600 has a good commanding presence without being too obnoxious like 800 or too thing like 400*/
+                      /* at least for the upperleft position  ~Ryan Spencer*/
+    font-size: 2.125em;
+    padding-left: 10px;
+    margin-top: -5px;
+    text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, p, a, label {
   color: #2a2b2b;
-  font-family: "Bentham", serif;
+  font-family: "Minion-pro", serif;
   font-style: normal;
-  font-weight: normal;
+  font-weight: 400;
   line-height: 1.4;
   margin-bottom: 0.5rem;
   margin-top: 0.2rem;
-  text-shadow: 0px 7px 7px rgba(0, 0, 0, 0.40);
+  text-shadow: 0px 7px 7px rgba(0, 0, 0, 0.20);
   text-decoration: none;
 }
 
@@ -100,7 +101,6 @@ ol {
 body {
   margin: 0;
   background-color: #e3d0b6;
-  /* background-image: url("../img/bgTile.jpg"); */
   background-repeat: repeat;
 }
 
@@ -115,7 +115,7 @@ p.result {
 }
 
 a {
-  text-decoration: underline;
+  text-decoration: none;
   -webkit-text-decoration-color: #2a2b2b;
   -moz-text-decoration-color: #2a2b2b;
   text-decoration-color: #2a2b2b;
@@ -123,6 +123,10 @@ a {
   -moz-text-decoration-color: #a70200;
   text-decoration-color: #a70200;
   text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.10);
+}
+
+a:hover {
+    color: #fff;
 }
 
 ::selection {
@@ -148,6 +152,9 @@ svg {
 /* Top level container*/
 .flex-parent {
 	display: flex;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
 	flex-direction: row;
 	justify-content: flex-start;
 	flex-wrap: wrap;
@@ -158,18 +165,29 @@ svg {
 }
 
 /* flex children */
-.flex-login .flex-form {
+.flex-login .flex-form .flex-pad {
 	flex: 1 50%;
 }
 .flex-content {
 	flex: 1 100%;
 }
+.flex-inner-content {
+    width: 30%;
+    margin: 0 auto;
+    /*
+    display: block;
+    width: 300px;
+    flex-basis: 30%;
+    text-align: center;
+    */
+}
 .flex-login {
-    /*order: 2;*/
+    /* order: 1 */
 }
 .flex-content {
-  text-align: center;
-	padding-bottom: 200px;
+    justify-content: center;
+    align-items: center;
+  /* padding-bottom: 200px; */
 }
 
 /* landing page detail */
@@ -188,10 +206,16 @@ svg {
   position: relative;
 }
 
+.user_area {
+    padding-right: 10px;
+    margin-top: 7px;
+}
+
 /* Landing form text input */
 input[type="text"] {
   color: #c0bdb6;
   font-family: 'Fira Sans', sans-serif;
+  font-weight: 400;
   background: #2a2b2b;
   width: 500px;
   height: 50px;
@@ -201,9 +225,58 @@ input[type="text"] {
   -webkit-border-radius: 8px;
      -moz-border-radius: 8px;
           border-radius: 8px;
-  -webkit-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.59);
-  -moz-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.59);
-  box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.59);
+  -webkit-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.50);
+  -moz-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.50);
+  box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.50);
+}
+
+/*
+    Alternate text field layouts
+*/
+#upleft-search {
+  color: #c0bdb6;
+  font-family: 'Fira Sans', sans-serif;
+  width: 400px;
+  height: 2em;
+  border: 2px;
+  margin: 2px 0;
+  padding: 0px 5px;
+  background: #2a2b2b;
+  font-size: 1em;
+  outline: none;
+  -webkit-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
+  -moz-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
+  box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
+  text-align: left;
+}
+
+input.reg-form {
+  color: #c0bdb6;
+  font-family: 'Fira Sans', sans-serif;
+  width: 100%;
+  height: 2em;
+  border: 2px;
+  margin: auto;
+  padding: 2px 5px;
+  background: #2a2b2b;
+  font-size: 1em;
+  line-height: 15px;
+  outline: none;
+  -webkit-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
+  -moz-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
+  box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
+  text-align: left;
+}
+
+div.addword-form-title {
+    margin: 5px 0 5px 0;
+    text-align: left;
+}
+.addword-form {
+    padding-bottom: 5px;
+}
+.addword-submit {
+    margin-top: 10px;
 }
 
 /*
