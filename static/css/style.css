@@ -121,9 +121,6 @@ svg {
 .flex-login .flex-form .flex-pad {
   flex: 1 50%;
 }
-.flex-content {
-  flex: 1 100%;
-}
 .flex-inner-content {
   width: 30%;
   margin: 0 auto;
@@ -133,8 +130,9 @@ svg {
 }
 
 .flex-content {
+  flex: 1 100%;
   align-items: stretch;
-  height: 1000000px;
+  height: 100vh;
   width: 100vw;
   position: relative;
   overflow: auto;
@@ -164,7 +162,7 @@ svg {
 /* Landing form text input */
 input[type="text"] {
   color: #c0bdb6;
-  font-family: 'Helvetica Neue', helvetica, sans-serif;
+  font-family: 'Fira Sans 2', helvetica, sans-serif;
   font-weight: 400;
   background: #2a2b2b;
   width: 500px;
@@ -185,7 +183,7 @@ input[type="text"] {
 */
 #upleft-search {
   color: #c0bdb6;
-  font-family: 'Helvetica Neue', helvetica, sans-serif;
+  font-family: 'Fira Sans 2', helvetica, sans-serif;
   width: 400px;
   height: 2em;
   border: 2px;
@@ -202,7 +200,7 @@ input[type="text"] {
 
 input.reg-form {
   color: #c0bdb6;
-  font-family: 'Helvetica Neue', helvetica, sans-serif;
+  font-family: 'Fira Sans 2', helvetica, sans-serif;
   width: 100%;
   height: 2em;
   border: 2px;
@@ -238,7 +236,7 @@ div.addword-form-title {
 .tt-hint,
 .tt-menu {
   color: #c0bdb6;
-  font-family: 'Helvetica Neue', helvetica, sans-serif;
+  font-family: 'Fira Sans 2', helvetica, sans-serif;
   width: 600px;
   margin: 12px 0;
   padding: 8px 0;
