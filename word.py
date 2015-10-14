@@ -12,13 +12,20 @@ class Word:
     latin = set(string.ascii_lowercase + string.ascii_uppercase + string.punctuation)
 
     def __init__(self, *args, **kwargs):
-        if isinstance(args[0], Node):
+        if isinstance(args[0], int) and isinstance(args[1], Graph):
+            self.id = args[0]
+            self.node = None
+        elif isinstance(args[0], Node) and isinstance(args[1], Graph):
             self.props = args[0].properties
-            self.get_node()
+            self.id = None
+            self.node = None
+            self.get_node(args[1])
         elif isinstance(args[0], dict):
             self.props = args[0]
+            self.id = None
             self.node = None
         else:
+            self.id = None
             self.node = None
             self.props = {}
             self.props['orig_form'] = args[0].strip().replace('"', '\\"')
@@ -55,16 +62,18 @@ class Word:
         if self.node is not None:
             return self.node
 
-        cond = '{' + ', '.join(['{}: "{}"'.format(prop, value) for prop, value in self.props.items()]) + '}'
-        query = 'MERGE (n:Word {}) RETURN n, id(n)'
-        query = query.format(cond)
-        results = graph.cypher.execute(query)
+        if self.id is not None:
+            query = 'MATCH (n:Word) WHERE id(n) = {} RETURN n,id(n)'.format(self.id)
+            results = graph.cypher.execute(query)
+        else:
+            cond = '{' + ', '.join(['{}: "{}"'.format(prop, value) for prop, value in self.props.items()]) + '}'
+            query = 'MERGE (n:Word {}) RETURN n, id(n)'
+            query = query.format(cond)
+            results = graph.cypher.execute(query)
 
         if results:
             self.node = results[0][0]
             self.id = results[0][1]
-        # else:
-        #     self.node = Node('Word', name=self.props['name'], lang=self.props['lang'])
 
         return self.node
 
