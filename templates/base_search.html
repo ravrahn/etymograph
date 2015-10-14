@@ -14,8 +14,8 @@
         <div class="flex-parent">
             <div class="flex-form">
                 <form action="{{ url_for('search') }}" method="GET">
-                    <!-- {{ form.hidden_tag() }} -->
-                    {{ form.q(class_="typeahead") }}
+                    <!-- {{ search_form.hidden_tag() }} -->
+                    {{ search_form.q(class_="typeahead") }}
                 </form>
             </div>
             <div class="user_area flex-login">

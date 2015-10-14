@@ -121,13 +121,16 @@ def search(): # ET-5, ET-19
 
     if not request_wants_json():
         search_field = SearchForm()
-        return render_template('results.html',
+        return render_search_template('results.html',
 			form=search_field,
 			search_str=search_str.capitalize(),
 			results=results, body_class="search")
     else:
         response = json.jsonify(results)
         return response
+
+def render_search_template(*args, **kwargs):
+    return render_template(*args, **kwargs, search_form=SearchForm())
 
 
 @app.route('/<int:word_id>/roots')
@@ -198,7 +201,7 @@ def info(word_id): # ET-20
         response.status_code = 200 # OK
     else:
         # Non-JSON request, return info page
-        response = render_template('info.html', word_properties=info, body_class="info", form=SearchForm())
+        response = render_search_template('info.html', word_properties=info, body_class="info")
     return response
 
 
@@ -208,8 +211,9 @@ def add_word():
     me = get_user()
     if me is not None:
         form = AddWordForm(request.form)
-
         if request.method == 'POST':
+            if not form.validate():
+                abort(400)
             # convert the request's ImmutableMultiDict to a dict
             word_data = {}
             for key in request.form:
@@ -220,7 +224,7 @@ def add_word():
             word_id = model.add_word(me, word)
             return redirect('/{}'.format(word_id))
 
-        return render_template('addword.html', form=form)
+        return render_search_template('addword.html', form=form)
     else:
         abort(403)
 
@@ -231,7 +235,7 @@ def show_graph(word_id):
         word_roots = model.roots(word_id)
         word_descs = model.descs(word_id)
         search_field = SearchForm()
-        return render_template('graph.html', form=search_field, roots=word_roots, descs=word_descs, body_class="graph")
+        return render_search_template('graph.html', roots=word_roots, descs=word_descs, body_class="graph")
     except model.WordNotFoundException:
         abort(404)
 
