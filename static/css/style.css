@@ -60,11 +60,6 @@ html {
     text-decoration: none;
 }
 
-.user-pic {
-    height: 25px;
-    width: 25px;
-}
-
 h1, h2, h3, h4, h5, p, a {
   color: #2a2b2b;
   font-family: "Minion-pro", serif;
@@ -157,6 +152,9 @@ svg {
 /* Top level container*/
 .flex-parent {
 	display: flex;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
 	flex-direction: row;
 	justify-content: flex-start;
 	flex-wrap: wrap;
@@ -170,15 +168,23 @@ svg {
 .flex-login .flex-form .flex-pad {
 	flex: 1 50%;
 }
+.flex-pad-third {
+	flex: 1 30%;
+}
 .flex-content {
 	flex: 1 100%;
-    justify-content: center;
+}
+.flex-inner-content {
+    display: block;
+    width: 600px;
+    text-align: center;
 }
 .flex-login {
     /* order: 1 */
 }
 .flex-content {
-  text-align: center;
+    justify-content: center;
+    align-items: center;
   /* padding-bottom: 200px; */
 }
 
@@ -241,7 +247,8 @@ input[type="text"] {
   box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
   text-align: left;
 }
-.reg-form {
+
+input.reg-form {
   color: #c0bdb6;
   font-family: 'Fira Sans', sans-serif;
   width: 300px;
@@ -258,6 +265,18 @@ input[type="text"] {
   box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
   text-align: left;
 }
+
+div.addword-form-title {
+    align-text: left;
+    margin: 5px 0 5px 0;
+}
+.addword-form {
+    padding-bottom: 5px;
+}
+.addword-submit {
+    margin-top: 10px;
+}
+
 /*
   overriden typeahead.js stuff
 */
