@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
+    <svg width="2000" height="2000"></svg>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
 <script src="http://cpettitt.github.io/project/dagre-d3/latest/dagre-d3.min.js"></script>
-<svg width="100%" height="100%"></svg>
 {# This is where the word info goes (js writes the inner HTML) #}
 <div id="infobar"></div>
 <script>
@@ -34,8 +34,7 @@
     // Get data from the templates
     var roots = {{ roots|safe }};
     var descs = {{ descs|safe }};
-    // This is ugly but it's just temporary while we sort out MVC
-    var info = roots;
+    var origin = roots;
 
 
     // convert roots and descs into a single dagre graph
@@ -49,11 +48,11 @@
         })
         .setDefaultEdgeLabel(function() { return {}; });;
 
-    g.setNode(info.id, {id: info.id, labelType:'html', label: makeLabel(info),  class: 'origin'});
+    g.setNode(origin.id, { id: origin.id, labelType:'html', label: makeLabel(origin),  class: 'origin word' });
 
     function addRoot(g, root, parent) {
         var rootLabel = makeLabel(root);
-        g.setNode(root.id, {id: root.id, labelType:'html', label: rootLabel });
+        g.setNode(root.id, { id: root.id, labelType:'html', label: rootLabel, class: 'word' });
         g.setEdge(root.id, parent, { lineInterpolate: "bundle" });
         if (root.roots !== undefined) {
             root.roots.forEach(function(r) { addRoot(g, r, root.id) });
@@ -63,15 +62,21 @@
 
     function addDesc(g, desc, parent) {
         var descLabel = makeLabel(desc);
-        g.setNode(desc.id, {id: desc.id, labelType:'html', label: descLabel });
+        g.setNode(desc.id, { id: desc.id, labelType:'html', label: descLabel, class: 'word' });
         g.setEdge(parent, desc.id);
         if (desc.descs !== undefined) {
             desc.descs.forEach(function(d) { addDesc(g, d, desc.id) });
         }
     }
 
-    roots.roots.forEach(function(r) { addRoot(g, r, info.id) });
-    descs.descs.forEach(function(d) { addDesc(g, d, info.id) });
+    roots.roots.forEach(function(r) { addRoot(g, r, origin.id) });
+    descs.descs.forEach(function(d) { addDesc(g, d, origin.id) });
+
+    g.setNode('add_root', { id: 'add_root', labelType: 'html', label: '+ Add Root', class: 'add add-root' });
+    g.setEdge('add_root', origin.id, { lineInterpolate: "bundle", class: 'add-edge' });
+
+    g.setNode('add_desc', { id: 'add_desc', labelType: 'html', label: '+ Add Descendant', class: 'add add-desc' });
+    g.setEdge(origin.id, 'add_desc', { lineInterpolate: "bundle", class: 'add-edge' });
 
     // Draw the graph
     // Create the renderer
@@ -84,7 +89,7 @@
     // Run the renderer. This is what draws the final graph.
     render(d3.select("svg g"), g);
 
-    $("g.node").click(function() {
+    $("g.word").click(function() {
         if ($('.selected').length !== 0) {
             $(".selected").attr("class", $(".selected").attr("class").replace('selected', ''));
         }
@@ -112,6 +117,28 @@
             info += "<p> Definition: "+ definition;
         }
         $("#infobar").html(info);
+    });
+
+
+    $('g.add-root').click(function() {
+        console.log('adding');
+        // search, somehow
+        var id = 7892; // in lieu of search
+        var source = 'a source';
+        data = { 'word_id': origin.id, 'root_id': id, 'source': source }
+        $.post('{{ url_for("add_root") }}', data, function() {
+            location.reload()
+        });
+    });
+    $('g.add-desc').click(function() {
+        console.log('adding');
+        // search, somehow
+        var id = 7891; // in lieu of search
+        var source = 'a source';
+        data = { 'word_id': id, 'root_id': origin.id, 'source': source }
+        $.post('{{ url_for("add_root") }}', data, function() {
+            location.reload()
+        });
     });
 
     // Resize the top div container for this graph
@@ -156,6 +183,16 @@
 
     .lang-name {
         font-size: 0.75rem;
+    }
+
+    .add-edge path {
+        stroke: #999;
+        fill: #999;
+    }
+
+    .node.add rect {
+        stroke-width: 1px;
+        stroke: #999;
     }
 </style>
 {% endblock %}
