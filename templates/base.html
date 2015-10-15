@@ -17,7 +17,7 @@
             <div class="flex-form">
                 <form action="{{ url_for('search') }}" method="GET">
                     <!-- {{ search_form.hidden_tag() }} -->
-                    {{ search_form.q(class_="typeahead", id="upleft-search") }}
+                    {{ search_form.q(class_="typeahead upleft-search") }}
                 </form>
             </div>
             <div class="user_area flex-login">
@@ -28,4 +28,11 @@
             </div>
         </div>
     </body>
+<script>
+/*
+$(document).ready( function () {
+    $('#search_field').addClass('upleft-search');
+});
+*/
+</script>
 </html>
