@@ -213,12 +213,9 @@ def add_word():
         form = AddWordForm(request.form)
         if request.method == 'POST':
             if not form.validate():
+                print(form.data)
                 abort(400)
-            # convert the request's ImmutableMultiDict to a dict
-            word_data = {}
-            for key in request.form:
-                if key != 'csrf_token':
-                    word_data[key] = request.form[key]
+            word_data = form.data
             # add the word to the database
             word = Word(word_data)
             word_id = model.add_word(me, word)
@@ -229,10 +226,13 @@ def add_word():
         abort(403)
 
 
-@app.route('/add/root/<int:word_id>/<int:root_id>/<source>', methods=['GET', 'POST'])
-def add_root(word_id, root_id, source):
+@app.route('/add/root', methods=['POST'])
+def add_root():
     me = get_user()
     if me is not None:
+        word_id = int(request.form['word_id'])
+        root_id = int(request.form['root_id'])
+        source = request.form['source']
         word = Word(word_id, model.graph)
         root = Word(root_id, model.graph)
         ret = model.add_relationship(me, word, root, source=source)
