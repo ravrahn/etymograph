@@ -1,17 +1,3 @@
-var substringMatcher = function(strs) {
-  return function findMatches(q, cb) {
-    var matches, substringRegex;
-    matches = [];
-    substrRegex = new RegExp('^' + q, 'i');
-    $.each(strs, function(i, str) {
-      if (substrRegex.test(str)) {
-        matches.push(str);
-      }
-    });
-    cb(matches);
-  };
-};
-
 /* start jQuery */
 $(document).ready(function(){
   // Because Jinja2 does not make this easy
@@ -48,6 +34,8 @@ $(document).ready(function(){
    Steal highlight back; workaround for latest typeahead highlight issue
    between .tt-suggestion and .tt-cursor. Without this, both highlighting (from
    keyboard and from mouse) can coexist.
+
+   DOESN'T WORK WHEN KEYBOARD STEALS FOCUS, APPARENTLY
   */
   $('.twitter-typeahead')
    .on('mouseenter', '.tt-suggestion', function(e){
