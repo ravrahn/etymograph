@@ -238,8 +238,8 @@ def add_root():
         root = Word(root_id, model.graph)
 
         model.add_relationship(me, word, root, source=source)
-        
-        return redirect('/{}'.format(word_id))
+        next_url = request.args.get('next') or '/{}'.format(word_id)
+        return redirect(next_url)
     else:
         abort(403)
 

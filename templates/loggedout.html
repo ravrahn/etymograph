@@ -1,2 +1,2 @@
-<a href="{{ url_for('login') }}">log in</a>
+<a href="{{ url_for('login', next=request.path) }}">log in</a>
 <script>var loggedIn = false;</script>

@@ -11,7 +11,7 @@
 <script src="{{ url_for('static', filename='js/graph.js') }}"></script>
 <script>
 
-var form = '<form class="add-root" action="{{ url_for("add_root") }}" method="POST"> \
+var form = '<form class="add-root" action="{{ url_for("add_root", next=request.path) }}" method="POST"> \
     {{ form.hidden_tag() }} \
     {% for field in form %} \
     {% if field.id != "csrf_token" %} \
