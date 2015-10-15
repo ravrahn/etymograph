@@ -123,7 +123,7 @@
     $('g.add-root').click(function() {
         console.log('adding');
         // search, somehow
-        var id = 600; // in lieu of search
+        var id = 7892; // in lieu of search
         var source = 'a source';
         data = { 'word_id': origin.id, 'root_id': id, 'source': source }
         $.post('{{ url_for("add_root") }}', data, function() {
@@ -133,7 +133,7 @@
     $('g.add-desc').click(function() {
         console.log('adding');
         // search, somehow
-        var id = 600; // in lieu of search
+        var id = 7891; // in lieu of search
         var source = 'a source';
         data = { 'word_id': id, 'root_id': origin.id, 'source': source }
         $.post('{{ url_for("add_root") }}', data, function() {
