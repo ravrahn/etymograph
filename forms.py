@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import StringField, BooleanField
+from wtforms import StringField, BooleanField, IntegerField
 from wtforms.validators import *
 import re
 
@@ -25,3 +25,7 @@ class AddWordForm(Form):
     ipa_form = StringField('IPA Transcription')
     eng_form = StringField('Latin Transliteration')
 
+class AddRootForm(Form):
+    word_id = IntegerField(label='Desc ID')
+    root_id = IntegerField(label='Root ID')
+    source = StringField('Source')

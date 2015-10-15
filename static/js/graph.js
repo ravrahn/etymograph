@@ -42,7 +42,7 @@ function addDesc(g, desc, parent) {
     }
 }
 
-function makeGraph(roots, descs) {
+function makeGraph(roots, descs, form) {
     var origin = roots;
 
     // convert roots and descs into a single dagre graph
@@ -113,23 +113,27 @@ function makeGraph(roots, descs) {
         $('g.add-root').click(function() {
             // search, somehow
             var id = 7892; // in lieu of search
-            var source = 'a source';
-            data = { 'word_id': origin.id, 'root_id': id, 'source': source }
-            $.post('{{ url_for("add_root") }}', data, function() {
-                location.reload()
-            });
+            $('body').append(form);
+            $('form.add-root #word_id').val(origin.id);
+            $('form.add-root #root_id').val(id);
+            // data = { 'word_id': origin.id, 'root_id': id, 'source': source }
+            // $.post('{{ url_for("add_root") }}', data, function() {
+            //     location.reload()
+            // });
         });
         $('g.add-desc').click(function() {
             // search, somehow
             var id = 7891; // in lieu of search
-            var source = 'a source';
-            data = { 'word_id': id, 'root_id': origin.id, 'source': source }
-            $.post('{{ url_for("add_root") }}', data, function() {
-                location.reload()
-            });
+            $('body').append(form);
+            $('form.add-root #word_id').val(id);
+            $('form.add-root #root_id').val(origin.id);
+            // data = { 'word_id': id, 'root_id': origin.id, 'source': source }
+            // $.post('{{ url_for("add_root") }}', data, function() {
+            //     location.reload()
+            // });
         });
     }
-    
+
     // Resize the top div container for this graph
     var gtag, gh, vw, pad;
     gtag = $('g');

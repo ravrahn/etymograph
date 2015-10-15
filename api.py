@@ -213,7 +213,6 @@ def add_word():
         form = AddWordForm(request.form)
         if request.method == 'POST':
             if not form.validate():
-                print(form.data)
                 abort(400)
             word_data = form.data
             # add the word to the database
@@ -230,12 +229,16 @@ def add_word():
 def add_root():
     me = get_user()
     if me is not None:
-        word_id = int(request.form['word_id'])
-        root_id = int(request.form['root_id'])
-        source = request.form['source']
+        form = AddRootForm(request.form)
+        word_id = form.word_id.data
+        root_id = form.root_id.data
+        source = form.source.data
+
         word = Word(word_id, model.graph)
         root = Word(root_id, model.graph)
-        ret = model.add_relationship(me, word, root, source=source)
+
+        model.add_relationship(me, word, root, source=source)
+        
         return redirect('/{}'.format(word_id))
     else:
         abort(403)
@@ -247,7 +250,7 @@ def show_graph(word_id):
         word_roots = model.roots(word_id)
         word_descs = model.descs(word_id)
         search_field = SearchForm()
-        return render_search_template('graph.html', roots=word_roots, descs=word_descs, body_class="graph")
+        return render_search_template('graph.html', roots=word_roots, descs=word_descs, form=AddRootForm(), body_class="graph")
     except model.WordNotFoundException:
         abort(404)
 
