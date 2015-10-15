@@ -1,0 +1,39 @@
+
+g.origin rect {
+    stroke: #000;
+}
+
+.node rect {
+    stroke: #999;
+    fill: #fff;
+    stroke-width: 1.5px;
+}
+
+.selected rect {
+    stroke: #000;
+    fill: #fff;
+    stroke-width: 3px;
+}
+
+.edgePath path {
+    stroke: #333;
+    stroke-width: 1.5px;
+}
+
+.lang-name {
+    font-size: 0.75rem;
+}
+
+.add-edge path {
+    stroke: #999;
+    fill: #999;
+}
+
+.node.add rect {
+    stroke-width: 1px;
+    stroke: #999;
+}
+
+.node.add:hover rect {
+    fill: #eee;
+}

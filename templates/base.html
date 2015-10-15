@@ -11,6 +11,7 @@
         <script type=text/javascript src="{{url_for('static', filename='js/typeahead.bundle.js') }}"></script>
         <script type=text/javascript src="{{url_for('static', filename='js/etymograph.main.js') }}"></script>
         <link rel="icon" href="{{ url_for('static', filename='img/favicon-book.ico') }}">
+        {% block head %}{% endblock %}
     </head>
     <body class="{{ body_class }}">
         <div class="flex-parent">
