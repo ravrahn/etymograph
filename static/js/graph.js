@@ -129,16 +129,15 @@ function makeGraph(roots, descs) {
             });
         });
     }
+    
     // Resize the top div container for this graph
-    $(document).ready( function () {
-        var gtag, gh, vw, pad;
-        gtag = $('g');
-        gh = gtag[0].getBBox().height;
-        gw = gtag[0].getBBox().width;
-        pad = 30; //gh and gw are actually less than what is reported in developer tools so we pad them.
-        gh += pad;
-        gw += pad;
-        $('.flex-content').height(gh);
-        $('.flex-content').width(gw);
-    });
+    var gtag, gh, vw, pad;
+    gtag = $('g');
+    gh = gtag[0].getBBox().height;
+    gw = gtag[0].getBBox().width;
+    pad = 30; //gh and gw are actually less than what is reported in developer tools so we pad them.
+    gh += pad;
+    gw += pad;
+    $('.flex-content').height(gh);
+    $('.flex-content').width(gw);
 }
