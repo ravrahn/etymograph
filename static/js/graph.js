@@ -92,21 +92,20 @@ function makeGraph(roots, descs, form) {
         var ipa_form = $("div#"+ id +".data").attr("data-ipa_form");
         var definition = $("div#"+id+".data").attr("data-definition");
         // Construct the html to go inside the info sidebar
-        // TODO ugly, not visible without scrolling, not in a sidebar
-        var info = "<p>" + orig_form;
+        var info = "<h2>" + orig_form + '</h2>';
         if (eng_form !== undefined){
-            info += "<p> English Transliteration: " + eng_form;
+            info += "<p> English Transliteration: " + eng_form + '</p>';
         }
         if (ipa_form !== undefined){
-            info += "<p> Pronounciation: " + ipa_form;
+            info += "<p> Pronounciation: " + ipa_form + '</p>';
         }
         if (lang_name !== undefined){
-            info += "<p> Language: "+ lang_name;
+            info += "<p> Language: "+ lang_name + '</p>';
         }
         if (definition !== undefined){
-            info += "<p> Definition: "+ definition;
+            info += "<p> Definition: "+ definition + '</p>';
         }
-        $("#infobar").html(info);
+        $(".infobar").html(info);
     });
 
     if (loggedIn) {

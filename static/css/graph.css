@@ -37,3 +37,14 @@ g.origin rect {
 .node.add:hover rect {
     fill: #eee;
 }
+
+.infobar {
+    position: fixed;
+    right: 0;
+    top: 4rem;
+    background-color: rgba(227, 208, 182, 0.75);
+    height: 100%;
+    width: 12rem;
+    padding: 1rem;
+    font-size: 0.8rem;
+}

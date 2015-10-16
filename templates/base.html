@@ -15,14 +15,17 @@
     </head>
     <body class="{{ body_class }}">
         <div class="flex-parent">
-            <div class="flex-form">
-                <form action="{{ url_for('search') }}" method="GET">
-                    <!-- {{ search_form.hidden_tag() }} -->
-                    {{ search_form.q(class_="typeahead upleft-search") }}
-                </form>
-            </div>
-            <div class="user_area flex-login">
-                {{ user_area()|safe }}
+            <div class="nav">
+                <h1 class="nav-title"><a href="{{ url_for('index') }}">Etymograph</a></h1>
+                <div class="nav-search-form">
+                    <form action="{{ url_for('search') }}" method="GET">
+                        <!-- {{ search_form.hidden_tag() }} -->
+                        {{ search_form.q(class_="typeahead upleft-search") }}
+                    </form>
+                </div>
+                <div class="user-area">
+                    {{ user_area()|safe }}
+                </div>
             </div>
             <div class="flex-content">
                 {% block content %}{% endblock %}
