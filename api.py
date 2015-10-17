@@ -234,10 +234,16 @@ def add_root():
         root_id = form.root_id.data
         source = form.source.data
 
-        word = Word(word_id, model.graph)
-        root = Word(root_id, model.graph)
+        try:
+            word = Word(word_id, model.graph)
+            root = Word(root_id, model.graph)
+        except AttributeError:
+            abort(400)
 
-        model.add_relationship(me, word, root, source=source)
+        try:
+            model.add_relationship(me, word, root, source=source)
+        except AttributeError:
+            abort(400)
         next_url = request.args.get('next') or '/{}'.format(word_id)
         return redirect(next_url)
     else:
