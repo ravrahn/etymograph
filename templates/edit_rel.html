@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% from "_formhelpers.html" import render_field %}
+{% block content %}
+<div class="flex-inner-content">
+    <h2 align="center">Edit Relationship</h2>
+    <h3 align="center">TODO -> TODO</h3>
+    <h3 align="center">previous source: TODO</h3>
+    <form action="{{ my_URL }}" method="POST">
+        {{ form.hidden_tag() }}
+        {% for field in form %}
+        {% if field.id != "csrf_token" %}
+            <div class="editrel-form-title">{{ field.label(class_="addword-form-title") }}</div>
+            <div class="editrel-form">{{ field(class_="reg-form") }}</div>
+        {% endif %}
+        {% endfor %}
+        <button type="submit" class="editrel-submit">Submit</form>
+    </form>
+</div>
+{% endblock %}

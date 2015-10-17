@@ -243,6 +243,30 @@ def add_root():
     else:
         abort(403)
 
+@app.route('/edit/rel/<int:root_id>/<int:desc_id>', methods=['GET','POST'])
+def edit_rel(root_id, desc_id):
+    me = get_user()
+    if me is not None:
+        form = EditRelForm(request.form)
+        #get dicts of info about this relationship
+        try:
+            (root, rel, desc) = model.get_rel(root_id, desc_id)
+        except model.RelNotFoundException:
+            abort(404)
+        if request.method == 'POST':
+            if not form.validate():
+                abort(400)
+            source = form.source.data
+            # edit the relationship the database TODO
+            user = get_user()
+            model.edit_rel_source(user, root_id, desc_id, source)
+            next_url = '/{}'.format(root_id)
+            return redirect(next_url)
+
+        my_URL = url_for('edit_rel', root_id=root_id, desc_id=desc_id)
+        return render_search_template('edit_rel.html', form=form, root=root, rel=rel, desc=desc, my_URL=my_URL)
+    else:
+        abort(403)
 
 @app.route('/<int:word_id>')
 def show_graph(word_id):

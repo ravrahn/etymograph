@@ -29,3 +29,6 @@ class AddRootForm(Form):
     word_id = IntegerField(label='Desc ID')
     root_id = IntegerField(label='Root ID')
     source = StringField('Source')
+
+class EditRelForm(Form):
+    source = StringField('Source', validators=[InputRequired()])

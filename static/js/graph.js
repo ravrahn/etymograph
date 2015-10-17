@@ -23,10 +23,16 @@ function hiddenInfo(word){
     return info;
 }
 
+function makeEdgeLabel(root, desc) {
+    //TODO
+    return "";
+}
+
 function addRoot(g, root, parent) {
     var rootLabel = makeLabel(root);
     g.setNode(root.id, { id: root.id, labelType:'html', label: rootLabel, class: 'word' });
-    g.setEdge(root.id, parent, { lineInterpolate: "bundle" });
+    var edgeLabel = makeEdgeLabel(root, parent);
+    g.setEdge(root.id, parent, { lineInterpolate: "bundle", labelType:'html', label: edgeLabel });
     if (root.roots !== undefined) {
         root.roots.forEach(function(r) { addRoot(g, r, root.id) });
     }

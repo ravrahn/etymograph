@@ -15,6 +15,12 @@ class WordNotFoundException(Exception):
         self.msg = msg
     def __str__(self):
         return self.msg
+        
+class RelNotFoundException(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+    def __str__(self):
+        return self.msg
 
 def roots(word_id, depth=None):
     '''
@@ -73,11 +79,7 @@ def info(word_id):
     This function should return a dictionary of information about a word
     given a word's id.
     '''
-    try:
-        node = graph.node(word_id)
-        node.pull();
-    except GraphError:
-        raise WordNotFoundException("Word with ID {} not found".format(word_id))
+    node = get_node_safe(word_id)
     info = node.properties
     # Adds a human-readable name to the information
     if 'language' in info:
@@ -86,6 +88,40 @@ def info(word_id):
         except KeyError:
             pass
     return info
+
+def get_rel(root_id, desc_id):
+    '''
+    This function should return info on a relationship
+    between the nodes of given IDs, if it exists.
+    Returns dicts of info on the root, the relationship and the desc, 
+    in that order
+    '''
+    # get root
+    root = get_node_safe(root_id)
+    root_info = root.properties
+    # Adds a human-readable name to the information
+    if 'language' in root_info:
+        try:
+            root_info['lang_name'] = lang_decode(root_info['language'])
+        except KeyError:
+            pass
+    # get desc
+    desc = get_node_safe(desc_id)
+    desc_info = desc.properties
+    # Adds a human-readable name to the information
+    if 'language' in desc_info:
+        try:
+            desc_info['lang_name'] = lang_decode(desc_info['language'])
+        except KeyError:
+            pass       
+    # note that the root relationship goes from desc -> root
+    rel = graph.match_one(start_node=desc, rel_type="root", end_node=root)
+    if(rel == None):
+        raise RelNotFoundException("The word with ID {} is not a root of the word with ID {}".format(root_id, desc_id))
+    rel_info = rel.properties
+    
+    return (root_info, rel_info, desc_info)
+
 
 def search(query):
     '''
@@ -140,9 +176,27 @@ def add_relationship(user, word, root, **kwargs):
 
     return word.id
 
-def add_user(user):
-    user_node = graph.merge_one('User', property_key='id', property_value=user['id'])
-    user_node.push()
+#TODO refactor so that this can be used to edit arbitrary rel properties
+def edit_rel_source(user, root_id, desc_id, new_source):
+    ''' changes the source of a relationship in the database'''
+    root = get_node_safe(root_id)
+    desc = get_node_safe(desc_id)
+    # note that the root relationship goes from desc -> root
+    rel = graph.match_one(start_node=desc, rel_type="root", end_node=root)
+    if(rel == None):
+        raise RelNotFoundException("The word with ID {} is not a root of the word with ID {}".format(root_id, desc_id))
+    rel['source'] = new_source
+    # could add info about the editing user here
+    rel.push()
+    
+    
+def get_node_safe(node_id):
+    try:
+        node = graph.node(node_id)
+        node.pull()
+        return node
+    except GraphError:
+        raise WordNotFoundException("Word with ID {} not found".format(root_id))
 
 def lang_decode(code):
     '''
