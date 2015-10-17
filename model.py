@@ -176,6 +176,10 @@ def add_relationship(user, word, root, **kwargs):
 
     return word.id
 
+def add_user(user):
+    user_node = graph.merge_one('User', property_key='id', property_value=user['id'])
+    user_node.push()
+
 #TODO refactor so that this can be used to edit arbitrary rel properties
 def edit_rel_source(user, root_id, desc_id, new_source):
     ''' changes the source of a relationship in the database'''
