@@ -3,8 +3,9 @@
 {% block content %}
 <div class="flex-inner-content">
     <h2 align="center">Edit Relationship</h2>
-    <h3 align="center">TODO -> TODO</h3>
-    <h3 align="center">previous source: TODO</h3>
+    {# TODO: replace this with a small graph rendering #}
+    <h3 align="center">{{root['orig_form']}} -> {{desc['orig_form']}}</h3>
+    <h3 align="center">Previous source: {{rel['source']}}</h3>
     <form action="{{ my_URL }}" method="POST">
         {{ form.hidden_tag() }}
         {% for field in form %}
