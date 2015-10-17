@@ -130,7 +130,7 @@ def search(): # ET-5, ET-19
         return response
 
 def render_search_template(*args, **kwargs):
-    return render_template(*args, **kwargs, search_form=SearchForm())
+    return render_template(*args, search_form=SearchForm(), **kwargs)
 
 
 @app.route('/<int:word_id>/roots')
