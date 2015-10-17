@@ -23,15 +23,18 @@ function hiddenInfo(word){
     return info;
 }
 
-function makeEdgeLabel(root, desc) {
-    //TODO
-    return "";
+function makeEdgeLabel(rootID, descID) {
+    if(loggedIn) {
+        return '<a href="/edit/rel/'+rootID+'/'+descID+'">more...</a>';
+    } else {
+        return "";
+    }
 }
 
 function addRoot(g, root, parent) {
     var rootLabel = makeLabel(root);
     g.setNode(root.id, { id: root.id, labelType:'html', label: rootLabel, class: 'word' });
-    var edgeLabel = makeEdgeLabel(root, parent);
+    var edgeLabel = makeEdgeLabel(root.id, parent);
     g.setEdge(root.id, parent, { lineInterpolate: "bundle", labelType:'html', label: edgeLabel });
     if (root.roots !== undefined) {
         root.roots.forEach(function(r) { addRoot(g, r, root.id) });
@@ -42,7 +45,8 @@ function addRoot(g, root, parent) {
 function addDesc(g, desc, parent) {
     var descLabel = makeLabel(desc);
     g.setNode(desc.id, { id: desc.id, labelType:'html', label: descLabel, class: 'word' });
-    g.setEdge(parent, desc.id);
+    var edgeLabel = makeEdgeLabel(parent, desc.id);
+    g.setEdge(parent, desc.id, { lineInterpolate: "bundle", labelType:'html', label: edgeLabel });
     if (desc.descs !== undefined) {
         desc.descs.forEach(function(d) { addDesc(g, d, desc.id) });
     }
