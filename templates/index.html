@@ -18,9 +18,7 @@
 			  <h1 class="nav-title"><a href="/">Etymograph</a></h1>
 			  <div class="user-area">
 
-				  <a href=/><img src="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xla1/v/t1.0-1/p50x50/10455440_570294629180_2034062049169725382_n.jpg?oh=ea9cbbcbb0b0b35d40070b374327d3a2&amp;oe=568E6C33&amp;__gda__=1452086838_f31c0d619ac7c79d8a8846db447ad210" height="25px" width="25px"><span>Ryan James Spencer</span></a>
-				  <a href="/logout?next=%2Fsearch">log out</a>
-				  <a href="/profile/delete?next=%2Fsearch">delete profile</a>
+				  {{ user_area()|safe }}
 				  <script>var loggedIn = true;</script>
 			  </div>
 		  </div>
