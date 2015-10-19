@@ -108,7 +108,7 @@ def request_wants_json():
 @app.route('/')
 def index():
     search_field = SearchForm()
-    return render_template('index.html', form=search_field, landing_title="Etymograph", body_class="index")
+    return render_no_search_template('index.html', form=search_field, landing_title="Etymograph", body_class="index")
 
 @app.route('/search')
 def search(): # ET-5, ET-19
@@ -130,8 +130,10 @@ def search(): # ET-5, ET-19
         return response
 
 def render_search_template(*args, **kwargs):
-    return render_template(*args, search_form=SearchForm(), **kwargs)
+    return render_template(*args, search_form=SearchForm(), no_form=False, **kwargs)
 
+def render_no_search_template(*args, **kwargs):
+    return render_template(*args, search_form=SearchForm(), no_form=True, **kwargs)
 
 @app.route('/<int:word_id>/roots')
 def roots(word_id): # ET-6

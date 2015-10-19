@@ -1,34 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <!-- <meta http-equiv="refresh" content="300"> -->
-    <title>Etymograph | Welcome!</title>
-    <script src="https://use.typekit.net/tct7oag.js"></script>
-    <script>try{Typekit.load({ async: true });}catch(e){}</script>
-    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css') }}">
-    <script type=text/javascript src="{{url_for('static', filename='js/jquery-2.1.4.min.js') }}"></script>
-    <script type=text/javascript src="{{url_for('static', filename='js/typeahead.bundle.js') }}"></script>
-    <script type=text/javascript src="{{url_for('static', filename='js/etymograph.main.js') }}"></script>
-    <link rel="icon" href="{{ url_for('static', filename='img/favicon-book.ico') }}">
-  </head>
-  <body class="{{ body_class }}">
-      <div class="flex-parent">
-		  <div class="nav">
-			  <h1 class="nav-title"><a href="/">Etymograph</a></h1>
-			  <div class="user-area">
-
-				  {{ user_area()|safe }}
-				  <script>var loggedIn = true;</script>
-			  </div>
-		  </div>
-          <div class="flex-center" id="landing">
-              <!-- <h1 id="title">{{ landing_title }}</h1> -->
-              <form action="{{ url_for('search') }}" method="GET">
-                  <!-- {{ form.hidden_tag() }} -->
-                  {{ form.q(class_="typeahead") }}
-              </form>
-          </div>
-      </div>
-  </body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+<div class="flex-center" id="landing">
+    <!-- <h1 id="title">{{ landing_title }}</h1> -->
+    <form action="{{ url_for('search') }}" method="GET">
+        <!-- {{ form.hidden_tag() }} -->
+        {{ form.q(class_="typeahead") }}
+    </form>
+</div>
+{% endblock %}
