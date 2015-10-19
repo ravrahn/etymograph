@@ -25,7 +25,7 @@ facebook = oauth.remote_app('facebook',
 app = Flask(__name__)
 app.config.from_object('config')
 app.config['SERVER_NAME'] = 'etymograph.com'
-# app.wsgi_app = ReverseProxied(app.wsgi_app)
+app.wsgi_app = ReverseProxied(app.wsgi_app)
 
 
 
