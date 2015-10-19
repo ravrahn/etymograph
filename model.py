@@ -4,7 +4,7 @@ import json, time
 from difflib import SequenceMatcher
 from flask import abort
 
-graph = Graph('http://etymograph.com:7474/db/data')
+graph = Graph('http://db.etymograph.com/db/data')
 # Language codes from data from www.sil.org/iso639-3/
 lang_code_file = 'lang_names.json'
 with open(lang_code_file, 'r') as f:
