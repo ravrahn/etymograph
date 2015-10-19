@@ -9,6 +9,7 @@ from forms import *
 import model
 import collections
 from flask_oauthlib.client import OAuth, OAuthException
+from reverse_proxy import *
 
 oauth = OAuth()
 facebook = oauth.remote_app('facebook',
@@ -24,6 +25,8 @@ facebook = oauth.remote_app('facebook',
 app = Flask(__name__)
 app.config.from_object('config')
 app.config['SERVER_NAME'] = 'localhost:5000'
+app.wsgi_app = ReverseProxied(app.wsgi_app)
+
 
 
 @facebook.tokengetter
