@@ -25,10 +25,10 @@ facebook = oauth.remote_app('facebook',
 app = Flask(__name__)
 app.config.from_object('config')
 # if you want to deploy the server, comment this line out:
-app.config['SERVER_NAME'] = 'localhost:5000'
+# app.config['SERVER_NAME'] = 'localhost:5000'
 # and uncomment these two:
-# app.config['SERVER_NAME'] = 'etymograph.com'
-# app.wsgi_app = ReverseProxied(app.wsgi_app)
+app.config['SERVER_NAME'] = 'etymograph.com'
+app.wsgi_app = ReverseProxied(app.wsgi_app)
 # and push it
 
 
