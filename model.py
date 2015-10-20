@@ -46,7 +46,7 @@ def roots(word_id, depth=None):
             new_depth = None
         word_info['roots'].append(roots(node_id, depth=new_depth))
 
-    return word_info
+    return dict(word_info)
 
 def descs(word_id, depth=None):
     '''
@@ -72,7 +72,7 @@ def descs(word_id, depth=None):
             new_depth = None
         word_info['descs'].append(descs(node_id, depth=new_depth))
 
-    return word_info
+    return dict(word_info)
 
 def info(word_id):
     '''
@@ -87,7 +87,7 @@ def info(word_id):
             info['lang_name'] = lang_decode(info['language'])
         except KeyError:
             pass
-    return info
+    return dict(info)
 
 def get_rel(root_id, desc_id):
     '''
@@ -132,22 +132,32 @@ def search(query):
     if not query:
         abort(400)
 
-    cypher_query = "MATCH (n) WHERE n.orig_form =~ {sub_str} RETURN n,id(n)"
+    cypher_query = "MATCH (n) WHERE n.orig_form =~ {sub_str} RETURN id(n)"
     params = { 'sub_str': '(?i).*{}.*'.format(query) }
 
-    results = {}
+    results = []
     try:
-        results = {uid: node.properties for (node, uid) in graph.cypher.execute(cypher_query, params)}
+        for uid in graph.cypher.execute(cypher_query, params):
+            uid = uid[0]
+            res_roots = roots(uid, depth=1)['roots']
+            res_descs = descs(uid, depth=1)['descs']
+            result = info(uid)
+            result['id'] = uid
+            if res_roots != []:
+                result['root'] = (res_roots[0]['orig_form'], res_roots[0]['lang_name'])
+            if res_descs != []:
+                result['desc'] = (res_descs[0]['orig_form'], res_descs[0]['lang_name'])
+            print(result)
+            results.append(result)
     except GraphError:
         return [(-1, {'error': 'Invalid request'})]
 
-    def sort_alpha(tup):
-        k, v = tup
-        m = SequenceMatcher(None, v['orig_form'], query)
+    def sort_alpha(word):
+        m = SequenceMatcher(None, word['orig_form'], query)
         ratio = m.quick_ratio() + 0.0001 # cheap hack to avoid /0 errors
         return 1/ratio
 
-    results = sorted(results.items(), key=sort_alpha)
+    results = sorted(results, key=sort_alpha)
 
     return results
 
