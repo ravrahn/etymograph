@@ -1,18 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2 align="center">Search results for "{{ search_str }}":</h2>
+<h2>Search results for "{{ search_str }}":</h2>
     {% if results %}
         <ol>
         {% for result in results %}
             <li>
-                <p class="result">{{ result['root'] }} -> {{ result['orig_form'] }} -> {{ result['desc'] }}</p>
-                <a href="/{{ result['id'] }}">Show graph</a>
+                <a class="result" href="/{{ result['id'] }}">{{ result['orig_form'] }}</a>
                 <p>{{ result['lang_name'] }}</p>
             </li>
         {% endfor %}
         </ol>
     {% else %}
-        <h1 align="center">No results</h1>
+        <h2>No results</h2>
     {% endif %}
 <script>
 /*$('#upleft-search.typeahead').hide();*/
