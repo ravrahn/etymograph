@@ -298,7 +298,7 @@ def show_graph(word_id):
         if me is not None:
             authorized = True
         return render_search_template('graph.html', roots=word_roots, descs=word_descs,
-                form=AddRootForm(), body_class="graph", authorized=authorized)
+                form=AddRootForm(), body_class="graph")
     except model.WordNotFoundException:
         abort(404)
 
