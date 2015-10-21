@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 from py2neo import *
 from word import *
 from flask import Flask, request, json, render_template, redirect, url_for, abort, session, flash
@@ -214,7 +214,7 @@ def info(word_id): # ET-20
         authorized = False
         if me is not None:
             authorized = True
-        response = render_search_template('info.html', word_properties=info, body_class="info", word_id=word_id, authorized=authorized)
+        response = render_search_template('info.html',word_properties=info, body_class="info", word_id=word_id, authorized=authorized)
     return response
 
 
@@ -293,7 +293,12 @@ def show_graph(word_id):
         word_roots = model.roots(word_id)
         word_descs = model.descs(word_id)
         search_field = SearchForm()
-        return render_search_template('graph.html', roots=word_roots, descs=word_descs, form=AddRootForm(), body_class="graph")
+        authorized = False
+        me = get_user()
+        if me is not None:
+            authorized = True
+        return render_search_template('graph.html', roots=word_roots, descs=word_descs,
+                form=AddRootForm(), body_class="graph", authorized=authorized)
     except model.WordNotFoundException:
         abort(404)
 
