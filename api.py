@@ -210,7 +210,7 @@ def info(word_id): # ET-20
         response.status_code = 200 # OK
     else:
         # Non-JSON request, return info page
-        response = render_search_template('info.html', word_properties=info, body_class="info")
+        response = render_search_template('info.html', word_properties=info, body_class="info", word_id=word_id)
     return response
 
 
@@ -293,12 +293,17 @@ def show_graph(word_id):
     except model.WordNotFoundException:
         abort(404)
 
+
 @app.route('/<int:word_id>/flag')
-def flag_word(word_id):
-    try:
-        pass
-    except modelWordNotFoundException:
-        abort(404)
+def flag(word_id):
+    if not word_id:
+        abort(404) # cannot flag non-existent words.
+    me = get_user()
+    if me is not None:
+        try:
+            return redirect('/index.html')
+        except modelWordNotFoundException:
+            abort(404)
 
 
 if __name__ == '__main__':
