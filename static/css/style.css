@@ -60,6 +60,12 @@ body.index {
     overflow: hidden;
 }
 
+a.login-text {
+    text-decoration: none;
+    font-family: 'Fira Sans 2', helvetica, sans-serif;
+    font-size: 0.75em;
+}
+
 a {
     text-decoration: underline;
     -webkit-text-decoration-color: #2a2b2b;
