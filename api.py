@@ -294,13 +294,16 @@ def show_graph(word_id):
         abort(404)
 
 
-@app.route('/<int:word_id>/flag')
+@app.route('/flag/<word_id>')
 def flag(word_id):
     if not word_id:
         abort(404) # cannot flag non-existent words.
     me = get_user()
     if me is not None:
         try:
+            model.flag(me['id'], word_id)
+            #return_url = request.args.get('last_url')
+            #return redirect(return_url)
             return redirect('/index.html')
         except modelWordNotFoundException:
             abort(404)

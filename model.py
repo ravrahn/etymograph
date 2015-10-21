@@ -15,7 +15,7 @@ class WordNotFoundException(Exception):
         self.msg = msg
     def __str__(self):
         return self.msg
-        
+
 class RelNotFoundException(Exception):
     def __init__(self, msg):
         self.msg = msg
@@ -93,7 +93,7 @@ def get_rel(root_id, desc_id):
     '''
     This function should return info on a relationship
     between the nodes of given IDs, if it exists.
-    Returns dicts of info on the root, the relationship and the desc, 
+    Returns dicts of info on the root, the relationship and the desc,
     in that order
     '''
     # get root
@@ -113,13 +113,13 @@ def get_rel(root_id, desc_id):
         try:
             desc_info['lang_name'] = lang_decode(desc_info['language'])
         except KeyError:
-            pass       
+            pass
     # note that the root relationship goes from desc -> root
     rel = graph.match_one(start_node=desc, rel_type="root", end_node=root)
     if(rel == None):
         raise RelNotFoundException("The word with ID {} is not a root of the word with ID {}".format(root_id, desc_id))
     rel_info = rel.properties
-    
+
     return (root_info, rel_info, desc_info)
 
 
@@ -186,9 +186,19 @@ def add_relationship(user, word, root, **kwargs):
 
     return word.id
 
+
 def add_user(user):
     user_node = graph.merge_one('User', property_key='id', property_value=user['id'])
     user_node.push()
+
+
+def flag(user_id, word_id):
+    """
+    Creates a flag relationship between user and word
+    """
+    query = """MATCH (u:User),(w:Word) WHERE u.id = {user_id} AND id(w) = {word_id} CREATE (u)-[f:flagged]->(w) RETURN f"""
+    graph.cypher.execute(query, {'user_id': str(user_id), 'word_id': int(word_id)})
+
 
 #TODO refactor so that this can be used to edit arbitrary rel properties
 def edit_rel_source(user, root_id, desc_id, new_source):
@@ -202,8 +212,8 @@ def edit_rel_source(user, root_id, desc_id, new_source):
     rel['source'] = new_source
     # could add info about the editing user here
     rel.push()
-    
-    
+
+
 def get_node_safe(node_id):
     try:
         node = graph.node(node_id)
@@ -237,3 +247,4 @@ def invalid_query(query):
         return True
     except ValueError:
         return False
+
