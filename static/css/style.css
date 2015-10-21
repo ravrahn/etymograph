@@ -24,7 +24,6 @@ h1, h2, h3, h4, h5, p, a, label {
     line-height: 1.4;
     margin-bottom: 0.5rem;
     margin-top: 0.2rem;
-    text-shadow: 0px 7px 7px rgba(0, 0, 0, 0.20);
     text-decoration: none;
 }
 
@@ -34,20 +33,16 @@ h1 {
 
 h2 {
     font-size: 1.75em;
-    text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
 }
 
 h3 {
     font-size: 1.50em;
-    text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
 }
 
 p {
     font-size: 1.15em;
-    text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
 }
 ol {
-    text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.49);
 }
 
 *, *:before, *:after {
@@ -67,7 +62,6 @@ body.index {
 .result {
     font-size: 1.50em;
     text-decoration: none;
-    text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
 }
 
 a {
@@ -78,7 +72,6 @@ a {
     -webkit-text-decoration-color: #a70200;
     -moz-text-decoration-color: #a70200;
     text-decoration-color: #a70200;
-    text-shadow: 0px 2px 2px rgba(0, 0, 0, 0.10);
 }
 
 a:hover {
