@@ -196,7 +196,7 @@ def flag(user_id, word_id):
     """
     Creates a flag relationship between user and word
     """
-    query = """MATCH (u:User),(w:Word) WHERE u.id = {user_id} AND id(w) = {word_id} CREATE (u)-[f:flagged]->(w) RETURN f"""
+    query = """MATCH (u:User),(w:Word) WHERE u.id = {user_id} AND id(w) = {word_id} MERGE (u)-[f:flagged]->(w) RETURN f"""
     graph.cypher.execute(query, {'user_id': str(user_id), 'word_id': int(word_id)})
 
 
