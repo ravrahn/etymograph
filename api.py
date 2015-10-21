@@ -303,9 +303,8 @@ def flag(word_id):
         try:
             if me['id']:
                 model.flag(me['id'], word_id)
-            #return_url = request.args.get('last_url')
-            #return redirect(return_url)
-            return redirect('/index.html')
+            return_url = request.args.get('next')
+            return redirect(return_url)
         except modelWordNotFoundException:
             abort(404)
 

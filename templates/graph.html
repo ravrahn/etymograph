@@ -21,6 +21,7 @@ var form = '<form class="add-root" action="{{ url_for("add_root", next=request.p
     {% endfor %} \
     <button type="submit" class="addword-submit">Submit</form> \
 </form>';
+var next_url = "{{ request.path }}";
 
 // Get data from the API
 makeGraph({{ roots|safe }}, {{ descs|safe }}, form);
