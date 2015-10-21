@@ -301,7 +301,8 @@ def flag(word_id):
     me = get_user()
     if me is not None:
         try:
-            model.flag(me['id'], word_id)
+            if me['id']:
+                model.flag(me['id'], word_id)
             #return_url = request.args.get('last_url')
             #return redirect(return_url)
             return redirect('/index.html')
