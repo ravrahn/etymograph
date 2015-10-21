@@ -52,7 +52,8 @@ ol {
 body {
     margin: 0;
     background-color: #e3d0b6;
-    background-repeat: repeat;
+    background-color: #EDECF0;
+    background-color: #F5ECE4; /* yellow near white */
 }
 
 body.index {
@@ -149,6 +150,8 @@ Common (non-landing) template flexbox stuff
     padding: 0.5rem;
     z-index: 10;
     background-color: rgba(227, 208, 182, 0.75);
+    background-color: rgba(237, 236, 240, 0.75);
+    background-color: rgba(245, 236, 228, 0.75);
 }
 
 .nav-title {
@@ -360,4 +363,7 @@ ul li{
     display: block;
     font-size: 0.75rem;
     font-family: 'minion-pro';
+}
+div.infobar {
+    background-color: #F5ECE4; /* yellow near white */
 }

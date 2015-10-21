@@ -20,4 +20,7 @@
 	{% if word_properties.definition %} 
 		<p>{{ word_properties.definition }}</p>
 	{% endif %}
+    {% if word_properties %}
+    <a href="{{url_for('flag')}}">Flag this as incorrect information?</a>
+    {% endif %}
 {% endblock %}

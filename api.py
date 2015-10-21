@@ -293,6 +293,13 @@ def show_graph(word_id):
     except model.WordNotFoundException:
         abort(404)
 
+@app.route('/<int:word_id>/flag')
+def flag_word(word_id):
+    try:
+        pass
+    except modelWordNotFoundException:
+        abort(404)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
