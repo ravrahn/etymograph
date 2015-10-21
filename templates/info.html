@@ -20,7 +20,7 @@
 	{% if word_properties.definition %} 
 		<p>{{ word_properties.definition }}</p>
 	{% endif %}
-    {% if word_properties %}
+    {% if authorized %}
         <a href="{{ url_for('flag', word_id=word_id, next=request.path) }}">Flag this as incorrect information?</a>
     {% endif %}
 {% endblock %}

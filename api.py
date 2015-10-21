@@ -210,7 +210,11 @@ def info(word_id): # ET-20
         response.status_code = 200 # OK
     else:
         # Non-JSON request, return info page
-        response = render_search_template('info.html', word_properties=info, body_class="info", word_id=word_id)
+        me = get_user()
+        authorized = False
+        if me is not None:
+            authorized = True
+        response = render_search_template('info.html', word_properties=info, body_class="info", word_id=word_id, authorized=authorized)
     return response
 
 
