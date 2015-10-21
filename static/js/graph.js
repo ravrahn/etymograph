@@ -115,6 +115,7 @@ function makeGraph(roots, descs, form) {
         if (definition !== undefined){
             info += "<p> Definition: "+ definition + '</p>';
         }
+        info += '<a href="/flag/' + id + '">Flag this as incorrect?</a>';
         $(".infobar").html(info);
     });
 
