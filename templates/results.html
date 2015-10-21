@@ -2,14 +2,14 @@
 {% block content %}
 <h2>Search results for "{{ search_str }}":</h2>
     {% if results %}
-        <ol>
+        <ul>
         {% for result in results %}
             <li>
                 <a class="result" href="/{{ result['id'] }}">{{ result['orig_form'] }}</a>
-                <p>{{ result['lang_name'] }}</p>
+                <span class="result-lang">{{ result['lang_name'] }}</span>
             </li>
         {% endfor %}
-        </ol>
+        </ul>
     {% else %}
         <h2>No results</h2>
     {% endif %}

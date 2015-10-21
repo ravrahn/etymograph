@@ -59,13 +59,8 @@ body.index {
     overflow: hidden;
 }
 
-.result {
-    font-size: 1.50em;
-    text-decoration: none;
-}
-
 a {
-    text-decoration: none;
+    text-decoration: underline;
     -webkit-text-decoration-color: #2a2b2b;
     -moz-text-decoration-color: #2a2b2b;
     text-decoration-color: #2a2b2b;
@@ -340,37 +335,29 @@ overriden typeahead.js stuff
 
 /* Results list numbering */
 /* not happy with how it looks; will change. */
-ol {
+ul {
     list-style-type: none;
 
     margin: 0;
-    margin-left: 5em;
+    margin-left: 1rem;
     padding: 0;
 
-    counter-reset: li-counter;
+    /*counter-reset: li-counter;*/
 }
-ol > li{
+ul li{
     position: relative;
+    left: 0;
     margin-bottom: 20px;
     padding-left: 0.5em;
-    min-height: 3em;
+    max-height: 2em;
 }
-ol li:before {
-    position: absolute;
-    top: 0;
-    left: -1em;
-    width: 0.8em;
 
-    font-size: 2.75em;
-    line-height: 1;
-    font-weight: bold;
-    text-align: right;
-    color: #464646;
-    /* color: #a70200; */
-
-    content: counter(li-counter);
-    counter-increment: li-counter;
+.result {
+    font-size: 1.25rem;
 }
-ol:after {
-    border-right: 3px solid #A70200;
+
+.result-lang {
+    display: block;
+    font-size: 0.75rem;
+    font-family: 'minion-pro';
 }

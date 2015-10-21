@@ -141,6 +141,7 @@ def search(query):
             uid = node[0]
             node = node[1]
             result = node.properties
+            result['id'] = uid
             # Adds a human-readable name to the information
             if 'language' in result:
                 try:
