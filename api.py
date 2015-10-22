@@ -330,7 +330,7 @@ def flag(word_id):
 
 @app.route('/flag/')
 def flag_rel():
-
+    abort(404)
 
 
 if __name__ == '__main__':

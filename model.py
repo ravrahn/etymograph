@@ -211,8 +211,8 @@ def flag(user_id, word_id):
     graph.cypher.execute(query, {'user_id': str(user_id), 'word_id': int(word_id)})
 
 def flag_relationship(user_id,word_id):
-#call flag function above
-    flag():
+    #call flag function above
+    flag()
 
 #TODO refactor so that this can be used to edit arbitrary rel properties
 def edit_rel_source(user, root_id, desc_id, new_source):
