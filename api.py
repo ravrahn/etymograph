@@ -133,7 +133,7 @@ def search(): # ET-5, ET-19
 			search_str=search_str.capitalize(),
 			results=results, body_class="search")
     else:
-        response = json.jsonify({ 'results': results })
+        response = json.dumps(results)
         return response
 
 def render_search_template(*args, **kwargs):
