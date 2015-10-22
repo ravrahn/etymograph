@@ -328,6 +328,10 @@ def flag(word_id):
         except modelWordNotFoundException:
             abort(404)
 
+@app.route('/flag/')
+def flag_rel():
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
