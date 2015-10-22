@@ -69,6 +69,17 @@ def logout():
     resp.set_cookie('session', '', expires=0)
     return resp
 
+@app.route('/profile')
+def profile():
+    me = get_user()
+    search_field = SearchForm()
+    results = model.user_added_word(me['id'])
+    return render_template('profile.html', 
+                            search_form=search_field, 
+                            user_name=me['name'], 
+                            body_class="index", 
+                            results=results)
+
 @app.route('/profile/delete')
 def delete_profile():
     next_url = request.args.get('next') or url_for('index')

@@ -172,6 +172,17 @@ def add_word(user, word):
 
     return word.id
 
+def user_added_word(user):
+    query = 'MATCH (u:User)-[:created]->(n:Word) WHERE u.id = {User} RETURN id(n)' 
+    results = graph.cypher.execute(query, {'User': user })
+    results2 = []
+    for result in results:
+        word_id = result[0]
+        word_info = info(word_id)
+        word_info['id'] = word_id
+        results2.append(word_info)
+    return results2
+
 def add_relationship(user, word, root, **kwargs):
     ''' Add a relationship to the database, given the user and two words
     Give the relationship arbitrary properties described in **kwargs'''

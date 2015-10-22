@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- View profile -->
+
+<center> <h2>{{ user_name }}</h2> </center>
+<center> <h4> Welcome :) </h4> </center>
+	<center> <p>My added words</p> </center>
+
+	<div class="words" align="center">
+	{% if results %}
+        <ul>
+        {% for result in results %}
+            <li>
+                <a class="result" href="/{{ result['id'] }}">{{ result['orig_form'] }}</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <h2>No results</h2>
+    {% endif %}
+	</div>
+
+{% endblock %}
