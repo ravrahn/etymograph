@@ -20,8 +20,25 @@ g.origin rect {
     stroke-width: 1.5px;
 }
 
-.lang-name {
+.node-container {
+    height: 2rem;
+    width: 6rem;
+}
+
+.node-lang-name {
     font-size: 0.75rem;
+    float: left;
+}
+
+.node-flags {
+    font-size: 0.5rem;
+    float: right;
+}
+
+.node-label {
+    padding-top: 0.85rem;
+    margin: 0;
+    display: block;
 }
 
 .add-edge path {
