@@ -203,6 +203,23 @@ def add_user(user):
     user_node.push()
 
 
+def get_flagged_words():
+    results = graph.cypher.execute('MATCH ()-[f:flagged]->(n:Word) RETURN id(n),COUNT(f)')
+
+    words = []
+
+    for result in results:
+        word = info(result[0])
+        word['id'] = result[0]
+        word['count'] = result[1]
+        words.append(word)
+
+    return words
+
+def get_flagged_rels():
+    return []
+
+
 def flag(user_id, word_id):
     """
     Creates a flag relationship between user and word

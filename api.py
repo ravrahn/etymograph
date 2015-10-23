@@ -313,6 +313,11 @@ def show_graph(word_id):
     except model.WordNotFoundException:
         abort(404)
 
+@app.route('/flagged')
+def show_flagged():
+    words = model.get_flagged_words()
+    rels = model.get_flagged_rels()
+    return render_search_template('flagged.html', words=words, rels=rels)
 
 @app.route('/flag/<int:word_id>')
 def flag(word_id):
