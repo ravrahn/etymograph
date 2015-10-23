@@ -80,7 +80,7 @@ function makeGraph(roots, descs, form) {
             marginx: 20,
             marginy: 20
         })
-        .setDefaultEdgeLabel(function() { return {}; });;
+        .setDefaultEdgeLabel(function() { return {}; });
 
     g.setNode(origin.id, {
         id: origin.id,

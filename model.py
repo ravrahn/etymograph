@@ -204,20 +204,36 @@ def add_user(user):
 
 
 def get_flagged_words():
-    results = graph.cypher.execute('MATCH ()-[f:flagged]->(n:Word) RETURN id(n),COUNT(f)')
+    results = graph.cypher.execute('MATCH (:User)-[f:flagged]->(n:Word) RETURN id(n),COUNT(f)')
 
     words = []
 
     for result in results:
         word = info(result[0])
         word['id'] = result[0]
-        word['count'] = result[1]
+        word['flag_count'] = result[1]
         words.append(word)
 
     return words
 
 def get_flagged_rels():
-    return []
+    results = graph.cypher.execute('MATCH (:User)-[f:created_rel]->(d:Word)-[:root]->(r:Word) WHERE id(r) = f.root RETURN id(r),id(d),COUNT(f)')
+
+    rels = []
+    for result in results:
+        root = info(result[0])
+        root['id'] = result[0]
+        desc = info(result[1])
+        desc['id'] = result[1]
+
+        rel = { 
+            'root': root,
+            'desc': desc,
+            'flag_count': result[2]
+            }
+        rels.append(rel)
+
+    return rels
 
 
 def flag(user_id, word_id):

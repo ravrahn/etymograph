@@ -2,7 +2,7 @@
 {% block content %}
 <h2>Search results for "{{ search_str }}":</h2>
     {% if results %}
-        <ul>
+        <ul class="results">
         {% for result in results %}
             <li>
                 <a class="result" href="/{{ result['id'] }}">{{ result['orig_form'] }}</a>
