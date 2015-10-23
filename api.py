@@ -314,7 +314,7 @@ def show_graph(word_id):
         abort(404)
 
 
-@app.route('/flag/<word_id>')
+@app.route('/flag/<int:word_id>')
 def flag(word_id):
     if not word_id:
         abort(404) # cannot flag non-existent words.
