@@ -90,8 +90,8 @@ function makeGraph(roots, descs, form) {
     }
     // Draw the graph
     
-    var svg = d3.select("svg");
-    inner = svg.select("g");
+    var svg = d3.select("svg"),
+    	inner = svg.select("g");
     
     // Create the renderer
     var render = new dagreD3.render();
