@@ -15,6 +15,7 @@ for (var i=0; i < words.length; i++) {
         id: word.id,
         labelType:'html',
         label: makeLabel(word),
+        padding: 0,
         class: 'word' 
     });
 
@@ -45,6 +46,7 @@ for (var i=0; i < rels.length; i++) {
         id: root.id,
         labelType:'html',
         label: makeLabel(root),
+        padding: 0,
         class: 'word' 
     });
 
@@ -52,6 +54,7 @@ for (var i=0; i < rels.length; i++) {
         id: desc.id,
         labelType:'html',
         label: makeLabel(desc),
+        padding: 0,
         class: 'word' 
     });
 

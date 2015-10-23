@@ -23,6 +23,7 @@ g.origin rect {
 .node-container {
     height: 2rem;
     width: 6rem;
+    margin: 0.5rem;
 }
 
 .node-lang-name {

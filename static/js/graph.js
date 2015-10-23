@@ -12,6 +12,7 @@ function addRoot(g, root, parent) {
         id: root.id,
         labelType:'html',
         label: rootLabel,
+        padding: 0,
         class: 'word'
     });
     var edgeLabel = makeEdgeLabel(root.id, parent);
@@ -31,6 +32,7 @@ function addDesc(g, desc, parent) {
         desc.id,
         labelType:'html',
         label: descLabel,
+        padding: 0,
         class: 'word'
     });
     var edgeLabel = makeEdgeLabel(parent, desc.id);
@@ -49,7 +51,7 @@ function makeGraph(roots, descs, form) {
     // convert roots and descs into a single dagre graph
     var g = new dagreD3.graphlib.Graph()
         .setGraph({
-            nodesep: 70,
+            nodesep: 30,
             ranksep: 50,
             rankdir: "LR",
             marginx: 20,
@@ -72,6 +74,7 @@ function makeGraph(roots, descs, form) {
             id: 'add_root',
             labelType: 'html',
             label: '+ Add Root',
+            padding: 0,
             class: 'add add-root'
         });
         g.setEdge('add_root', origin.id, {
@@ -82,6 +85,7 @@ function makeGraph(roots, descs, form) {
             id: 'add_desc',
             labelType: 'html',
             label: '+ Add Descendant',
+            padding: 0,
             class: 'add add-desc'
         });
         g.setEdge(origin.id, 'add_desc', {
