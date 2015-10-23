@@ -81,12 +81,17 @@ def info(word_id):
     '''
     node = get_node_safe(word_id)
     info = node.properties
+    info['id'] = word_id
     # Adds a human-readable name to the information
     if 'language' in info:
         try:
             info['lang_name'] = lang_decode(info['language'])
         except KeyError:
             pass
+
+    flag_count_query = 'MATCH (:User)-[f:flagged]->(n:Word) WHERE id(n) = {id} RETURN COUNT(f)'
+    info['flag_count'] = graph.cypher.execute(flag_count_query, {'id': word_id})[0][0]
+
     return dict(info)
 
 def get_rel(root_id, desc_id):
@@ -179,7 +184,6 @@ def user_added_word(user):
     for result in results:
         word_id = result[0]
         word_info = info(word_id)
-        word_info['id'] = word_id
         results2.append(word_info)
     return results2
 
@@ -204,20 +208,32 @@ def add_user(user):
 
 
 def get_flagged_words():
-    results = graph.cypher.execute('MATCH ()-[f:flagged]->(n:Word) RETURN id(n),COUNT(f)')
+    results = graph.cypher.execute('MATCH (:User)-[f:flagged]->(n:Word) RETURN id(n),COUNT(f)')
 
     words = []
 
     for result in results:
         word = info(result[0])
-        word['id'] = result[0]
-        word['count'] = result[1]
         words.append(word)
 
     return words
 
 def get_flagged_rels():
-    return []
+    results = graph.cypher.execute('MATCH (:User)-[f:created_rel]->(d:Word)-[:root]->(r:Word) WHERE id(r) = f.root RETURN id(r),id(d),COUNT(f)')
+
+    rels = []
+    for result in results:
+        root = info(result[0])
+        desc = info(result[1])
+
+        rel = { 
+            'root': root,
+            'desc': desc,
+            'flag_count': result[2]
+            }
+        rels.append(rel)
+
+    return rels
 
 
 def flag(user_id, word_id):

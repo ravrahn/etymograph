@@ -1,28 +1,3 @@
-function makeLabel(word) {
-    return hiddenInfo(word)+'<div class="lang-name">' + word.lang_name + '</div><div><a href="/'+word.id+'">' + word.orig_form + '</a></div>';
-}
-
-function hiddenInfo(word){
-    var info = '<div class="data"';
-    info += 'id='+word.id+' ';
-    info += 'data-orig_form="'+word.orig_form+'" ';
-
-    if(word.eng_form !== undefined){
-        info += 'data-eng_form="'+word.eng_form+'" ';
-    }
-    if(word.lang_name !== undefined){
-        info += 'data-lang_name="'+word.lang_name+'" ';
-    }
-    if(word.ipa_form !== undefined){
-        info += 'data-ipa_form="'+word.ipa_form+'" ';
-    }
-    if(word.definition !== undefined){
-        info += 'data-definition="'+word.definition+'" ';
-    }
-    info +='></div>';
-    return info;
-}
-
 function makeEdgeLabel(rootID, descID) {
     if(loggedIn) {
         return '<a href="/edit/rel/'+rootID+'/'+descID+'">more...</a>';
@@ -80,7 +55,7 @@ function makeGraph(roots, descs, form) {
             marginx: 20,
             marginy: 20
         })
-        .setDefaultEdgeLabel(function() { return {}; });;
+        .setDefaultEdgeLabel(function() { return {}; });
 
     g.setNode(origin.id, {
         id: origin.id,
@@ -114,9 +89,13 @@ function makeGraph(roots, descs, form) {
         });
     }
     // Draw the graph
+    
+    var svg = d3.select("svg"),
+    	inner = svg.select("g");
+    
     // Create the renderer
     var render = new dagreD3.render();
-
+    
     // Set up an SVG group so that we can translate the final graph.
     var svg = d3.select("svg"),
         svgGroup = svg.append("g");

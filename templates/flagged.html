@@ -1,13 +1,33 @@
 {% extends 'base.html' %}
+{% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/graph.css') }}">
+{% endblock %}
 {% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+<script src="{{ url_for('static', filename='js/dagre-d3.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/graphLabel.js') }}"></script>
 
+<div class="flagged-words">
 <h2>Flagged Words</h2>
 
 <ul>
 {% for word in words %}
-    <li><a href={{ url_for('show_graph', word_id=word['id']) }} >{{ word['orig_form'] }}</a>
-    <div>Flagged {{ word['count'] }} time{{ 's' if word['count'] != 1 }}</div></li>
+    <li><svg id="graph-{{ word['id'] }}" width="200" height="75"></svg></li>
 {% endfor %}
 </ul>
+</div>
+<div class="flagged-rels">
+<h2>Flagged Relationships</h2>
+<ul>
+{% for rel in rels %}
+	<li><svg id="graph-{{ rel['root']['id'] }}-{{ rel['desc']['id'] }}" width="350" height="75"></svg></li>
+{% endfor %}
+</div>
+
+<script>
+var words = {{ words|safe }};
+var rels = {{ rels|safe }};
+</script>
+<script src="{{ url_for('static', filename='js/flagged.js') }}"></script>
 
 {% endblock %}

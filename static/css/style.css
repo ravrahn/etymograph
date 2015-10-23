@@ -93,7 +93,6 @@ Graph detail
 
 svg {
     display:block;
-    margin: auto;
 }
 
 /*
@@ -343,17 +342,13 @@ overriden typeahead.js stuff
 }
 
 /* Results list numbering */
-/* not happy with how it looks; will change. */
 ul {
     list-style-type: none;
-
     margin: 0;
     margin-left: 1rem;
     padding: 0;
-
-    /*counter-reset: li-counter;*/
 }
-ul li{
+.results li{
     position: relative;
     left: 0;
     margin-bottom: 20px;
@@ -369,4 +364,14 @@ ul li{
     display: block;
     font-size: 0.75rem;
     font-family: 'minion-pro';
+}
+
+
+
+.flagged-words {
+    float: left;
+}
+
+.flagged-rels {
+    float: right;
 }
