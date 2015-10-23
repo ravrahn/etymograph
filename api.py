@@ -206,9 +206,8 @@ def info(word_id): # ET-20
         info = model.info(word_id)
     except model.WordNotFoundException as e:
         if request_wants_json():
-            errNum  = 1234 # placeholder error num. TODO: change
             errDesc = str(e)
-            response = json.jsonify({'error':errNum, 'description':errDesc})
+            response = json.jsonify({'error': errDesc})
             response.status_code = 404 #file not found
             return response
         else:
