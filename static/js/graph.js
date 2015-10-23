@@ -33,9 +33,17 @@ function makeEdgeLabel(rootID, descID) {
 
 function addRoot(g, root, parent) {
     var rootLabel = makeLabel(root);
-    g.setNode(root.id, { id: root.id, labelType:'html', label: rootLabel, class: 'word' });
+    g.setNode(root.id, {
+        id: root.id,
+        labelType:'html',
+        label: rootLabel,
+        class: 'word'
+    });
     var edgeLabel = makeEdgeLabel(root.id, parent);
-    g.setEdge(root.id, parent, { lineInterpolate: "bundle", labelType:'html', label: edgeLabel });
+    g.setEdge(root.id, parent, {
+        labelType:'html',
+        label: edgeLabel
+    });
     if (root.roots !== undefined) {
         root.roots.forEach(function(r) { addRoot(g, r, root.id) });
     }
@@ -44,9 +52,17 @@ function addRoot(g, root, parent) {
 
 function addDesc(g, desc, parent) {
     var descLabel = makeLabel(desc);
-    g.setNode(desc.id, { id: desc.id, labelType:'html', label: descLabel, class: 'word' });
+    g.setNode(desc.id, { id:
+        desc.id,
+        labelType:'html',
+        label: descLabel,
+        class: 'word'
+    });
     var edgeLabel = makeEdgeLabel(parent, desc.id);
-    g.setEdge(parent, desc.id, { lineInterpolate: "bundle", labelType:'html', label: edgeLabel });
+    g.setEdge(parent, desc.id, {
+        labelType:'html',
+        label: edgeLabel
+    });
     if (desc.descs !== undefined) {
         desc.descs.forEach(function(d) { addDesc(g, d, desc.id) });
     }
@@ -66,17 +82,36 @@ function makeGraph(roots, descs, form) {
         })
         .setDefaultEdgeLabel(function() { return {}; });;
 
-    g.setNode(origin.id, { id: origin.id, labelType:'html', label: makeLabel(origin),  class: 'origin word' });
+    g.setNode(origin.id, {
+        id: origin.id,
+        labelType:'html',
+        label: makeLabel(origin),
+        class: 'origin word' 
+    });
 
     roots.roots.forEach(function(r) { addRoot(g, r, origin.id) });
     descs.descs.forEach(function(d) { addDesc(g, d, origin.id) });
 
     if (loggedIn) {
-        g.setNode('add_root', { id: 'add_root', labelType: 'html', label: '+ Add Root', class: 'add add-root' });
-        g.setEdge('add_root', origin.id, { lineInterpolate: "bundle", class: 'add-edge' });
+        g.setNode('add_root', {
+            id: 'add_root',
+            labelType: 'html',
+            label: '+ Add Root',
+            class: 'add add-root'
+        });
+        g.setEdge('add_root', origin.id, {
+            class: 'add-edge'
+        });
 
-        g.setNode('add_desc', { id: 'add_desc', labelType: 'html', label: '+ Add Descendant', class: 'add add-desc' });
-        g.setEdge(origin.id, 'add_desc', { lineInterpolate: "bundle", class: 'add-edge' });
+        g.setNode('add_desc', {
+            id: 'add_desc',
+            labelType: 'html',
+            label: '+ Add Descendant',
+            class: 'add add-desc'
+        });
+        g.setEdge(origin.id, 'add_desc', {
+            class: 'add-edge'
+        });
     }
     // Draw the graph
     // Create the renderer
