@@ -14,9 +14,15 @@ for (var i=0; i < words.length; i++) {
     g.setNode(word.id, {
         id: word.id,
         labelType:'html',
-        label: makeLabel(word),
+        label: makeLinkLabel(word),
         padding: 0,
         class: 'word' 
+    });
+
+    g.nodes().forEach(function(v) {
+      var node = g.node(v);
+      // Round the corners of the nodes
+      node.rx = node.ry = 5;
     });
 
 	var render = new dagreD3.render();

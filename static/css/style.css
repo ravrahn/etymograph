@@ -26,6 +26,9 @@ h1, h2, h3, h4, h5, p, a, label {
     margin-top: 0.2rem;
     text-decoration: none;
 }
+p, a {
+    font-family: 'freight-sans-pro', sans-serif;
+}
 
 h1 {
     font-size: 4.125em;
@@ -41,8 +44,6 @@ h3 {
 
 p {
     font-size: 1.15em;
-}
-ol {
 }
 
 *, *:before, *:after {
@@ -82,7 +83,7 @@ a {
 }
 
 a:hover {
-    color: #fff;
+    color: #666;
 }
 
 ::selection {
@@ -291,7 +292,7 @@ ul {
     margin-left: 1rem;
     padding: 0;
 }
-.results li{
+.results li {
     position: relative;
     left: 0;
     margin-bottom: 20px;
