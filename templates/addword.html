@@ -1,17 +1,48 @@
 {% extends 'base.html' %}
 {% from "_formhelpers.html" import render_field %}
 {% block content %}
-<div class="flex-inner-content">
+<div class="add-word-body">
     <h2 align="center">Add a word</h2>
     <form action="{{ url_for('add_word') }}" method="POST">
+        <div>{{ form.orig_form(placeholder="Word", class="add-word") }}</div>
+        <div class="lang-container">{{ form.lang_name(placeholder="Langage", class="add-word") }}
+        {{ form.language(readonly=true, placeholder="None", class="add-word") }}</div>
+        <div>{{ form.ipa_form(placeholder="IPA Transcription", class="add-word") }}
+        {{ form.eng_form(placeholder="Latin Transliteration", class="add-word") }}</div>
+        <div>{{ form.definition(placeholder="Definition", class="add-word") }}</div>
         {{ form.hidden_tag() }}
-        {% for field in form %}
-        {% if field.id != "csrf_token" %}
-            <div class="addword-form-title">{{ field.label(class_="addword-form-title") }}</div>
-            <div class="addword-form">{{ field(class_="reg-form") }}</div>
-        {% endif %}
-        {% endfor %}
-        <button type="submit" class="addword-submit">Submit</form>
+        <button type="submit" class="add-word-submit">Submit</form>
     </form>
 </div>
+<script>
+var langs = {{ langs|safe }};
+var langLookup = {{ lang_lookup|safe }};
+
+var langsHound = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.whitespace,
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  // `states` is an array of state names defined in "The Basics"
+  local: langs
+});
+
+$('#lang_name').typeahead({
+      hint: false,
+      highlight: true
+    },
+    {
+      name: 'langs',
+      source: langsHound
+    });
+$('#lang_name').on("input", function() {
+        var lang = $('#lang_name').val();
+        console.log(langLookup[lang]);
+        $('#language').val(langLookup[lang]);
+    })
+    .on("typeahead:selected", function() {
+        var lang = $('#lang_name').val();
+        console.log(langLookup[lang]);
+        $('#language').val(langLookup[lang]);
+    });
+
+</script>
 {% endblock %}

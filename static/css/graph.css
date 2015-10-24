@@ -1,3 +1,6 @@
+.graph .flex-content {
+    padding: 0;
+}
 
 g.origin rect {
     stroke: #000;
@@ -6,13 +9,11 @@ g.origin rect {
 .node rect {
     stroke: #999;
     fill: #fff;
-    stroke-width: 1.5px;
+    stroke-width: 1px;
 }
 
 .selected rect {
-    stroke: #000;
-    fill: #fff;
-    stroke-width: 3px;
+    stroke-width: 1.5px;
 }
 
 .edgePath path {
@@ -23,10 +24,11 @@ g.origin rect {
 .node-container {
     height: 2rem;
     width: 6rem;
-    margin: 0.5rem;
+    margin: 0.3rem 0.5rem;
 }
 
 .node-lang-name {
+    font-family: 'freight-sans-pro', sans-serif;
     font-size: 0.75rem;
     float: left;
 }
@@ -37,9 +39,12 @@ g.origin rect {
 }
 
 .node-label {
-    padding-top: 0.85rem;
+    padding-top: 1rem;
+    line-height: 1em;
     margin: 0;
     display: block;
+    font-family: 'minion-pro', serif;
+    font-size: 1rem;
 }
 
 .add-edge path {
@@ -48,12 +53,19 @@ g.origin rect {
 }
 
 .node.add rect {
-    stroke-width: 1px;
     stroke: #999;
 }
 
-.node.add:hover rect {
+.node:hover rect {
     fill: #eee;
+}
+
+.add-node {
+    padding: 0.6rem;
+    height: 2.5rem;
+    /*width: 6rem;*/
+    font-family: 'freight-sans-pro', sans-serif;
+    font-size: 1rem;
 }
 
 .infobar {
@@ -62,7 +74,40 @@ g.origin rect {
     top: 4rem;
     background-color: rgba(245, 236, 228, 0.75);
     height: 100%;
-    width: 12rem;
+    width: 16rem;
     padding: 1rem;
     font-size: 0.8rem;
+}
+
+.infobar h2, .infobar h2 a {
+    font-family: 'minion-pro', serif;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.infobar h3 {
+    font-family: 'freight-sans-pro', sans-serif;
+    font-size: 0.85rem;
+    line-height: 1;
+    margin: 0;
+}
+
+.infobar p {
+    font-family: 'freight-sans-pro', sans-serif;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.infobar h4 {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.infobar .ipa, .infobar .latin {
+    font-family: 'freight-sans-pro', sans-serif;
+    font-size: 0.9rem;
+}
+
+.infobar .flag {
+    margin-top: 1rem;
 }

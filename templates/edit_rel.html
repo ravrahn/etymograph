@@ -4,8 +4,8 @@
 <div class="flex-inner-content">
     <h2 align="center">Edit Relationship</h2>
     {# TODO: replace this with a small graph rendering #}
-    <h3 align="center">{{root['orig_form']}} -> {{desc['orig_form']}}</h3>
-    <h3 align="center">Previous source: {{rel['source']}}</h3>
+    <h3 align="center">{{root['orig_form']}} ({{root['lang_name']}}) -> {{desc['orig_form']}} ({{desc['lang_name']}})</h3>
+    <h3 align="center">Source: {{rel['source']}}</h3>
     <form action="{{ my_URL }}" method="POST">
         {{ form.hidden_tag() }}
         {% for field in form %}
@@ -15,6 +15,9 @@
         {% endif %}
         {% endfor %}
         <button type="submit" class="editrel-submit">Submit</form>
+    </form>
+    <form action="/flag/rel/{{root['id']}}/{{desc['id']}}" method="GET">
+        <button type="submit" value="flag">Flag relation as incorrect</button>
     </form>
 </div>
 {% endblock %}

@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import StringField, BooleanField, IntegerField
+from wtforms import StringField, BooleanField, IntegerField, TextAreaField
 from wtforms.validators import *
 import re
 
@@ -20,8 +20,9 @@ class LoginForm(Form): # For later
 
 class AddWordForm(Form):
     orig_form = StringField('Word', validators=[InputRequired()])
-    language = StringField('Language', validators=[InputRequired()])
-    definition = StringField('Definition')
+    lang_name = StringField('Language')
+    language = StringField(validators=[InputRequired()])
+    definition = TextAreaField('Definition')
     ipa_form = StringField('IPA Transcription')
     eng_form = StringField('Latin Transliteration')
 

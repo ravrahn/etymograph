@@ -26,6 +26,9 @@ h1, h2, h3, h4, h5, p, a, label {
     margin-top: 0.2rem;
     text-decoration: none;
 }
+p, a {
+    font-family: 'freight-sans-pro', sans-serif;
+}
 
 h1 {
     font-size: 4.125em;
@@ -42,11 +45,14 @@ h3 {
 p {
     font-size: 1.15em;
 }
-ol {
-}
 
 *, *:before, *:after {
     box-sizing: inherit;
+    -moz-font-feature-settings:"kern" 1; 
+    -ms-font-feature-settings:"kern" 1; 
+    -o-font-feature-settings:"kern" 1; 
+    -webkit-font-feature-settings:"kern" 1; 
+    font-feature-settings:"kern" 1;
 }
 
 body {
@@ -62,7 +68,7 @@ body.index {
 
 a.login-text {
     text-decoration: none;
-    font-family: 'fira-sans-2', helvetica, sans-serif;
+    font-family: 'freight-sans-pro', sans-serif;
     font-size: 0.75em;
 }
 
@@ -77,7 +83,7 @@ a {
 }
 
 a:hover {
-    color: #fff;
+    color: #666;
 }
 
 ::selection {
@@ -219,126 +225,64 @@ Common (non-landing) template flexbox stuff
     background-color: rgba(59, 89, 152, 0.75);
 }
 
-/* Landing form text input */
-input[type="text"] {
-    color: #c0bdb6;
-    font-family: 'fira-sans-2', helvetica, sans-serif;
-    font-weight: 400;
-    background: #2a2b2b;
-    width: 500px;
-    height: 50px;
-    padding: 12px;
-    border: 10px;
-    font-size: 1.2em;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
-    -webkit-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.50);
-    -moz-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.50);
-    box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.50);
+input.nav-search {
+    width: 24rem;
+    height: 2rem;
+    font-size: 1rem;
 }
 
-/*
-Alternate text field layouts
- */
-input.upleft-search {
-    color: #c0bdb6;
-    font-family: 'fira-sans-2', helvetica, sans-serif;
-    width: 400px;
-    height: 2em;
-    border: 2px;
-    margin: 2px 0;
-    padding: 0px 5px;
-    background: #2a2b2b;
-    font-size: 1em;
+input.index-search {
+    width: 32rem;
+    font-size: 1.25rem;
+    padding: 0.5rem 0.75rem;
+}
+
+input, textarea, button {
+    border: solid 1px #ddd;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    font-family: 'freight-sans-pro', sans-serif;
+}
+
+input:focus, textarea:focus {
+    border: solid 1px #999;
+}
+
+input:focus, textarea:focus {
     outline: none;
-    -webkit-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
-    -moz-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
-    box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
-    text-align: left;
 }
 
-input.reg-form {
-    color: #c0bdb6;
-    font-family: 'fira-sans-2', helvetica, sans-serif;
-    width: 100%;
-    height: 2em;
-    border: 2px;
-    margin: auto;
-    padding: 2px 5px;
-    background: #2a2b2b;
-    font-size: 1em;
-    line-height: 15px;
+button {
+    background: white;
+    font-size: 0.85rem;
+}
+
+button:focus {
     outline: none;
-    -webkit-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
-    -moz-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
-    box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
-    text-align: left;
 }
 
-div.addword-form-title {
-    margin: 5px 0 5px 0;
-    text-align: left;
-}
-.addword-form {
-    padding-bottom: 5px;
-}
-.addword-submit {
-    margin-top: 10px;
+button:active {
+    background-color: #eee;
+    border: solid 1px #999;
 }
 
-/*
-overriden typeahead.js stuff
- */
-
-.typeahead,
-.tt-query,
-.tt-input,
-.tt-hint,
 .tt-menu {
-    color: #c0bdb6;
-    font-family: 'fira-sans-2', helvetica, sans-serif;
-    width: 500px;
-    margin: 12px 0;
-    padding: 8px 0;
-    background: #2a2b2b;
-    font-size: 1.2em;
-    line-height: 30px;
-    outline: none;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
-    -webkit-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
-    -moz-box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
-    box-shadow: 0px 13px 78px 0px rgba(0,0,0,0.20);
-    text-align: left;
-}
-
-
-.tt-highlight {
-    color: #fff;
+    width: 100%;
+    border-radius: 0 0 0.25rem 0.25rem;
+    background-color: white;
 }
 
 .tt-suggestion {
-    padding: 3px 20px;
-    font-size: 16px;
-    line-height: 24px;
-}
-
-.tt-suggestion p {
-    margin: 0;
-}
-
-.tt-cursor {
-    cursor: default;
-    color: #fff;
-    background-color: #c0bdb6;
+    padding: 0.125rem 0.5rem;
+    font-family: 'freight-sans-pro', sans-serif;
+    cursor: pointer;
+    border-left: solid 1px #999;
+    border-right: solid 1px #999;
+    border-bottom: solid 1px #999;
 }
 
 .tt-suggestion:hover {
-    cursor: default;
-    color: #fff;
-    background-color: #c0bdb6;
+    background-color: #eee;
 }
 
 /* Results list numbering */
@@ -348,7 +292,7 @@ ul {
     margin-left: 1rem;
     padding: 0;
 }
-.results li{
+.results li {
     position: relative;
     left: 0;
     margin-bottom: 20px;
@@ -374,4 +318,57 @@ ul {
 
 .flagged-rels {
     float: right;
+}
+
+
+.add-word-body {
+    width: 12rem;
+    margin: 0 auto;
+}
+
+
+
+.add-word {
+    height: 2rem;
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+}
+
+input.add-word#orig_form {
+    width: 12rem;
+}
+
+input.add-word#lang_name {
+    width: 12rem;
+    margin: 0;
+}
+
+.lang-container {
+    position: relative;
+    margin-bottom: 0.25rem;
+}
+
+input.add-word#language {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 3.5rem;
+    /*padding: 0;*/
+    overflow: visible;
+    background: none;
+    border-radius: 0;
+    border: none;
+    border-left: solid 1px #eee;
+    font-size: 1rem;
+    text-align: center;
+    margin: 0;
+}
+
+input.add-word#ipa_form, input.add-word#eng_form {
+    width: 5.825rem;
+}
+
+textarea.add-word#definition {
+    width: 12rem;
+    height: 4rem;
 }
