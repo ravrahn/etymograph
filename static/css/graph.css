@@ -23,10 +23,11 @@ g.origin rect {
 .node-container {
     height: 2rem;
     width: 6rem;
-    margin: 0.5rem;
+    margin: 0.3rem 0.5rem;
 }
 
 .node-lang-name {
+    font-family: 'freight-sans-pro', sans-serif;
     font-size: 0.75rem;
     float: left;
 }
@@ -37,7 +38,8 @@ g.origin rect {
 }
 
 .node-label {
-    padding-top: 0.85rem;
+    padding-top: 1rem;
+    line-height: 1em;
     margin: 0;
     display: block;
 }

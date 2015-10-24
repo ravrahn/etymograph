@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 {% from "_formhelpers.html" import render_field %}
 {% block content %}
-<div class="flex-inner-content">
+<div class="add-word-body">
     <h2 align="center">Add a word</h2>
     <form action="{{ url_for('add_word') }}" method="POST">
+        <div>{{ form.orig_form(placeholder="Word", class="add-word") }}</div>
+        <div class="lang-container">{{ form.lang_name(placeholder="Langage", class="add-word") }}
+        {{ form.language(readonly=true, placeholder="None", class="add-word") }}</div>
+        <div>{{ form.ipa_form(placeholder="IPA Transcription", class="add-word") }}
+        {{ form.eng_form(placeholder="Latin Transliteration", class="add-word") }}</div>
+        <div>{{ form.definition(placeholder="Definition", class="add-word") }}</div>
         {{ form.hidden_tag() }}
-        <div>{{ form.orig_form(placeholder="Word") }}</div>
-        <div>{{ form.lang_name(placeholder="Langage") }}
-        {{ form.language(readonly=true) }}</div>
-        <div>{{ form.ipa_form(placeholder="IPA Transcription") }}
-        {{ form.eng_form(placeholder="Latin Transliteration") }}</div>
-        <div>{{ form.definition(placeholder="Definition") }}</div>
-        <button type="submit" class="addword-submit">Submit</form>
+        <button type="submit" class="add-word-submit">Submit</form>
     </form>
 </div>
 <script>
@@ -26,7 +26,7 @@ var langsHound = new Bloodhound({
 });
 
 $('#lang_name').typeahead({
-      hint: true,
+      hint: false,
       highlight: true
     },
     {
