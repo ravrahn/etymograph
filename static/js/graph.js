@@ -93,9 +93,13 @@ function makeGraph(roots, descs, form) {
         });
     }
     // Draw the graph
+    
+    var svg = d3.select("svg"),
+    	inner = svg.select("g");
+    
     // Create the renderer
     var render = new dagreD3.render();
-
+    
     // Set up an SVG group so that we can translate the final graph.
     var svg = d3.select("svg"),
         svgGroup = svg.append("g");
