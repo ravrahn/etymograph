@@ -238,12 +238,17 @@ def add_word():
             if not form.validate():
                 abort(400)
             word_data = form.data
+            del word_data['lang_name']
             # add the word to the database
             word = Word(word_data)
             word_id = model.add_word(me, word)
             return redirect('/{}'.format(word_id))
 
-        return render_search_template('addword.html', form=form)
+        langs = sorted([model.names[code] for code in model.names])
+        lang_lookup = {}
+        for code in model.names:
+            lang_lookup[model.names[code]] = code
+        return render_search_template('addword.html', form=form, langs=langs, lang_lookup=lang_lookup)
     else:
         abort(403)
 
