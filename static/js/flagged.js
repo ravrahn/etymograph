@@ -14,9 +14,15 @@ for (var i=0; i < words.length; i++) {
     g.setNode(word.id, {
         id: word.id,
         labelType:'html',
-        label: makeLabel(word),
+        label: makeLinkLabel(word),
         padding: 0,
         class: 'word' 
+    });
+
+    g.nodes().forEach(function(v) {
+      var node = g.node(v);
+      // Round the corners of the nodes
+      node.rx = node.ry = 5;
     });
 
 	var render = new dagreD3.render();
@@ -45,7 +51,7 @@ for (var i=0; i < rels.length; i++) {
     g.setNode(root.id, {
         id: root.id,
         labelType:'html',
-        label: makeLabel(root),
+        label: makeLinkLabel(root),
         padding: 0,
         class: 'word' 
     });
@@ -53,7 +59,7 @@ for (var i=0; i < rels.length; i++) {
     g.setNode(desc.id, {
         id: desc.id,
         labelType:'html',
-        label: makeLabel(desc),
+        label: makeLinkLabel(desc),
         padding: 0,
         class: 'word' 
     });
@@ -61,6 +67,12 @@ for (var i=0; i < rels.length; i++) {
     g.setEdge(root.id, desc.id, {
         labelType:'html',
         label: rels[i].flag_count + ' flag' + (rels[i].flag_count === 1 ? '' : 's')
+    });
+
+    g.nodes().forEach(function(v) {
+      var node = g.node(v);
+      // Round the corners of the nodes
+      node.rx = node.ry = 5;
     });
 
 	var render = new dagreD3.render();

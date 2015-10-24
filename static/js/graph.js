@@ -6,6 +6,14 @@ function makeEdgeLabel(rootID, descID) {
     }
 }
 
+var nodes = {};
+var fields = {
+    'lang_name': 'Language',
+    'definition': 'Definition',
+    'ipa_form': 'IPA Transcription',
+    'eng_form': 'Latin Transliteration'
+};
+
 function addRoot(g, root, parent) {
     var rootLabel = makeLabel(root);
     g.setNode(root.id, {
@@ -15,10 +23,13 @@ function addRoot(g, root, parent) {
         padding: 0,
         class: 'word'
     });
+    nodes[root.id] = root;
+
     var edgeLabel = makeEdgeLabel(root.id, parent);
     g.setEdge(root.id, parent, {
         labelType:'html',
-        label: edgeLabel
+        label: edgeLabel,
+        lineInterpolate: 'basis'
     });
     if (root.roots !== undefined) {
         root.roots.forEach(function(r) { addRoot(g, r, root.id) });
@@ -35,177 +46,171 @@ function addDesc(g, desc, parent) {
         padding: 0,
         class: 'word'
     });
+    nodes[desc.id] = desc;
+
     var edgeLabel = makeEdgeLabel(parent, desc.id);
     g.setEdge(parent, desc.id, {
         labelType:'html',
-        label: edgeLabel
+        label: edgeLabel,
+        lineInterpolate: 'basis'
     });
     if (desc.descs !== undefined) {
         desc.descs.forEach(function(d) { addDesc(g, d, desc.id) });
     }
 }
+var origin = roots;
 
+// convert roots and descs into a single dagre graph
+var g = new dagreD3.graphlib.Graph()
+    .setGraph({
+        nodesep: 30,
+        ranksep: 50,
+        rankdir: "LR",
+        marginx: 40,
+        marginy: 80
+    })
+    .setDefaultEdgeLabel(function() { return {}; });
 
-function makeGraph(roots, descs, form) {
-    var origin = roots;
+g.setNode(origin.id, {
+    id: origin.id,
+    labelType:'html',
+    label: makeLabel(origin),
+    padding: 0,
+    class: 'origin word' 
+});
+nodes[origin.id] = origin;
 
-    // convert roots and descs into a single dagre graph
-    var g = new dagreD3.graphlib.Graph()
-        .setGraph({
-            nodesep: 30,
-            ranksep: 50,
-            rankdir: "LR",
-            marginx: 40,
-            marginy: 80
-        })
-        .setDefaultEdgeLabel(function() { return {}; });
+roots.roots.forEach(function(r) { addRoot(g, r, origin.id) });
+descs.descs.forEach(function(d) { addDesc(g, d, origin.id) });
 
-    g.setNode(origin.id, {
-        id: origin.id,
-        labelType:'html',
-        label: makeLabel(origin),
+if (loggedIn) {
+    g.setNode('add_root', {
+        id: 'add_root',
+        labelType: 'html',
+        label: '<div class="add-node">+ Add</div>',
         padding: 0,
-        class: 'origin word' 
+        class: 'add add-root'
+    });
+    g.setEdge('add_root', origin.id, {
+        lineInterpolate: 'basis',
+        class: 'add-edge'
     });
 
-    roots.roots.forEach(function(r) { addRoot(g, r, origin.id) });
-    descs.descs.forEach(function(d) { addDesc(g, d, origin.id) });
-
-    if (loggedIn) {
-        g.setNode('add_root', {
-            id: 'add_root',
-            labelType: 'html',
-            label: '<div class="add-node">+ Add</div>',
-            padding: 0,
-            class: 'add add-root'
-        });
-        g.setEdge('add_root', origin.id, {
-            class: 'add-edge'
-        });
-
-        g.setNode('add_desc', {
-            id: 'add_desc',
-            labelType: 'html',
-            label: '<div class="add-node">+ Add</div>',
-            padding: 0,
-            class: 'add add-desc'
-        });
-        g.setEdge(origin.id, 'add_desc', {
-            class: 'add-edge'
-        });
-    }
-
-    g.nodes().forEach(function(v) {
-      var node = g.node(v);
-      // Round the corners of the nodes
-      node.rx = node.ry = 5;
+    g.setNode('add_desc', {
+        id: 'add_desc',
+        labelType: 'html',
+        label: '<div class="add-node">+ Add</div>',
+        padding: 0,
+        class: 'add add-desc'
     });
-
-    // Draw the graph
-    // Create the renderer
-    var render = new dagreD3.render();
-    
-    // Set up an SVG group so that we can translate the final graph.
-    var svg = d3.select("svg"),
-        inner = svg.append("g"),
-        innerX = 0;
-    // Set up click-and-drag
-
-    function translateGraph(dx, e) {
-        var leftBound = 0;
-        var rightBound = $('svg').width() - $('.infobar').width() - $('g')[0].getBBox().width - 40;
-        if (innerX + dx > leftBound) {
-            innerX = leftBound;
-        } else if (innerX + dx < rightBound) {
-            innerX = rightBound;
-        } else {
-            innerX += dx;
-            if (e !== null) {
-                e.preventDefault();
-            }
-        }
-        inner.attr("transform", "translate(" + [ innerX,0 ] + ")");
-    }
-
-    var drag = d3.behavior.drag().on("drag", function() {
-            translateGraph(d3.event.dx, null);
-        });
-    svg.call(drag);
-
-    // Run the renderer. This is what draws the final graph.
-    render(inner, g);
-
-    $("g.word").click(function() {
-        if ($('.selected').length !== 0) {
-            $(".selected").attr("class", $(".selected").attr("class").replace('selected', ''));
-        }
-        $( this ).attr("class", "selected " + $(this).attr("class"));
-        // Get data from the graph node
-        var id = $( this ).attr("id");
-        var orig_form = $("div#"+ id +".data").attr("data-orig_form");
-        var eng_form = $("div#"+ id +".data").attr("data-eng_form");
-        var lang_name = $("div#"+ id +".data").attr("data-lang_name");
-        var ipa_form = $("div#"+ id +".data").attr("data-ipa_form");
-        var definition = $("div#"+id+".data").attr("data-definition");
-        // Construct the html to go inside the info sidebar
-        var info = "<h2><a href='/" + id + "'>" + orig_form + '</a></h2>';
-        if (eng_form !== undefined){
-            info += "<p> English Transliteration: " + eng_form + '</p>';
-        }
-        if (ipa_form !== undefined){
-            info += "<p> Pronounciation: " + ipa_form + '</p>';
-        }
-        if (lang_name !== undefined){
-            info += "<p> Language: "+ lang_name + '</p>';
-        }
-        if (definition !== undefined){
-            info += "<p> Definition: "+ definition + '</p>';
-        }
-        if (loggedIn) {
-            info += '<a href="/flag/' + id + '?next=' + next_url + '">Flag this as incorrect?</a>';
-        }
-        $(".infobar").html(info);
+    g.setEdge(origin.id, 'add_desc', {
+        lineInterpolate: 'basis',
+        class: 'add-edge'
     });
-
-    if (loggedIn) {
-        $('g.add-root').click(function() {
-            // search, somehow
-            var id = 7892; // in lieu of search
-            $('body').append(form);
-            $('form.add-root #word_id').val(origin.id);
-            $('form.add-root #root_id').val(id);
-            // data = { 'word_id': origin.id, 'root_id': id, 'source': source }
-            // $.post('{{ url_for("add_root") }}', data, function() {
-            //     location.reload()
-            // });
-        });
-        $('g.add-desc').click(function() {
-            // search, somehow
-            var id = 7891; // in lieu of search
-            $('body').append(form);
-            $('form.add-root #word_id').val(id);
-            $('form.add-root #root_id').val(origin.id);
-            // data = { 'word_id': id, 'root_id': origin.id, 'source': source }
-            // $.post('{{ url_for("add_root") }}', data, function() {
-            //     location.reload()
-            // });
-        });
-    }
-
-    $('svg').mousewheel(function(e) {
-        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-            translateGraph(-e.deltaX/e.deltaFactor, e);
-        }
-    });
-
-    // Resize the top div container for this graph
-    var gtag, gh, vw, pad;
-    gtag = $('g');
-    gh = gtag[0].getBBox().height;
-    gw = gtag[0].getBBox().width;
-    pad = 30; //gh and gw are actually less than what is reported in developer tools so we pad them.
-    gh += pad;
-    gw += pad;
-    $('.flex-content').height(gh);
-    $('.flex-content').width(gw);
 }
+
+g.nodes().forEach(function(v) {
+  var node = g.node(v);
+  // Round the corners of the nodes
+  node.rx = node.ry = 5;
+});
+
+// Draw the graph
+// Create the renderer
+var render = new dagreD3.render();
+
+// Set up an SVG group so that we can translate the final graph.
+var svg = d3.select("svg"),
+    inner = svg.append("g"),
+    innerX = 0;
+// Set up click-and-drag
+
+function translateGraph(dx, e) {
+    var leftBound = 0;
+    var rightBound = $('svg').width() - $('.infobar').width() - $('g')[0].getBBox().width - 40;
+    if (innerX + dx > leftBound) {
+        innerX = leftBound;
+    } else if (innerX + dx < rightBound) {
+        innerX = rightBound;
+    } else {
+        innerX += dx;
+        if (e !== null) {
+            e.preventDefault();
+        }
+    }
+    inner.attr("transform", "translate(" + [ innerX,0 ] + ")");
+}
+
+var drag = d3.behavior.drag().on("drag", function() {
+        translateGraph(d3.event.dx, null);
+    });
+svg.call(drag);
+
+// Run the renderer. This is what draws the final graph.
+render(inner, g);
+
+$("g.word").click(function() {
+    if ($('.selected').length !== 0) {
+        $(".selected").attr("class", $(".selected").attr("class").replace('selected', ''));
+    }
+    $( this ).attr("class", "selected " + $(this).attr("class"));
+    // Get data from the graph node
+    var id = $(this).attr("id");
+    var node = nodes[id];
+    console.log(node, id);
+    // Construct the html to go inside the info sidebar
+    var info = "<h2><a href='/" + id + "'>" + node.orig_form + '</a></h2>';
+    info += '<h3>' + node.lang_name + '</h3>';
+    if ('definition' in node) {
+        info += '<p>' + node.definition + '</p>';
+    }
+    if ('eng_form' in node && node.eng_form !== ''){
+        info += "<h4>" + fields.eng_form + ":</h4> <div class='latin'>" + node.eng_form + '</div>';
+    }
+    if ('ipa_form' in node && node.ipa_form !== ''){
+        info += "<h4>" + fields.ipa_form + ":</h4> <div class='ipa'>/" + node.ipa_form + '/</div>';
+    }
+    if (loggedIn) {
+        info += '<div class="flag"><a href="/flag/' + id + '?next=' + next_url + '">Flag as incorrect</a> - <span class="flag-count">' + node.flag_count + '</span> flags</div>';
+    }
+    console.log(info);
+    $(".infobar").html(info);
+});
+
+if (loggedIn) {
+    $('g.add-root').click(function() {
+        // search, somehow
+        var id = 7892; // in lieu of search
+        $('body').append(form);
+        $('form.add-root #word_id').val(origin.id);
+        $('form.add-root #root_id').val(id);
+        // data = { 'word_id': origin.id, 'root_id': id, 'source': source }
+        // $.post('{{ url_for("add_root") }}', data, function() {
+        //     location.reload()
+        // });
+    });
+    $('g.add-desc').click(function() {
+        // search, somehow
+        var id = 7891; // in lieu of search
+        $('body').append(form);
+        $('form.add-root #word_id').val(id);
+        $('form.add-root #root_id').val(origin.id);
+        // data = { 'word_id': id, 'root_id': origin.id, 'source': source }
+        // $.post('{{ url_for("add_root") }}', data, function() {
+        //     location.reload()
+        // });
+    });
+}
+
+$('.origin').click();
+
+$('svg').mousewheel(function(e) {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        translateGraph(-e.deltaX/e.deltaFactor, e);
+    }
+});
+
+// Resize the top div container for this graph
+var gtag = $('g'),
+    gh = gtag[0].getBBox().height + 30; //gh is actually less than what is reported in developer tools so we pad them.
+$('.flex-content').height(gh);
