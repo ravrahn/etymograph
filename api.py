@@ -337,9 +337,19 @@ def flag(word_id):
         except modelWordNotFoundException:
             abort(404)
 
-@app.route('/flag/')
-def flag_rel():
-    abort(404)
+@app.route('/flag/rel/<int:root_id>/<int:desc_id>', methods=['GET', 'POST'])
+def flag_rel(root_id, desc_id):
+    if not root_id or not desc_id:
+        abort(404) # cannot flag non-existent relations.
+    me = get_user()
+    if me is not None:
+        try:
+            if me['id']:
+                model.flag_relationship(me['id'], root_id, desc_id)
+            return_url = request.args.get('next') or '/edit/rel/'+str(root_id)+'/'+str(desc_id)
+            return redirect(return_url)
+        except model.WordNotFoundException:
+            abort(404)
 
 
 if __name__ == '__main__':

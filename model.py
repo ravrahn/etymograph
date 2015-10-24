@@ -110,6 +110,7 @@ def get_rel(root_id, desc_id):
             root_info['lang_name'] = lang_decode(root_info['language'])
         except KeyError:
             pass
+    root_info['id'] = root_id
     # get desc
     desc = get_node_safe(desc_id)
     desc_info = desc.properties
@@ -119,6 +120,7 @@ def get_rel(root_id, desc_id):
             desc_info['lang_name'] = lang_decode(desc_info['language'])
         except KeyError:
             pass
+    desc_info['id'] = desc_id
     # note that the root relationship goes from desc -> root
     rel = graph.match_one(start_node=desc, rel_type="root", end_node=root)
     if(rel == None):
@@ -211,7 +213,7 @@ def get_flagged_words():
     return words
 
 def get_flagged_rels():
-    results = graph.cypher.execute('MATCH (:User)-[f:created_rel]->(d:Word)-[:root]->(r:Word) WHERE id(r) = f.root RETURN id(r),id(d),COUNT(f)')
+    results = graph.cypher.execute('MATCH (:User)-[f:flagged_rel]->(d:Word)-[:root]->(r:Word) WHERE id(r) = f.root RETURN id(r),id(d),COUNT(f)')
 
     rels = []
     for result in results:
@@ -235,9 +237,17 @@ def flag(user_id, word_id):
     query = """MATCH (u:User),(w:Word) WHERE u.id = {user_id} AND id(w) = {word_id} MERGE (u)-[f:flagged]->(w) RETURN f"""
     graph.cypher.execute(query, {'user_id': str(user_id), 'word_id': int(word_id)})
 
-def flag_relationship(user_id,word_id):
-    #call flag function above
-    flag()
+def flag_relationship(user_id, root_id, desc_id):
+    """
+    Creates a flagged_rel relationship between user and decs of relationship
+    """
+    query = """MATCH (u:User), (r:Word), (d:Word) 
+            WHERE u.id = {user_id} AND id(r) = {root_id} AND id(d) = {desc_id} 
+            MERGE (u)-[f:flagged_rel {root:{root_id}, desc:{desc_id}}]->(d) 
+            ON CREATE SET f.flag_count = 1
+            RETURN f"""
+    graph.cypher.execute(query, {'user_id': str(user_id), 'root_id': int(root_id), 'desc_id': int(desc_id)})
+    
 
 #TODO refactor so that this can be used to edit arbitrary rel properties
 def edit_rel_source(user, root_id, desc_id, new_source):
