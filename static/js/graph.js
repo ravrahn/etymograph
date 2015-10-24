@@ -93,24 +93,24 @@ function makeGraph(roots, descs, form) {
             class: 'add-edge'
         });
     }
+
     // Draw the graph
-    
-    var svg = d3.select("svg"),
-    	inner = svg.select("g");
-    // Zooming property
-    var zoom = d3.behavior.zoom().on("zoom",function(){
-	inner.attr("transfrom","translate(" +d3.event.translate + ")");
-	});
-    svg.call(zoom);	    
     // Create the renderer
     var render = new dagreD3.render();
     
     // Set up an SVG group so that we can translate the final graph.
     var svg = d3.select("svg"),
-        svgGroup = svg.append("g");
+        inner = svg.append("g"),
+        innerX = 0;
+    // Set up click-and-drag
+    var drag = d3.behavior.drag().on("drag", function() {
+            innerX += d3.event.dx;
+            inner.attr("transform", "translate(" + [ innerX,0 ] + ")");
+        });
+    svg.call(drag);
 
     // Run the renderer. This is what draws the final graph.
-    render(d3.select("svg g"), g);
+    render(inner, g);
 
     $("g.word").click(function() {
         if ($('.selected').length !== 0) {
