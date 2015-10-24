@@ -329,5 +329,13 @@ def flag(word_id):
             abort(404)
 
 
+@app.route('/about')
+def about():
+    return render_search_template('about.html')
+
+@app.route('/api')
+def api_doc():
+    return render_search_template('api.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
