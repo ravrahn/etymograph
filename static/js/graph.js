@@ -45,6 +45,7 @@ function addDesc(g, desc, parent) {
     }
 }
 
+
 function makeGraph(roots, descs, form) {
     var origin = roots;
 
@@ -54,8 +55,8 @@ function makeGraph(roots, descs, form) {
             nodesep: 30,
             ranksep: 50,
             rankdir: "LR",
-            marginx: 20,
-            marginy: 20
+            marginx: 40,
+            marginy: 80
         })
         .setDefaultEdgeLabel(function() { return {}; });
 
@@ -74,7 +75,7 @@ function makeGraph(roots, descs, form) {
         g.setNode('add_root', {
             id: 'add_root',
             labelType: 'html',
-            label: '+ Add Root',
+            label: '<div class="add-node">+ Add</div>',
             padding: 0,
             class: 'add add-root'
         });
@@ -85,7 +86,7 @@ function makeGraph(roots, descs, form) {
         g.setNode('add_desc', {
             id: 'add_desc',
             labelType: 'html',
-            label: '+ Add Descendant',
+            label: '<div class="add-node">+ Add</div>',
             padding: 0,
             class: 'add add-desc'
         });
@@ -93,6 +94,12 @@ function makeGraph(roots, descs, form) {
             class: 'add-edge'
         });
     }
+
+    g.nodes().forEach(function(v) {
+      var node = g.node(v);
+      // Round the corners of the nodes
+      node.rx = node.ry = 5;
+    });
 
     // Draw the graph
     // Create the renderer
@@ -103,9 +110,25 @@ function makeGraph(roots, descs, form) {
         inner = svg.append("g"),
         innerX = 0;
     // Set up click-and-drag
+
+    function translateGraph(dx, e) {
+        var leftBound = 0;
+        var rightBound = $('svg').width() - $('.infobar').width() - $('g')[0].getBBox().width - 40;
+        if (innerX + dx > leftBound) {
+            innerX = leftBound;
+        } else if (innerX + dx < rightBound) {
+            innerX = rightBound;
+        } else {
+            innerX += dx;
+            if (e !== null) {
+                e.preventDefault();
+            }
+        }
+        inner.attr("transform", "translate(" + [ innerX,0 ] + ")");
+    }
+
     var drag = d3.behavior.drag().on("drag", function() {
-            innerX += d3.event.dx;
-            inner.attr("transform", "translate(" + [ innerX,0 ] + ")");
+            translateGraph(d3.event.dx, null);
         });
     svg.call(drag);
 
@@ -125,7 +148,7 @@ function makeGraph(roots, descs, form) {
         var ipa_form = $("div#"+ id +".data").attr("data-ipa_form");
         var definition = $("div#"+id+".data").attr("data-definition");
         // Construct the html to go inside the info sidebar
-        var info = "<h2>" + orig_form + '</h2>';
+        var info = "<h2><a href='/" + id + "'>" + orig_form + '</a></h2>';
         if (eng_form !== undefined){
             info += "<p> English Transliteration: " + eng_form + '</p>';
         }
@@ -168,6 +191,12 @@ function makeGraph(roots, descs, form) {
             // });
         });
     }
+
+    $('svg').mousewheel(function(e) {
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+            translateGraph(-e.deltaX/e.deltaFactor, e);
+        }
+    });
 
     // Resize the top div container for this graph
     var gtag, gh, vw, pad;

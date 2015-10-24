@@ -1,3 +1,6 @@
+.graph .flex-content {
+    padding: 0;
+}
 
 g.origin rect {
     stroke: #000;
@@ -6,13 +9,11 @@ g.origin rect {
 .node rect {
     stroke: #999;
     fill: #fff;
-    stroke-width: 1.5px;
+    stroke-width: 1px;
 }
 
 .selected rect {
-    stroke: #000;
-    fill: #fff;
-    stroke-width: 3px;
+    stroke-width: 1.5px;
 }
 
 .edgePath path {
@@ -42,6 +43,8 @@ g.origin rect {
     line-height: 1em;
     margin: 0;
     display: block;
+    font-family: 'minion-pro', serif;
+    font-size: 1rem;
 }
 
 .add-edge path {
@@ -50,12 +53,19 @@ g.origin rect {
 }
 
 .node.add rect {
-    stroke-width: 1px;
     stroke: #999;
 }
 
 .node.add:hover rect {
     fill: #eee;
+}
+
+.add-node {
+    padding: 0.6rem;
+    height: 2.5rem;
+    /*width: 6rem;*/
+    font-family: 'freight-sans-pro', sans-serif;
+    font-size: 1rem;
 }
 
 .infobar {
@@ -64,7 +74,7 @@ g.origin rect {
     top: 4rem;
     background-color: rgba(245, 236, 228, 0.75);
     height: 100%;
-    width: 12rem;
+    width: 16rem;
     padding: 1rem;
     font-size: 0.8rem;
 }

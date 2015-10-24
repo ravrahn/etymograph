@@ -1,5 +1,5 @@
 function makeLabel(word) {
-    return hiddenInfo(word)+'<div class="node-container"><span class="node-lang-name">' + word.lang_name + '</span><span class="node-flags">' + word.flag_count + ' flag' + (word.flag_count === 1 ? '' : 's') + '</span><a class="node-label" href="/'+word.id+'">' + word.orig_form + '</a><div style="clear: none;"></div></div>';
+    return hiddenInfo(word)+'<div class="node-container"><span class="node-lang-name">' + word.lang_name + '</span><span class="node-label">' + word.orig_form + '</span><div style="clear: none;"></div></div>';
 }
 
 function hiddenInfo(word){
