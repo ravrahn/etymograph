@@ -63,6 +63,7 @@ function makeGraph(roots, descs, form) {
         id: origin.id,
         labelType:'html',
         label: makeLabel(origin),
+        padding: 0,
         class: 'origin word' 
     });
 
