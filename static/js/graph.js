@@ -1,28 +1,3 @@
-function makeLabel(word) {
-    return hiddenInfo(word)+'<div class="lang-name">' + word.lang_name + '</div><div><a href="/'+word.id+'">' + word.orig_form + '</a></div>';
-}
-
-function hiddenInfo(word){
-    var info = '<div class="data"';
-    info += 'id='+word.id+' ';
-    info += 'data-orig_form="'+word.orig_form+'" ';
-
-    if(word.eng_form !== undefined){
-        info += 'data-eng_form="'+word.eng_form+'" ';
-    }
-    if(word.lang_name !== undefined){
-        info += 'data-lang_name="'+word.lang_name+'" ';
-    }
-    if(word.ipa_form !== undefined){
-        info += 'data-ipa_form="'+word.ipa_form+'" ';
-    }
-    if(word.definition !== undefined){
-        info += 'data-definition="'+word.definition+'" ';
-    }
-    info +='></div>';
-    return info;
-}
-
 function makeEdgeLabel(rootID, descID) {
     if(loggedIn) {
         return '<a href="/edit/rel/'+rootID+'/'+descID+'">more...</a>';
@@ -33,9 +8,18 @@ function makeEdgeLabel(rootID, descID) {
 
 function addRoot(g, root, parent) {
     var rootLabel = makeLabel(root);
-    g.setNode(root.id, { id: root.id, labelType:'html', label: rootLabel, class: 'word' });
+    g.setNode(root.id, {
+        id: root.id,
+        labelType:'html',
+        label: rootLabel,
+        padding: 0,
+        class: 'word'
+    });
     var edgeLabel = makeEdgeLabel(root.id, parent);
-    g.setEdge(root.id, parent, { lineInterpolate: "bundle", labelType:'html', label: edgeLabel });
+    g.setEdge(root.id, parent, {
+        labelType:'html',
+        label: edgeLabel
+    });
     if (root.roots !== undefined) {
         root.roots.forEach(function(r) { addRoot(g, r, root.id) });
     }
@@ -44,9 +28,18 @@ function addRoot(g, root, parent) {
 
 function addDesc(g, desc, parent) {
     var descLabel = makeLabel(desc);
-    g.setNode(desc.id, { id: desc.id, labelType:'html', label: descLabel, class: 'word' });
+    g.setNode(desc.id, { id:
+        desc.id,
+        labelType:'html',
+        label: descLabel,
+        padding: 0,
+        class: 'word'
+    });
     var edgeLabel = makeEdgeLabel(parent, desc.id);
-    g.setEdge(parent, desc.id, { lineInterpolate: "bundle", labelType:'html', label: edgeLabel });
+    g.setEdge(parent, desc.id, {
+        labelType:'html',
+        label: edgeLabel
+    });
     if (desc.descs !== undefined) {
         desc.descs.forEach(function(d) { addDesc(g, d, desc.id) });
     }
@@ -58,36 +51,66 @@ function makeGraph(roots, descs, form) {
     // convert roots and descs into a single dagre graph
     var g = new dagreD3.graphlib.Graph()
         .setGraph({
-            nodesep: 70,
+            nodesep: 30,
             ranksep: 50,
             rankdir: "LR",
             marginx: 20,
             marginy: 20
         })
-        .setDefaultEdgeLabel(function() { return {}; });;
+        .setDefaultEdgeLabel(function() { return {}; });
 
-    g.setNode(origin.id, { id: origin.id, labelType:'html', label: makeLabel(origin),  class: 'origin word' });
+    g.setNode(origin.id, {
+        id: origin.id,
+        labelType:'html',
+        label: makeLabel(origin),
+        padding: 0,
+        class: 'origin word' 
+    });
 
     roots.roots.forEach(function(r) { addRoot(g, r, origin.id) });
     descs.descs.forEach(function(d) { addDesc(g, d, origin.id) });
 
     if (loggedIn) {
-        g.setNode('add_root', { id: 'add_root', labelType: 'html', label: '+ Add Root', class: 'add add-root' });
-        g.setEdge('add_root', origin.id, { lineInterpolate: "bundle", class: 'add-edge' });
+        g.setNode('add_root', {
+            id: 'add_root',
+            labelType: 'html',
+            label: '+ Add Root',
+            padding: 0,
+            class: 'add add-root'
+        });
+        g.setEdge('add_root', origin.id, {
+            class: 'add-edge'
+        });
 
-        g.setNode('add_desc', { id: 'add_desc', labelType: 'html', label: '+ Add Descendant', class: 'add add-desc' });
-        g.setEdge(origin.id, 'add_desc', { lineInterpolate: "bundle", class: 'add-edge' });
+        g.setNode('add_desc', {
+            id: 'add_desc',
+            labelType: 'html',
+            label: '+ Add Descendant',
+            padding: 0,
+            class: 'add add-desc'
+        });
+        g.setEdge(origin.id, 'add_desc', {
+            class: 'add-edge'
+        });
     }
+
     // Draw the graph
     // Create the renderer
     var render = new dagreD3.render();
-
+    
     // Set up an SVG group so that we can translate the final graph.
     var svg = d3.select("svg"),
-        svgGroup = svg.append("g");
+        inner = svg.append("g"),
+        innerX = 0;
+    // Set up click-and-drag
+    var drag = d3.behavior.drag().on("drag", function() {
+            innerX += d3.event.dx;
+            inner.attr("transform", "translate(" + [ innerX,0 ] + ")");
+        });
+    svg.call(drag);
 
     // Run the renderer. This is what draws the final graph.
-    render(d3.select("svg g"), g);
+    render(inner, g);
 
     $("g.word").click(function() {
         if ($('.selected').length !== 0) {

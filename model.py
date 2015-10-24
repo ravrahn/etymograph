@@ -81,12 +81,17 @@ def info(word_id):
     '''
     node = get_node_safe(word_id)
     info = node.properties
+    info['id'] = word_id
     # Adds a human-readable name to the information
     if 'language' in info:
         try:
             info['lang_name'] = lang_decode(info['language'])
         except KeyError:
             pass
+
+    flag_count_query = 'MATCH (:User)-[f:flagged]->(n:Word) WHERE id(n) = {id} RETURN COUNT(f)'
+    info['flag_count'] = graph.cypher.execute(flag_count_query, {'id': word_id})[0][0]
+
     return dict(info)
 
 def get_rel(root_id, desc_id):
@@ -132,22 +137,14 @@ def search(query):
     if not query:
         abort(400)
 
-    cypher_query = "MATCH (n:Word) WHERE n.orig_form =~ {sub_str} RETURN id(n),n"
+    cypher_query = "MATCH (n:Word) WHERE n.orig_form =~ {sub_str} RETURN id(n)"
     params = { 'sub_str': '(?i).*{}.*'.format(query) }
 
     results = []
     try:
         for node in graph.cypher.execute(cypher_query, params):
             uid = node[0]
-            node = node[1]
-            result = node.properties
-            result['id'] = uid
-            # Adds a human-readable name to the information
-            if 'language' in result:
-                try:
-                    result['lang_name'] = lang_decode(result['language'])
-                except KeyError:
-                    pass
+            result = info(uid)
             results.append(result)
     except GraphError:
         return [(-1, {'error': 'Invalid request'})]
@@ -179,7 +176,6 @@ def user_added_word(user):
     for result in results:
         word_id = result[0]
         word_info = info(word_id)
-        word_info['id'] = word_id
         results2.append(word_info)
     return results2
 
@@ -203,6 +199,35 @@ def add_user(user):
     user_node.push()
 
 
+def get_flagged_words():
+    results = graph.cypher.execute('MATCH (:User)-[f:flagged]->(n:Word) RETURN id(n),COUNT(f)')
+
+    words = []
+
+    for result in results:
+        word = info(result[0])
+        words.append(word)
+
+    return words
+
+def get_flagged_rels():
+    results = graph.cypher.execute('MATCH (:User)-[f:created_rel]->(d:Word)-[:root]->(r:Word) WHERE id(r) = f.root RETURN id(r),id(d),COUNT(f)')
+
+    rels = []
+    for result in results:
+        root = info(result[0])
+        desc = info(result[1])
+
+        rel = { 
+            'root': root,
+            'desc': desc,
+            'flag_count': result[2]
+            }
+        rels.append(rel)
+
+    return rels
+
+
 def flag(user_id, word_id):
     """
     Creates a flag relationship between user and word
@@ -210,6 +235,9 @@ def flag(user_id, word_id):
     query = """MATCH (u:User),(w:Word) WHERE u.id = {user_id} AND id(w) = {word_id} MERGE (u)-[f:flagged]->(w) RETURN f"""
     graph.cypher.execute(query, {'user_id': str(user_id), 'word_id': int(word_id)})
 
+def flag_relationship(user_id,word_id):
+    #call flag function above
+    flag()
 
 #TODO refactor so that this can be used to edit arbitrary rel properties
 def edit_rel_source(user, root_id, desc_id, new_source):

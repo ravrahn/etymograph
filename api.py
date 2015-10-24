@@ -206,9 +206,8 @@ def info(word_id): # ET-20
         info = model.info(word_id)
     except model.WordNotFoundException as e:
         if request_wants_json():
-            errNum  = 1234 # placeholder error num. TODO: change
             errDesc = str(e)
-            response = json.jsonify({'error':errNum, 'description':errDesc})
+            response = json.jsonify({'error': errDesc})
             response.status_code = 404 #file not found
             return response
         else:
@@ -313,8 +312,13 @@ def show_graph(word_id):
     except model.WordNotFoundException:
         abort(404)
 
+@app.route('/flagged')
+def show_flagged():
+    words = model.get_flagged_words()
+    rels = model.get_flagged_rels()
+    return render_search_template('flagged.html', words=words, rels=rels)
 
-@app.route('/flag/<word_id>')
+@app.route('/flag/<int:word_id>')
 def flag(word_id):
     if not word_id:
         abort(404) # cannot flag non-existent words.
@@ -327,6 +331,10 @@ def flag(word_id):
             return redirect(return_url)
         except modelWordNotFoundException:
             abort(404)
+
+@app.route('/flag/')
+def flag_rel():
+    abort(404)
 
 
 @app.route('/about')
