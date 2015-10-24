@@ -3,9 +3,6 @@
 <link rel="stylesheet" href="{{url_for('static', filename='css/graph.css') }}">
 {% endblock %}
 {% block content %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
-<script src="{{ url_for('static', filename='js/dagre-d3.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/graphLabel.js') }}"></script>
 
 <div class="flagged-words">
 <h2>Flagged Words</h2>
@@ -24,6 +21,9 @@
 {% endfor %}
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+<script src="{{ url_for('static', filename='js/dagre-d3.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/graphLabel.js') }}"></script>
 <script>
 var words = {{ words|safe }};
 var rels = {{ rels|safe }};

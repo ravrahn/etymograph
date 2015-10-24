@@ -137,22 +137,14 @@ def search(query):
     if not query:
         abort(400)
 
-    cypher_query = "MATCH (n:Word) WHERE n.orig_form =~ {sub_str} RETURN id(n),n"
+    cypher_query = "MATCH (n:Word) WHERE n.orig_form =~ {sub_str} RETURN id(n)"
     params = { 'sub_str': '(?i).*{}.*'.format(query) }
 
     results = []
     try:
         for node in graph.cypher.execute(cypher_query, params):
             uid = node[0]
-            node = node[1]
-            result = node.properties
-            result['id'] = uid
-            # Adds a human-readable name to the information
-            if 'language' in result:
-                try:
-                    result['lang_name'] = lang_decode(result['language'])
-                except KeyError:
-                    pass
+            result = info(uid)
             results.append(result)
     except GraphError:
         return [(-1, {'error': 'Invalid request'})]

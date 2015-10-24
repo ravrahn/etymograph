@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
+{% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/graph.css') }}">
+{% endblock %}
 {% block content %}
 <h2>Search results for "{{ search_str }}":</h2>
     {% if results %}
-        <ul class="results">
-        {% for result in results %}
-            <li>
-                <a class="result" href="/{{ result['id'] }}">{{ result['orig_form'] }}</a>
-                <span class="result-lang">{{ result['lang_name'] }}</span>
-            </li>
+        <ul>
+        {% for word in results %}
+            <li><svg id="graph-{{ word['id'] }}" width="200" height="75"></svg></li>
         {% endfor %}
         </ul>
     {% else %}
@@ -16,4 +16,12 @@
 <script>
 /*$('#upleft-search.typeahead').hide();*/
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+<script src="{{ url_for('static', filename='js/dagre-d3.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/graphLabel.js') }}"></script>
+<script>
+var words = {{ results|safe }};
+</script>
+<script src="{{ url_for('static', filename='js/results.js') }}"></script>
 {% endblock %}
