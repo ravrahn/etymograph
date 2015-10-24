@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+<body>
+
+    <div class="about-title">
+        <h2>What is Etymograph?</h2>
+    </div>
+    <div class="point-box">
+        <img style="float:left; margin-right: 40px" src="{{ url_for('static', filename='img/graph1.png') }}" height="125px" width="125px">
+        <p>For anyone interested in the origin of words, Etymograph is a website and API that shows etymological data in a structured and easy-to-use way.</p>
+    </div>
+    <div class="point-box">
+        <img style="float:right; margin-left: 40px" src="{{ url_for('static', filename='img/growth2.png') }}" height="125px" width="125px">
+        <p>The word database is open to change from the hands of users like you. Words and relationships can be added, modified, and flagged.</p>
+    </div>
+    <div class="point-box">
+        <img style="float:left; margin-right: 40px" src="{{ url_for('static', filename='img/terminal1.png') }}" height="125px" width="125px">
+        <p><a href="{{ url_for('api_doc') }}" id="api-link">Etymograph's API</a> allows researchers, students, or anyone inclined to quickly access the database from a CLI or script.</p>
+    </div>
+
+</body>
+<style type="text/css">
+    h1 {
+        font-size: 3.998em;
+    }
+    h2 {
+        font-size: 2.827em;
+    }
+    h3 {
+        font-size: 1.999em;
+    }
+    h4 {
+        font-size: 1.414em;
+    }
+    h5 {
+        font-size: 1em;
+    }
+    h5 {
+        font-size: 0.707em;
+    }
+    body {
+        margin: 0 auto;
+        text-align: center;
+    }
+    p {
+        font-family: "Fira Sans", sans-serif;
+        font-size: 1.414em;
+        line-height: 1.20; /* standard leading about 120% */
+        padding-top: 15px;
+    }
+    #api-link {
+        text-decoration: none;
+        color: #A70200;
+        font-family: "Fira Sans", sans-serif;
+        line-height: 1.20; /* standard leading about 120% */
+        padding-top: 15px;
+    }
+    a {
+        text-decoration: none;
+    }
+    .point-box {
+        text-align: left;
+        margin: 0 auto;
+        position: relative;
+        width: 40em;
+        clear: both;
+        margin-bottom: 2.0em;
+    }
+    .about-title {
+        margin-bottom: 40px;
+        margin: 10px 0 40px 0;
+        font-weight: 700;
+    }
+</style>
+{% endblock %}

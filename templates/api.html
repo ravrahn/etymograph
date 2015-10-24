@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block content %}
+<body>
+
+    <div class="about-title">
+        <h2>Etymograph API</h2>
+    </div>
+    <div class="point-box">
+        <h3>The /descs query</h3>
+        <h4 class="subtitle">Usage:</h4> 
+        <div class="code-block">
+            <p class="code">&lt;API address&gt;/&lt;word_id&gt;/descs</p>
+        </div>
+        <p>Returns a JSON object containing the etymological descendant of the word with the given ID. Etymological descendants include the descendants of descendants, forming a tree-like structure. This query can also take an additional 'depth' argument as a get or post parameter specifying how many layers of descendants to return (i.e. the maximum depth of the descendants tree).
+        </p>
+        <h4 class="subtitle">Inputs:</h4>
+        <table class="parameters">
+            <tr>
+                <td>
+                    word_id:Integer
+                </td>
+                <td>
+                    The ID of the word to get the descendents of
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    depth:Integer
+                </td>
+                <td>
+                    (Optional) The depth of descendants to return.
+                    NOTE: Entered as a GET/POST parameter of the form "depth=n"
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+<style type="text/css">
+    h1 {
+        font-size: 3.998em;
+    }
+    h2 {
+        font-size: 2.827em;
+    }
+    h3 {
+        font-size: 1.999em;
+    }
+    h4 {
+        font-size: 1.414em;
+    }
+    h5 {
+        font-size: 1em;
+    }
+    h5 {
+        font-size: 0.707em;
+    }
+    body {
+        margin: 0 auto;
+        text-align: center;
+    }
+    p {
+        font-family: "Fira Sans", sans-serif;
+        font-size: 1em;
+        line-height: 1.20; /* standard leading about 120% */
+        padding-top: 15px;
+    }
+    #api-link {
+        text-decoration: none;
+        color: #A70200;
+        font-family: "Fira Sans", sans-serif;
+        line-height: 1.20; /* standard leading about 120% */
+        padding-top: 15px;
+    }
+    a {
+        text-decoration: none;
+    }
+    .point-box {
+        text-align: left;
+        margin: 0 auto;
+        position: relative;
+        width: 33em;
+        clear: both;
+        margin-bottom: 2.0em;
+    }
+    .about-title {
+        margin-bottom: 40px;
+        margin: 10px 0 40px 0;
+        font-weight: 700;
+    }
+    .code {
+        font-family: 'source-code-pro';
+        color: #EEE;
+    }
+    .code-block {
+        background-color: #2A2B2B;
+    }
+    .subtitle {
+        font-weight: 700;
+    }
+    table.parameters {
+        background-color: #2A2B2B;
+        color: #EEE;
+        border: 1px solid #EEE;
+    }
+</style>
+{% endblock %}
