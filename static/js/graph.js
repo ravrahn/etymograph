@@ -96,7 +96,11 @@ function makeGraph(roots, descs, form) {
     
     var svg = d3.select("svg"),
     	inner = svg.select("g");
-    
+    // Zooming property
+    var zoom = d3.behavior.zoom().on("zoom",function(){
+	inner.attr("transfrom","translate(" +d3.event.translate + ")");
+	});
+    svg.call(zoom);	    
     // Create the renderer
     var render = new dagreD3.render();
     
