@@ -26,6 +26,14 @@ class AddWordForm(Form):
     ipa_form = StringField('IPA Transcription')
     eng_form = StringField('Latin Transliteration')
 
+class EditWordForm(Form):
+    orig_form = StringField('Word', validators=[InputRequired()])
+    lang_name = StringField('Language')
+    language = StringField(validators=[InputRequired()])
+    definition = TextAreaField('Definition')
+    ipa_form = StringField('IPA Transcription')
+    eng_form = StringField('Latin Transliteration')
+
 class AddRootForm(Form):
     search = StringField('Search')
     word_id = HiddenField(validators=[InputRequired()])

@@ -252,6 +252,29 @@ def add_word():
     else:
         abort(403)
 
+@app.route('/edit/word/<int:word_id>', methods=['GET', 'POST'])
+def edit_word(word_id):
+    me = get_user()
+    if me is not None:
+        form = EditWordForm(request.form)
+        if request.method == 'POST':
+            if not form.validate():
+                abort(400)
+            word_data = form.data
+            del word_data['lang_name']
+            # add the word to the database
+            word_id = model.edit_word(me, word_id, word_data)
+            return redirect('/{}'.format(word_id))
+
+        langs = sorted([model.names[code] for code in model.names])
+        lang_lookup = {}
+        for code in model.names:
+            lang_lookup[model.names[code]] = code
+        word = model.info(word_id)
+        return render_search_template('editword.html', form=form, langs=langs, lang_lookup=lang_lookup, word=word)
+    else:
+        abort(403)
+
 
 @app.route('/add/root', methods=['POST'])
 def add_root():
