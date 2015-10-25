@@ -200,6 +200,21 @@ def add_user(user):
     user_node = graph.merge_one('User', property_key='id', property_value=user['id'])
     user_node.push()
 
+def edit_word(user_id, word_id, **kwargs):
+    """
+    Edits the word with given id so that the properties with the keys in 
+    kwargs are updated to have the correcponding values.
+    Note that other properties are not changed
+    """
+    query = "MATCH (u:User), (w:Word) WHERE u.id = {user_id} AND id(w) = {word_id} "
+    keys = sorted(kwargs.keys())
+    for key in keys:
+        query += "SET w.{} = {} ".format(key, kwargs[key])
+    query += "RETURN w"
+    results = graph.cypher.execute(query, {'user_id': str(user_id), 'word_id': int(word_id)})
+    if len(results) == 0:
+        raise WordNotFoundException("Word with ID {} not found".format(word_id))
+
 
 def get_flagged_words():
     results = graph.cypher.execute('MATCH (:User)-[f:flagged]->(n:Word) RETURN id(n),COUNT(f)')
