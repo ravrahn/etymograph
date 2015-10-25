@@ -3,15 +3,15 @@
 <link rel="stylesheet" href="{{url_for('static', filename='css/graph.css') }}">
 {% endblock %}
 {% block content %}
-<h2>Search results for "{{ search_str }}":</h2>
     {% if results %}
+		<h2>Search results for "{{ search_str }}":</h2>
         <ul>
         {% for word in results %}
             <li><svg id="graph-{{ word['id'] }}" width="200" height="75"></svg></li>
         {% endfor %}
         </ul>
     {% else %}
-        <h2>No results</h2>
+        <h2>No results for "{{ search_str }}"</h2>
     {% endif %}
 <script>
 /*$('#upleft-search.typeahead').hide();*/

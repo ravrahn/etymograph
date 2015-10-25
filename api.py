@@ -69,16 +69,20 @@ def logout():
     resp.set_cookie('session', '', expires=0)
     return resp
 
-@app.route('/profile')
-def profile():
-    me = get_user()
-    search_field = SearchForm()
-    results = model.user_added_word(me['id'])
-    return render_template('profile.html', 
-                            search_form=search_field, 
-                            user_name=me['name'], 
-                            body_class="index", 
-                            results=results)
+@app.route('/profile/<user_id>')
+def profile(user_id):
+    is_me = (user_id == 'me')
+    if is_me:
+        user = get_user()
+    else:
+        user = get_user(user_id=user_id)
+        is_me = (user == get_user())
+    results = model.user_added_word(user['id'])
+    return render_search_template('profile.html', 
+                            user_name=user['name'], 
+                            body_class="index",
+                            is_me=is_me, 
+                            added_words=results)
 
 @app.route('/profile/delete')
 def delete_profile():
@@ -103,15 +107,18 @@ def user_area():
 
 app.jinja_env.globals.update(user_area=user_area)
 
-def get_user():
+def get_user(user_id=None):
     try:
-        me = facebook.get('/me')
+        if user_id is not None:
+            user = facebook.get('/{}'.format(user_id))
+        else:
+            user = facebook.get('/me')
     except OAuthException:
         return None
-    if me is None:
+    if user is None:
         return None
     else:
-        return me.data
+        return user.data
 
 def request_wants_json():
     """returns true if the current request has a JSON application type, false otherwise.
