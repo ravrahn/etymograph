@@ -213,6 +213,7 @@ def edit_word(user_id, word_id, new_properties):
     results = graph.cypher.execute(query, {'user_id': str(user_id), 'word_id': int(word_id)})
     if len(results) == 0:
         raise WordNotFoundException("Word with ID {} not found".format(word_id))
+    return word_id
 
 
 def get_flagged_words():
