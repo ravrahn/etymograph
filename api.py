@@ -304,13 +304,8 @@ def show_graph(word_id):
     try:
         word_roots = model.roots(word_id)
         word_descs = model.descs(word_id)
-        search_field = SearchForm()
-        authorized = False
-        me = get_user()
-        if me is not None:
-            authorized = True
         return render_search_template('graph.html', roots=word_roots, descs=word_descs,
-                form=AddRootForm(), body_class="graph")
+                form=AddRootForm(), body_class="graph", add_root_search=SearchForm())
     except model.WordNotFoundException:
         abort(404)
 

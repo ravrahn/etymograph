@@ -266,6 +266,10 @@ button:active {
     border: solid 1px #999;
 }
 
+button:disabled {
+    background-color: #ddd;
+}
+
 .tt-menu {
     width: 100%;
     border-radius: 0 0 0.25rem 0.25rem;

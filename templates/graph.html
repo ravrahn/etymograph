@@ -13,21 +13,28 @@
 <script>
 
 // Get data from the API
-var form = '<form class="add-root" action="{{ url_for("add_root", next=request.path) }}" method="POST"> \
-    {{ form.hidden_tag() }} \
-    {% for field in form %} \
-    {% if field.id != "csrf_token" %} \
-        <div class="addword-form-title">{{ field.label(class_="addword-form-title") }}</div> \
-        <div class="addword-form">{{ field(class_="reg-form") }}</div> \
-    {% endif %} \
-    {% endfor %} \
-    <button type="submit" class="addword-submit">Submit</form> \
-</form>';
+var form = '<form class="add-root-search" action="#">\
+		{{ add_root_search.q(placeholder="Find word") }} \
+	</form>\
+	<svg class="add-root-graph" width="116" height="138"></svg> \
+	<div class="results-container"></div> \
+	<form class="add-root" action="{{ url_for("add_root", next=request.path) }}" method="POST"> \
+	    {{ form.hidden_tag() }} \
+	    {{ form.root_id() }} \
+	    {{ form.word_id() }} \
+	    {{ form.source(placeholder="Source") }} \
+	    <button type="submit" class="addrel-submit">Submit</button> \
+	</form> \
+<div style="clear: both;"></div>';
 var next_url = "{{ request.path }}";
+
+var info_url = "{{ url_for('info', word_id=0) }}"
+var search_url = "{{ url_for('search') }}"
 
 var roots = {{ roots|safe }};
 var descs = {{ descs|safe }};
 
 </script>
+<script src="{{ url_for('static', filename='js/graphAddRel.js') }}"></script>
 <script src="{{ url_for('static', filename='js/graph.js') }}"></script>
 {% endblock %}

@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import StringField, BooleanField, IntegerField, TextAreaField
+from wtforms import StringField, BooleanField, IntegerField, TextAreaField, HiddenField
 from wtforms.validators import *
 import re
 
@@ -27,8 +27,9 @@ class AddWordForm(Form):
     eng_form = StringField('Latin Transliteration')
 
 class AddRootForm(Form):
-    word_id = IntegerField(label='Desc ID')
-    root_id = IntegerField(label='Root ID')
+    search = StringField('Search')
+    word_id = HiddenField(validators=[InputRequired()])
+    root_id = HiddenField(validators=[InputRequired()])
     source = StringField('Source')
 
 class EditRelForm(Form):
