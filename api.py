@@ -77,6 +77,8 @@ def profile(user_id):
     else:
         user = get_user(user_id=user_id)
         is_me = (user == get_user())
+    if user == None:
+        return abort(400)
     results = model.user_added_word(user['id'])
     return render_search_template('profile.html', 
                             user_name=user['name'], 
