@@ -27,7 +27,8 @@ h1, h2, h3, h4, h5, p, a, label {
     text-decoration: none;
 }
 p, a {
-    font-family: 'freight-sans-pro', sans-serif;
+    font-family: 'source-sans-pro', sans-serif;
+    font-weight: 300;
 }
 
 h1 {
@@ -47,7 +48,8 @@ p {
 }
 
 *, *:before, *:after {
-    font-family: 'freight-sans-pro', sans-serif;
+    font-family: 'source-sans-pro', sans-serif;
+    font-weight: 300;
     box-sizing: inherit;
     -moz-font-feature-settings:"kern" 1; 
     -ms-font-feature-settings:"kern" 1; 
@@ -69,7 +71,8 @@ body.index {
 
 a.login-text {
     text-decoration: none;
-    font-family: 'freight-sans-pro', sans-serif;
+    font-family: 'source-sans-pro', sans-serif;
+    font-weight: 300;
     font-size: 0.75em;
 }
 
@@ -242,7 +245,8 @@ input, textarea, button {
     border: solid 1px #ddd;
     border-radius: 0.25rem;
     padding: 0.25rem 0.5rem;
-    font-family: 'freight-sans-pro', sans-serif;
+    font-family: 'source-sans-pro', sans-serif;
+    font-weight: 300;
 }
 
 input:focus, textarea:focus {
@@ -279,7 +283,8 @@ button:disabled {
 
 .tt-suggestion {
     padding: 0.125rem 0.5rem;
-    font-family: 'freight-sans-pro', sans-serif;
+    font-family: 'source-sans-pro', sans-serif;
+    font-weight: 300;
     cursor: pointer;
     border-left: solid 1px #999;
     border-right: solid 1px #999;
@@ -384,3 +389,185 @@ textarea.add-word#definition {
 #definition {
     resize: none;
 }
+
+.graph .flex-content {
+    padding: 0;
+}
+
+g.origin rect {
+    stroke: #000;
+}
+
+.node rect {
+    stroke: #999;
+    fill: #fff;
+    stroke-width: 1px;
+}
+
+.selected rect {
+    stroke-width: 1.5px;
+}
+
+.edgePath path {
+    stroke: #333;
+    stroke-width: 1.5px;
+}
+
+.node-container {
+    height: 2rem;
+    width: 6rem;
+    margin: 0.3rem 0.5rem;
+}
+
+.node-lang-name {
+    font-family: 'source-sans-pro', sans-serif;
+    font-weight: 400;
+    font-size: 0.75rem;
+    float: left;
+}
+
+.node-flags {
+    font-size: 0.5rem;
+    float: right;
+}
+
+.node-label {
+    padding-top: 1rem;
+    line-height: 1em;
+    margin: 0;
+    display: block;
+    font-family: 'minion-pro', serif;
+    font-size: 1rem;
+}
+
+.add-edge path {
+    stroke: #999;
+    fill: #999;
+}
+
+.node.add rect {
+    stroke: #999;
+}
+
+.node:hover rect {
+    fill: #eee;
+}
+
+.node:hover {
+    cursor: pointer;
+}
+
+.add-node {
+    padding: 0.6rem;
+    height: 2.5rem;
+    /*width: 6rem;*/
+    font-family: 'source-sans-pro', sans-serif;
+    font-weight: 300;
+    font-size: 1rem;
+}
+
+.infobar {
+    position: fixed;
+    right: 0;
+    top: 4rem;
+    background-color: rgba(245, 236, 228, 0.75);
+    height: 100%;
+    width: 18rem;
+    padding: 1rem;
+    font-size: 0.8rem;
+}
+
+.infobar h2, .infobar h2 a {
+    font-family: 'minion-pro', serif;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.infobar h3 {
+    font-family: 'source-sans-pro', sans-serif;
+    font-weight: 300;
+    font-size: 0.85rem;
+    line-height: 1;
+    margin: 0;
+}
+
+.infobar p {
+    font-family: 'source-sans-pro', sans-serif;
+    font-weight: 300;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.infobar h4 {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.infobar .ipa, .infobar .latin {
+    font-family: 'source-sans-pro', sans-serif;
+    font-weight: 300;
+    font-size: 0.9rem;
+}
+
+.infobar .flag {
+    margin-top: 1rem;
+}
+
+.flag-form {
+    display: inline;
+}
+
+.add-title {
+    text-align: center;
+}
+
+.add-root-search {
+    float: right;
+}
+
+.add-root-search #search_field {
+    width: 116px;
+    margin-right: 4px;
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+}
+
+.add-root {
+    float: left;
+}
+
+.add-root-graph {
+    float: left;
+}
+
+.results-container {
+    float: right;
+    width: 120px;
+    height: 10.5rem;
+    overflow: scroll;
+    text-align: center;
+}
+
+.results-container ul {
+    margin: 0;
+}
+
+.results-container li {
+    margin-bottom: 0.5rem;
+}
+
+.add-root #source {
+    width: 116px;
+    font-size: 0.85rem;
+    margin: 0.25rem 0;
+}
+
+.add-root .addrel-submit {
+    width: 116px;
+    display: block;
+}
+
+.loading {
+    margin-top: 2rem;
+}
+
