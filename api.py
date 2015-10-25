@@ -9,7 +9,6 @@ from forms import *
 import model
 import collections
 from flask_oauthlib.client import OAuth, OAuthException
-from reverse_proxy import *
 
 oauth = OAuth()
 facebook = oauth.remote_app('facebook',
