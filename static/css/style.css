@@ -380,3 +380,6 @@ textarea.add-word#definition {
     margin-top: 7px;
     float: left;
 }
+#definition {
+    resize: none;
+}

@@ -187,7 +187,7 @@ $("g.word").click(function() {
         info += "<h4>" + fields.ipa_form + ":</h4> <div class='ipa'>/" + node.ipa_form + '/</div>';
     }
     if (loggedIn) {
-        info += '<div class="flag"><a href="/flag/' + id + '?next=' + next_url + '">Flag as incorrect</a> - <span class="flag-count">' + node.flag_count + '</span> flags</div>';
+        info += '<div class="flag"> <form method="POST" action="/flag/' + id + '?next=' + next_url + '"><button type="submit" value="flag">Flag as incorrect</button></form> - <span class="flag-count">' + node.flag_count + '</span> flags</div>';
     }
     $(".infobar").html(info);
 });
