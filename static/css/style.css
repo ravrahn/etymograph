@@ -571,3 +571,11 @@ g.origin rect {
     margin-top: 2rem;
 }
 
+.edit-rel-graph {
+    display: inline-block;
+}
+
+input#source {
+    font-size: 0.85rem;
+    margin: 0.25rem 0;
+}

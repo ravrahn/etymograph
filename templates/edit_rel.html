@@ -1,23 +1,26 @@
 {% extends 'base.html' %}
 {% from "_formhelpers.html" import render_field %}
 {% block content %}
-<div class="flex-inner-content">
-    <h2 align="center">Edit Relationship</h2>
-    {# TODO: replace this with a small graph rendering #}
-    <h3 align="center">{{root['orig_form']}} ({{root['lang_name']}}) -> {{desc['orig_form']}} ({{desc['lang_name']}})</h3>
-    <h3 align="center">Source: {{rel['source']}}</h3>
+<div class="flex-inner-content edit-rel">
+    <h2>Edit Relationship</h2>
+    <svg class="edit-rel-graph" width="278" height="46"></svg>
+    <div>Current source: <em>{{ rel['source'] }}</em></div>
     <form action="{{ my_URL }}" method="POST">
         {{ form.hidden_tag() }}
-        {% for field in form %}
-        {% if field.id != "csrf_token" %}
-            <div class="editrel-form-title">{{ field.label(class_="addword-form-title") }}</div>
-            <div class="editrel-form">{{ field(class_="reg-form") }}</div>
-        {% endif %}
-        {% endfor %}
+        <span class="editrel-form">{{ form.source(placeholder="Source", class_="reg-form") }}</span>
         <button type="submit" class="editrel-submit">Submit</form>
     </form>
     <form action="/flag/rel/{{root['id']}}/{{desc['id']}}" method="POST">
         <button type="submit" value="flag">Flag relation as incorrect</button>
     </form>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+<script src="{{ url_for('static', filename='js/dagre-d3.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/graphLabel.js') }}"></script>
+<script>
+var root = {{ root|safe }};
+var desc = {{ desc|safe }};
+var rel = {{ rel|safe }}
+</script>
+<script src="{{ url_for('static', filename='js/edit_rel.js') }}"></script>
 {% endblock %}
