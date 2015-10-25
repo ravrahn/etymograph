@@ -200,21 +200,20 @@ Common (non-landing) template flexbox stuff
 .user-area a {
     float: left;
     padding-left: 0.5rem;
-    margin: auto;
+    margin: 0;
 }
 
 .user-area a img {
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 2rem;
+    height: 2rem;
+    display: block;
+    float: left;
 }
 
 .user-area a span {
-    float: right;
+    float: left;
     padding-left: 0.25rem;
-}
-
-.user {
-    margin: 0.5rem;
+    margin: 0.325rem 0;
 }
 
 .login {
