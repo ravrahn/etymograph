@@ -269,7 +269,7 @@ def get_node_safe(node_id):
         node.pull()
         return node
     except GraphError:
-        raise WordNotFoundException("Word with ID {} not found".format(root_id))
+        raise WordNotFoundException("Word with ID {} not found".format(node_id))
 
 def lang_decode(code):
     '''
