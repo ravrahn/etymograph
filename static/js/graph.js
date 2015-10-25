@@ -192,28 +192,108 @@ $("g.word").click(function() {
     $(".infobar").html(info);
 });
 
+function makeAddGraph(id, isRoot) {
+        $('.infobar').html(form);
+
+        var ajax = null;
+
+        $('.add-root-search #search_field').on("input", function() {
+            var q = $('.add-root-search #search_field').val();
+            if (ajax !== null) {
+                ajax.abort();
+            }
+            if (q.length >= 3) {
+                ajax = $.ajax(search_url + '?q=' + q, {
+                    dataType: 'json'
+                })
+                .done(function(results) {
+                    makeWordList(results, isRoot);
+                    buildGraph(results[0], isRoot);
+                });
+            }
+        });
+
+        if (id >= 0) {
+            $.ajax(info_url.replace('0', id))
+            .done(function(info) {
+                buildGraph(info, isRoot);
+            });
+        } else {
+            buildGraph({'id': id}, isRoot);
+        }
+
+}
+
+function buildGraph(info, isRoot) {
+    if (isRoot) {
+        $('form.add-root #word_id').val(origin.id);
+        $('form.add-root #root_id').val(info.id);
+    } else {
+        $('form.add-root #word_id').val(info.id);
+        $('form.add-root #root_id').val(origin.id);
+    }
+
+    if (info.id < 0) {
+        $('form.add-root .addrel-submit').prop('disabled', true);
+    } else {
+        $('form.add-root .addrel-submit').prop('disabled', false);
+    }
+
+    var rootG = new dagreD3.graphlib.Graph()
+        .setGraph({
+            nodesep: 30,
+            ranksep: 50,
+            marginx: 2,
+            marginy: 2
+        })
+        .setDefaultEdgeLabel(function() { return {}; });
+    rootG.setNode(origin.id, {
+        id: origin.id,
+        labelType:'html',
+        label: makeLabel(origin),
+        padding: 0,
+        class: 'origin word' 
+    });
+    var infoLabel = makeAddLabel();
+    if (info.id >= 0) {
+        infoLabel = makeLabel(info);
+    }
+    rootG.setNode(info.id, {
+        id: info.id,
+        labelType:'html',
+        label: infoLabel,
+        padding: 0,
+        class: 'origin word' 
+    });
+    if (isRoot) {
+        rootG.setEdge(info.id, origin.id);
+    } else {
+        rootG.setEdge(origin.id, info.id);
+    }
+
+    rootG.nodes().forEach(function(v) {
+      var node = rootG.node(v);
+      // Round the corners of the nodes
+      node.rx = node.ry = 5;
+    });
+
+    $('.add-root-graph').empty();
+    var rootSVG = d3.select('.add-root-graph'),
+        rootInner = rootSVG.append('g');
+    render(rootInner, rootG);
+}
+
+function makeAddLabel() {
+    return '<div class="add-node">None</div>'
+}
+
 if (loggedIn) {
     $('g.add-root').click(function() {
-        // search, somehow
-        var id = 7892; // in lieu of search
-        $('body').append(form);
-        $('form.add-root #word_id').val(origin.id);
-        $('form.add-root #root_id').val(id);
-        // data = { 'word_id': origin.id, 'root_id': id, 'source': source }
-        // $.post('{{ url_for("add_root") }}', data, function() {
-        //     location.reload()
-        // });
+        makeAddGraph(-1, true);
     });
+
     $('g.add-desc').click(function() {
-        // search, somehow
-        var id = 7891; // in lieu of search
-        $('body').append(form);
-        $('form.add-root #word_id').val(id);
-        $('form.add-root #root_id').val(origin.id);
-        // data = { 'word_id': id, 'root_id': origin.id, 'source': source }
-        // $.post('{{ url_for("add_root") }}', data, function() {
-        //     location.reload()
-        // });
+        makeAddGraph(-1, false);
     });
 }
 

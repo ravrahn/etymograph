@@ -217,26 +217,14 @@ def info(word_id): # ET-20
     try:
         info = model.info(word_id)
     except model.WordNotFoundException as e:
-        if request_wants_json():
-            errDesc = str(e)
-            response = json.jsonify({'error': errDesc})
-            response.status_code = 404 #file not found
-            return response
-        else:
-            # display file not found page
-            abort(404)
+        errDesc = str(e)
+        response = json.jsonify({'error': errDesc})
+        response.status_code = 404 #file not found
+        return response
 
-    if request_wants_json():
-        # Convert word data to JSON and wrap in a Flask response
-        response = json.jsonify(info)
-        response.status_code = 200 # OK
-    else:
-        # Non-JSON request, return info page
-        me = get_user()
-        authorized = False
-        if me is not None:
-            authorized = True
-        response = render_search_template('info.html',word_properties=info, body_class="info", word_id=word_id, authorized=authorized)
+    # Convert word data to JSON and wrap in a Flask response
+    response = json.jsonify(info)
+    response.status_code = 200 # OK
     return response
 
 
@@ -270,8 +258,8 @@ def add_root():
     me = get_user()
     if me is not None:
         form = AddRootForm(request.form)
-        word_id = form.word_id.data
-        root_id = form.root_id.data
+        word_id = int(form.word_id.data)
+        root_id = int(form.root_id.data)
         source = form.source.data
 
         try:
@@ -319,13 +307,8 @@ def show_graph(word_id):
     try:
         word_roots = model.roots(word_id)
         word_descs = model.descs(word_id)
-        search_field = SearchForm()
-        authorized = False
-        me = get_user()
-        if me is not None:
-            authorized = True
         return render_search_template('graph.html', roots=word_roots, descs=word_descs,
-                form=AddRootForm(), body_class="graph")
+                form=AddRootForm(), body_class="graph", add_root_search=SearchForm())
     except model.WordNotFoundException:
         abort(404)
 

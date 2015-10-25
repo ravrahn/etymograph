@@ -2,7 +2,7 @@
 $(document).ready(function(){
   // Because Jinja2 does not make this easy
   $("#search_field").attr("placeholder", "Look up the origins of a word...");
-  $("#upleft-search").attr("placeholder", "Look up the origins of a word...");
+  $("#nav-search").attr("placeholder", "Look up the origins of a word...");
 
   // Start Bloodhound search engine
   var words = new Bloodhound({
