@@ -209,8 +209,9 @@ def edit_word(user_id, word_id, new_properties):
     keys = sorted(new_properties.keys())
     for key in keys:
         query += 'SET w.{} = "{}" '.format(key, new_properties[key])
+    query += "CREATE (u)-[r:edited_word {time: {created_time} }]->(w)"
     query += "RETURN w"
-    results = graph.cypher.execute(query, {'user_id': str(user_id), 'word_id': int(word_id)})
+    results = graph.cypher.execute(query, {'user_id': str(user_id), 'word_id': int(word_id), 'created_time': int(time.time())})
     if len(results) == 0:
         raise WordNotFoundException("Word with ID {} not found".format(word_id))
     return word_id
