@@ -25,6 +25,9 @@
                 </div>
                 {% else %}
                 <div class="about">
+                    <span><a href="{{ url_for('show_flagged') }}">View flagged words</a></span>
+                </div>
+                <div class="about">
                     <span><a href="{{ url_for('about') }}">About</a></span>
                 </div>
                 {% endif %}
