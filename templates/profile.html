@@ -1,23 +1,32 @@
 {% extends 'base.html' %}
+{% block head %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/graph.css') }}">
+{% endblock %}
 {% block content %}
 <!-- View profile -->
 
-<center> <h2>{{ user_name }}</h2> </center>
-<center> <h4> Welcome :) </h4> </center>
-	<center> <p>My added words</p> </center>
-
-	<div class="words" align="center">
-	{% if results %}
-        <ul>
-        {% for result in results %}
-            <li>
-                <a class="result" href="/{{ result['id'] }}">{{ result['orig_form'] }}</a>
-            </li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <h2>No results</h2>
-    {% endif %}
-	</div>
-
+<h2>{{ user_name }}</h2>
+{% if is_me %}
+<a href="{{ url_for('delete_profile', next=url_for('index')) }}">Delete profile</a>
+{% endif %}
+    
+<div class="words">
+{% if added_words %}
+    <h3>Added words:</h3>
+    <ul>
+    {% for word in added_words %}
+        <li><svg id="graph-{{ word['id'] }}" width="200" height="75"></svg></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <h3>No words added</h3>
+{% endif %}
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+<script src="{{ url_for('static', filename='js/dagre-d3.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/graphLabel.js') }}"></script>
+<script>
+var addedWords = {{ added_words|safe }};
+</script>
+<script src="{{ url_for('static', filename='js/profile.js') }}"></script>
 {% endblock %}
