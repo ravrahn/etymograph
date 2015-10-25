@@ -122,27 +122,44 @@ var render = new dagreD3.render();
 // Set up an SVG group so that we can translate the final graph.
 var svg = d3.select("svg"),
     inner = svg.append("g"),
-    innerX = 0;
+    innerX = 0,
+    innerY = 0;
 // Set up click-and-drag
 
-function translateGraph(dx, e) {
+function translateGraph(dx, dy, e) {
     var leftBound = 0;
     var rightBound = $('svg').width() - $('.infobar').width() - $('g')[0].getBBox().width - 40;
-    if (innerX + dx > leftBound) {
-        innerX = leftBound;
-    } else if (innerX + dx < rightBound) {
-        innerX = rightBound;
-    } else {
-        innerX += dx;
-        if (e !== null) {
+    var topBound = 0;
+    var bottomBound = $('svg').height() - $('g')[0].getBBox().height - 80;
+    if (leftBound > rightBound) {
+        if (innerX + dx > leftBound) {
+            innerX = leftBound;
+        } else if (innerX + dx < rightBound) {
+            innerX = rightBound;
+        } else {
+            innerX += dx;
+        }
+    }
+    if (topBound > bottomBound) {
+        if (innerY + dy > topBound) {
+            innerY = topBound;
+        } else if (innerY + dy < bottomBound) {
+            innerY = bottomBound;
+        } else {
+            innerY += dy;
+        }
+    }
+    if (e !== null) {
+        var smaller = (topBound < bottomBound && leftBound < rightBound);
+        if (!smaller) {
             e.preventDefault();
         }
     }
-    inner.attr("transform", "translate(" + [ innerX,0 ] + ")");
+    inner.attr("transform", "translate(" + [ innerX,innerY ] + ")");
 }
 
 var drag = d3.behavior.drag().on("drag", function() {
-        translateGraph(d3.event.dx, null);
+        translateGraph(d3.event.dx, d3.event.dy, null);
     });
 svg.call(drag);
 
@@ -157,7 +174,6 @@ $("g.word").click(function() {
     // Get data from the graph node
     var id = $(this).attr("id");
     var node = nodes[id];
-    console.log(node, id);
     // Construct the html to go inside the info sidebar
     var info = "<h2><a href='/" + id + "'>" + node.orig_form + '</a></h2>';
     info += '<h3>' + node.lang_name + '</h3>';
@@ -173,7 +189,6 @@ $("g.word").click(function() {
     if (loggedIn) {
         info += '<div class="flag"><a href="/flag/' + id + '?next=' + next_url + '">Flag as incorrect</a> - <span class="flag-count">' + node.flag_count + '</span> flags</div>';
     }
-    console.log(info);
     $(".infobar").html(info);
 });
 
@@ -205,12 +220,10 @@ if (loggedIn) {
 $('.origin').click();
 
 $('svg').mousewheel(function(e) {
-    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-        translateGraph(-e.deltaX/e.deltaFactor, e);
-    }
+    translateGraph(-e.deltaX/e.deltaFactor, e.deltaY/e.deltaFactor, e);
 });
 
-// Resize the top div container for this graph
-var gtag = $('g'),
-    gh = gtag[0].getBBox().height + 30; //gh is actually less than what is reported in developer tools so we pad them.
-$('.flex-content').height(gh);
+// // Resize the top div container for this graph
+// var gtag = $('g'),
+//     gh = gtag[0].getBBox().height + 30; //gh is actually less than what is reported in developer tools so we pad them.
+// $('.flex-content').height(gh);
