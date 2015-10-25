@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% from "_formhelpers.html" import render_field %}
+{% block content %}
+<div class="add-word-body">
+    <h2 align="center">Edit <em>{{ word.orig_form }}</em></h2>
+    <form action="{{ url_for('edit_word', word_id=word.id) }}" method="POST">
+        <div>{{ form.orig_form(placeholder="Word", class="add-word") }}</div>
+        <div class="lang-container">{{ form.lang_name(placeholder="Langage", class="add-word") }}
+        {{ form.language(readonly=true, placeholder="None", class="add-word") }}</div>
+        <div>{{ form.ipa_form(placeholder="IPA Transcription", class="add-word") }}
+        {{ form.eng_form(placeholder="Latin Transliteration", class="add-word") }}</div>
+        <div>{{ form.definition(placeholder="Definition", class="add-word") }}</div>
+        {{ form.hidden_tag() }}
+        <button type="submit" class="add-word-submit">Submit</form>
+    </form>
+</div>
+<script>
+$('#orig_form').val('{{ word.orig_form|safe }}');
+$('#language').val('{{ word.language|safe }}');
+$('#lang_name').val('{{ word.lang_name|safe }}');
+$('#ipa_form').val('{{ word.ipa_form|safe }}');
+$('#eng_form').val('{{ word.eng_form|safe }}');
+$('#definition').val('{{ word.definition|safe }}');
+
+
+var langs = {{ langs|safe }};
+var langLookup = {{ lang_lookup|safe }};
+
+var langsHound = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.whitespace,
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  // `states` is an array of state names defined in "The Basics"
+  local: langs
+});
+
+$('#lang_name').typeahead({
+      hint: false,
+      highlight: true
+    },
+    {
+      name: 'langs',
+      source: langsHound
+    });
+$('#lang_name').on("input", function() {
+        var lang = $('#lang_name').val();
+        $('#language').val(langLookup[lang]);
+    })
+    .on("typeahead:selected", function() {
+        var lang = $('#lang_name').val();
+        $('#language').val(langLookup[lang]);
+    });
+
+</script>
+{% endblock %}
