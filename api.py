@@ -263,7 +263,7 @@ def edit_word(word_id):
             word_data = form.data
             del word_data['lang_name']
             # add the word to the database
-            word_id = model.edit_word(me, word_id, word_data)
+            word_id = model.edit_word(me['id'], word_id, word_data)
             return redirect('/{}'.format(word_id))
 
         langs = sorted([model.names[code] for code in model.names])
@@ -314,9 +314,8 @@ def edit_rel(root_id, desc_id):
             if not form.validate():
                 abort(400)
             source = form.source.data
-            # edit the relationship the database TODO
-            user = get_user()
-            model.edit_rel_source(user, root_id, desc_id, source)
+            # edit the relationship the database 
+            model.edit_rel_source(me, root_id, desc_id, source)
             next_url = '/{}'.format(root_id)
             return redirect(next_url)
 

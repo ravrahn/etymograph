@@ -200,16 +200,15 @@ def add_user(user):
     user_node = graph.merge_one('User', property_key='id', property_value=user['id'])
     user_node.push()
 
-def edit_word(user_id, word_id, **kwargs):
+def edit_word(user_id, word_id, new_properties):
     """
-    Edits the word with given id so that the properties with the keys in 
-    kwargs are updated to have the correcponding values.
+    Edits the properties of a word with given id.
     Note that other properties are not changed
     """
     query = "MATCH (u:User), (w:Word) WHERE u.id = {user_id} AND id(w) = {word_id} "
-    keys = sorted(kwargs.keys())
+    keys = sorted(new_properties.keys())
     for key in keys:
-        query += "SET w.{} = {} ".format(key, kwargs[key])
+        query += 'SET w.{} = "{}" '.format(key, new_properties[key])
     query += "RETURN w"
     results = graph.cypher.execute(query, {'user_id': str(user_id), 'word_id': int(word_id)})
     if len(results) == 0:
@@ -274,7 +273,7 @@ def edit_rel_source(user, root_id, desc_id, new_source):
     if(rel == None):
         raise RelNotFoundException("The word with ID {} is not a root of the word with ID {}".format(root_id, desc_id))
     rel['source'] = new_source
-    # could add info about the editing user here
+    # TODO could add info about the editing user here
     rel.push()
 
 
