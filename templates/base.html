@@ -23,6 +23,10 @@
                         {{ search_form.q(class_="typeahead nav-search") }}
                     </form>
                 </div>
+                {% else %}
+                <div class="about">
+                    <span><a href="{{ url_for('about') }}">About</a></span>
+                </div>
                 {% endif %}
                 <div class="user-area">
                     {{ user_area()|safe }}

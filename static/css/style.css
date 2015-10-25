@@ -372,3 +372,7 @@ textarea.add-word#definition {
     width: 12rem;
     height: 4rem;
 }
+.about {
+    margin-top: 7px;
+    float: left;
+}
