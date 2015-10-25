@@ -16,7 +16,7 @@
         {% endfor %}
         <button type="submit" class="editrel-submit">Submit</form>
     </form>
-    <form action="/flag/rel/{{root['id']}}/{{desc['id']}}" method="GET">
+    <form action="/flag/rel/{{root['id']}}/{{desc['id']}}" method="POST">
         <button type="submit" value="flag">Flag relation as incorrect</button>
     </form>
 </div>

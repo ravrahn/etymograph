@@ -323,7 +323,7 @@ def show_flagged():
     rels = model.get_flagged_rels()
     return render_search_template('flagged.html', words=words, rels=rels)
 
-@app.route('/flag/<int:word_id>')
+@app.route('/flag/<int:word_id>', methods=['POST'])
 def flag(word_id):
     if not word_id:
         abort(404) # cannot flag non-existent words.
@@ -337,7 +337,7 @@ def flag(word_id):
         except modelWordNotFoundException:
             abort(404)
 
-@app.route('/flag/rel/<int:root_id>/<int:desc_id>', methods=['GET', 'POST'])
+@app.route('/flag/rel/<int:root_id>/<int:desc_id>', methods=['POST'])
 def flag_rel(root_id, desc_id):
     if not root_id or not desc_id:
         abort(404) # cannot flag non-existent relations.
