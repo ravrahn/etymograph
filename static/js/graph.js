@@ -193,23 +193,36 @@ $("g.word").click(function() {
 });
 
 function makeAddGraph(id, isRoot) {
-        $('.infobar').html(form);
+        relForm = new String(form);
+        if (isRoot) {
+            $('.infobar').html(relForm.replace('RELTYPE', 'Root'));
+        } else {
+            $('.infobar').html(relForm.replace('RELTYPE', 'Descendent'));
+        }
 
         var ajax = null;
 
-        $('.add-root-search #search_field').on("input", function() {
-            var q = $('.add-root-search #search_field').val();
-            if (ajax !== null) {
-                ajax.abort();
-            }
-            if (q.length >= 3) {
-                ajax = $.ajax(search_url + '?q=' + q, {
-                    dataType: 'json'
-                })
-                .done(function(results) {
-                    makeWordList(results, isRoot);
-                    buildGraph(results[0], isRoot);
-                });
+        $('.add-root-search').submit(function() {
+          return false;
+        });
+
+        $('.add-root-search #search_field').on("keypress", function(e) {
+            if (e.which === 13) {
+                $('.results-container').html('<div class="loading">Loading...</div>')
+
+                var q = $('.add-root-search #search_field').val();
+                if (ajax !== null) {
+                    ajax.abort();
+                }
+                if (q.length >= 3) {
+                    ajax = $.ajax(search_url + '?q=' + q, {
+                        dataType: 'json'
+                    })
+                    .done(function(results) {
+                        makeWordList(results, isRoot);
+                        buildGraph(results[0], isRoot);
+                    });
+                }
             }
         });
 

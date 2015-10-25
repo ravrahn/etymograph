@@ -47,6 +47,7 @@ p {
 }
 
 *, *:before, *:after {
+    font-family: 'freight-sans-pro', sans-serif;
     box-sizing: inherit;
     -moz-font-feature-settings:"kern" 1; 
     -ms-font-feature-settings:"kern" 1; 

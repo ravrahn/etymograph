@@ -60,6 +60,10 @@ g.origin rect {
     fill: #eee;
 }
 
+.node:hover {
+    cursor: pointer;
+}
+
 .add-node {
     padding: 0.6rem;
     height: 2.5rem;
@@ -74,7 +78,7 @@ g.origin rect {
     top: 4rem;
     background-color: rgba(245, 236, 228, 0.75);
     height: 100%;
-    width: 17rem;
+    width: 18rem;
     padding: 1rem;
     font-size: 0.8rem;
 }
@@ -116,12 +120,17 @@ g.origin rect {
     display: inline;
 }
 
+.add-title {
+    text-align: center;
+}
+
 .add-root-search {
     float: right;
 }
 
 .add-root-search #search_field {
     width: 116px;
+    margin-right: 4px;
     font-size: 0.85rem;
     margin-bottom: 0.25rem;
 }
@@ -136,9 +145,10 @@ g.origin rect {
 
 .results-container {
     float: right;
-    width: 116px;
+    width: 120px;
     height: 10.5rem;
     overflow: scroll;
+    text-align: center;
 }
 
 .results-container ul {
@@ -158,4 +168,8 @@ g.origin rect {
 .add-root .addrel-submit {
     width: 116px;
     display: block;
+}
+
+.loading {
+    margin-top: 2rem;
 }

@@ -13,11 +13,12 @@
 <script>
 
 // Get data from the API
-var form = '<form class="add-root-search" action="#">\
+var form = '<h2 class="add-title">Add a RELTYPE</h2> \
+	<form class="add-root-search" action="#">\
 		{{ add_root_search.q(placeholder="Find word") }} \
 	</form>\
 	<svg class="add-root-graph" width="116" height="138"></svg> \
-	<div class="results-container"></div> \
+	<div class="results-container">Type a word above and press enter</div> \
 	<form class="add-root" action="{{ url_for("add_root", next=request.path) }}" method="POST"> \
 	    {{ form.hidden_tag() }} \
 	    {{ form.root_id() }} \
