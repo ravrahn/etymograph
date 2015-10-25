@@ -112,6 +112,10 @@ g.origin rect {
     margin-top: 1rem;
 }
 
+.flag-form {
+    display: inline;
+}
+
 .add-root-search {
     float: right;
 }
