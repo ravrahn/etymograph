@@ -27,13 +27,13 @@ class Word(db.Model):
 
     creator = db.relationship('User', backref='created_words')
 
-    def __init__(self, user, orig_form, language,
+    def __init__(self, user, orig_form, language, 
         definition=None, latin_form=None, ipa_form=None):
         self.orig_form = orig_form
         self.language = language
-        self.definition = None
-        self.latin_form = None
-        self.ipa_form = None
+        self.definition = definition
+        self.latin_form = latin_form
+        self.ipa_form = ipa_form
         self.creator = user
 
     def __repr__(self):
@@ -44,7 +44,7 @@ class Word(db.Model):
         info['id'] = self.id
         info['orig_form'] = self.orig_form
         info['langauge'] = self.language
-        info['creator'] = self.creator
+        info['creator'] = self.creator.token
         info['definition'] = self.definition
         info['latin_form'] = self.latin_form
         info['ipa_form'] = self.ipa_form
@@ -98,3 +98,9 @@ class RelFlag(db.Model):
         self.rel = rel
         self.flagger = flagger
 
+
+def get_user(user_id):
+    return User.query.filter_by(token=user_id).first()
+
+def get_word(word_id):
+    return Word.query.filter_by(id=word_id).first()

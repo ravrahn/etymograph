@@ -7,11 +7,11 @@ from forms import *
 import collections
 from flask_oauthlib.client import OAuth, OAuthException
 
+import model
+
 app = Flask(__name__)
 app.config.from_object('config')
 db = SQLAlchemy(app)
-
-import model
 
 oauth = OAuth()
 facebook = oauth.remote_app('facebook',
@@ -47,7 +47,7 @@ def login_authorized():
     session['oauth_token'] = (resp['access_token'], '')
     me = facebook.get('/me')
 
-    me_check = model.User.query.filter_by(token=me.data['id'])
+    me_check = model.get_user(me.data['id'])
     if not me_check.first():
         me_db = model.User('facebook', me.data['id'])
         db.session.add(me_db)
@@ -210,9 +210,8 @@ def descs(word_id): # ET-7
 
 @app.route('/<int:word_id>/info')
 def info(word_id): # ET-20
-    try:
-        info = model.info(word_id)
-    except model.WordNotFoundException as e:
+    info = model.get_word(word_id).info()
+    if info is None:
         errDesc = str(e)
         response = json.jsonify({'error': errDesc})
         response.status_code = 404 #file not found
@@ -236,9 +235,15 @@ def add_word():
             word_data = form.data
             del word_data['lang_name']
             # add the word to the database
-            word = Word(word_data)
-            word_id = model.add_word(me, word)
-            return redirect('/{}'.format(word_id))
+            word = model.Word(model.get_user(me['id']),
+                word_data['orig_form'],
+                word_data['language'],
+                definition=word_data['definition'],
+                latin_form=word_data['latin_form'],
+                ipa_form=word_data['ipa_form'])
+            model.db.session.add(word)
+            model.db.session.commit()
+            return redirect('/{}'.format(word.id))
 
         langs = sorted([model.names[code] for code in model.names])
         lang_lookup = {}
