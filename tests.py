@@ -12,7 +12,7 @@ class MyTest(TestCase):
     def setUp(self):
         db.create_all()
         # create user
-        user = User('Facebook', 'test')
+        user = User('facebook', 'test')
         db.session.add(user)
         # create words
         word = Word(user, 'doot', 'en')

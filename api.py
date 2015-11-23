@@ -47,7 +47,11 @@ def login_authorized():
     session['oauth_token'] = (resp['access_token'], '')
     me = facebook.get('/me')
 
-    model.add_user(me.data)
+    me_check = model.User.query.filter_by(token=me.data['id'])
+    if not me_check.first():
+        me_db = model.User('facebook', me.data['id'])
+        db.session.add(me_db)
+        db.session.commit()
 
     flash('Logged in as %s' % (me.data['name']))
     return redirect(next_url)
@@ -70,7 +74,8 @@ def profile(user_id):
         is_me = (user == get_user())
     if user == None:
         return abort(400)
-    results = model.user_added_word(user['id'])
+    user_db = model.User.query.filter_by(token=user['id']).first()
+    results = [word.info() for word in user_db.created_words]
     return render_search_template('profile.html', 
                             user_name=user['name'], 
                             body_class="index",
