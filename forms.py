@@ -24,7 +24,7 @@ class AddWordForm(Form):
     language = StringField(validators=[InputRequired()])
     definition = TextAreaField('Definition')
     ipa_form = StringField('IPA Transcription')
-    eng_form = StringField('Latin Transliteration')
+    latin_form = StringField('Latin Transliteration')
 
 class EditWordForm(Form):
     orig_form = StringField('Word', validators=[InputRequired()])
@@ -32,7 +32,7 @@ class EditWordForm(Form):
     language = StringField(validators=[InputRequired()])
     definition = TextAreaField('Definition')
     ipa_form = StringField('IPA Transcription')
-    eng_form = StringField('Latin Transliteration')
+    latin_form = StringField('Latin Transliteration')
 
 class AddRootForm(Form):
     search = StringField('Search')
