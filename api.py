@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
-from py2neo import *
 from word import *
 from flask import Flask, request, json, render_template, redirect, url_for, abort, session, flash
+from flask.ext.sqlalchemy import SQLAlchemy
 from io import StringIO
-
 from forms import *
-
-import model
 import collections
 from flask_oauthlib.client import OAuth, OAuthException
+
+app = Flask(__name__)
+app.config.from_object('config')
+db = SQLAlchemy(app)
+
+import model
 
 oauth = OAuth()
 facebook = oauth.remote_app('facebook',
@@ -20,10 +23,6 @@ facebook = oauth.remote_app('facebook',
     consumer_secret='460470cd0827caa33ba93d47d4f7874d',
     request_token_params={'scope': 'email'}
 )
-
-app = Flask(__name__)
-app.config.from_object('config')
-
 
 @facebook.tokengetter
 def get_facebook_oauth_token():

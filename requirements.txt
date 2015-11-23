@@ -7,3 +7,7 @@ wtforms
 flask-wtf
 Flask-OAuthlib
 flask-webtest
+SQLAlchemy
+Flask-SQLAlchemy
+Flask-Migrate
+Flask-Testing
