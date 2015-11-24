@@ -29,8 +29,8 @@ def search(): # ET-5, ET-19
         search_field = SearchForm()
         return render_search_template('results.html',
             form=search_field,
-            search_str=query.capitalize(),
-            results=results, body_class="search")
+            search_str=query,
+            results=results, body_class="search", title='Results for {}'.format(query))
     else:
         response = json.dumps(results)
         return response

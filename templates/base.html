@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Etymograph | A page!</title>
+        <title>{% if title != '' %}{{ title }} | {% endif %}Etymograph</title>
         <script src="https://use.typekit.net/tct7oag.js"></script>
         <script>try{Typekit.load({ async: true });}catch(e){}</script>
         <link rel="stylesheet" href="{{url_for('static', filename='css/style.css') }}">

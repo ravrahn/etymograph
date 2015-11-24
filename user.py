@@ -83,7 +83,8 @@ def profile(user_id):
                             user_name=user['name'], 
                             body_class="index",
                             is_me=is_me, 
-                            added_words=results)
+                            added_words=results,
+                            title=user['name'])
 
 def user_area():
     ''' Returns the "user area" - a login button if you're not logged in
