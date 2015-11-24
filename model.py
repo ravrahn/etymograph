@@ -44,10 +44,13 @@ class Word(db.Model):
         info['id'] = self.id
         info['orig_form'] = self.orig_form
         info['language'] = self.language
-        info['definition'] = self.definition
-        info['latin_form'] = self.latin_form
-        info['ipa_form'] = self.ipa_form
         info['lang_name'] = names[self.language]
+        if self.definition is not None:
+            info['definition'] = self.definition
+        if self.latin_form is not None:
+            info['latin_form'] = self.latin_form
+        if self.ipa_form is not None:
+            info['ipa_form'] = self.ipa_form
         info['flag_count'] = len(self.flags)
         return info
 
