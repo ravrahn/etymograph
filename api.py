@@ -5,6 +5,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from io import StringIO
 from forms import *
 import collections
+from difflib import SequenceMatcher
 from flask_oauthlib.client import OAuth, OAuthException
 
 import model
@@ -138,19 +139,28 @@ def index():
 
 @app.route('/search')
 def search(): # ET-5, ET-19
-    """
+    '''
     Search for all words that match a particular substring
     usage: /search?q=<string> or frontend search bar
-    """
-    search_str = request.args['q']
-    results = model.search(search_str)
+    '''
+    query = request.args['q']
+    results = model.Word.query.filter(model.Word.orig_form.like('%' + query + '%')).all()
+    
+    results = [word.info() for word in results]
+
+    def sort_alpha(word):
+        m = SequenceMatcher(None, word['orig_form'], query)
+        ratio = m.quick_ratio() + 0.0001 # cheap hack to avoid /0 errors
+        return 1/ratio
+
+    results = sorted(results, key=sort_alpha)
 
     if not request_wants_json():
         search_field = SearchForm()
         return render_search_template('results.html',
-			form=search_field,
-			search_str=search_str.capitalize(),
-			results=results, body_class="search")
+            form=search_field,
+            search_str=query.capitalize(),
+            results=results, body_class="search")
     else:
         response = json.dumps(results)
         return response
@@ -164,21 +174,19 @@ def render_no_search_template(*args, **kwargs):
 @app.route('/<int:word_id>/roots')
 def roots(word_id): # ET-6
     if 'depth' in request.args:
-        try:
-            depth = int(request.args['depth'])
-            if depth < 0:
-                raise ValueError
-        except ValueError:
+        depth = int(request.args['depth'])
+        if depth < 0:
             response = json.jsonify({ 'error': 'Invalid depth' })
             response.status_code = 400
             return response
     else:
         depth = None
 
-    try:
-        response = json.jsonify(model.roots(word_id, depth=depth))
+    word = model.get_word(word_id)
+    if word is not None:
+        response = json.jsonify(word.get_roots(depth=depth))
         response.status_code = 200
-    except model.WordNotFoundException:
+    else:
         response = json.jsonify({ 'error': 'Word not found' })
         response.status_code = 404
 
@@ -188,21 +196,19 @@ def roots(word_id): # ET-6
 @app.route('/<int:word_id>/descs')
 def descs(word_id): # ET-7
     if 'depth' in request.args:
-        try:
-            depth = int(request.args['depth'])
-            if depth < 0:
-                raise ValueError
-        except ValueError:
+        depth = int(request.args['depth'])
+        if depth < 0:
             response = json.jsonify({ 'error': 'Invalid depth' })
             response.status_code = 400
             return response
     else:
         depth = None
 
-    try:
-        response = json.jsonify(model.descs(word_id, depth=depth))
+    word = model.get_word(word_id)
+    if word is not None:
+        response = json.jsonify(word.get_descs(depth=depth))
         response.status_code = 200
-    except model.WordNotFoundException:
+    else:
         response = json.jsonify({ 'error': 'Word not found' })
         response.status_code = 404
 
@@ -286,15 +292,14 @@ def add_root():
         root_id = int(form.root_id.data)
         source = form.source.data
 
-        try:
-            word = Word(word_id, model.graph)
-            root = Word(root_id, model.graph)
-        except AttributeError:
-            abort(400)
+        word = model.get_word(word_id)
+        root = model.get_word(root_id)
 
-        try:
-            model.add_relationship(me, word, root, source=source)
-        except AttributeError:
+        if word is not None and root is not None:
+            rel = model.Rel(model.get_user(me['id']), root, word, source)
+            model.db.session.add(rel)
+            model.db.session.commit()
+        else:
             abort(400)
         next_url = request.args.get('next') or '/{}'.format(word_id)
         return redirect(next_url)
@@ -327,13 +332,15 @@ def edit_rel(root_id, desc_id):
 
 @app.route('/<int:word_id>')
 def show_graph(word_id):
-    try:
-        word_roots = model.roots(word_id)
-        word_descs = model.descs(word_id)
-        return render_search_template('graph.html', roots=word_roots, descs=word_descs,
-                form=AddRootForm(), body_class="graph", add_root_search=SearchForm())
-    except model.WordNotFoundException:
+    word = model.get_word(word_id)
+    word_roots = word.get_roots()
+    word_descs = word.get_descs()
+
+    if word is None:
         abort(404)
+    else:
+        return render_search_template('graph.html', roots=word_roots, descs=word_descs,
+            form=AddRootForm(), body_class="graph", add_root_search=SearchForm())
 
 @app.route('/flagged')
 def show_flagged():

@@ -48,6 +48,31 @@ class Word(db.Model):
         info['definition'] = self.definition
         info['latin_form'] = self.latin_form
         info['ipa_form'] = self.ipa_form
+        info['lang_name'] = names[self.language]
+        return info
+
+    def get_roots(self, depth=None):
+        if depth == 0:
+            return self.info()
+        elif depth is not None:
+            depth -= 1
+        roots = []
+        for rel in self.roots:
+            roots.append(rel.root.get_roots(depth=depth))
+        info = self.info()
+        info['roots'] = roots
+        return info
+
+    def get_descs(self, depth=None):
+        if depth == 0:
+            return self.info()
+        elif depth is not None:
+            depth -= 1
+        descs = []
+        for rel in self.descs:
+            descs.append(rel.desc.get_descs(depth=depth))
+        info = self.info()
+        info['descs'] = descs
         return info
 
 class WordFlag(db.Model):
@@ -71,9 +96,9 @@ class Rel(db.Model):
     creator_id = db.Column(db.Integer, db.ForeignKey(User.id))  
 
     root = db.relationship('Word', foreign_keys=[root_id],
-        backref='roots')
-    desc = db.relationship('Word', foreign_keys=[desc_id],
         backref='descs')
+    desc = db.relationship('Word', foreign_keys=[desc_id],
+        backref='roots')
 
     creator = db.relationship('User', backref='created_rels')
 
