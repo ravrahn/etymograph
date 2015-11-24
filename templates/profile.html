@@ -4,7 +4,7 @@
 
 <h2>{{ user_name }}</h2>
 {% if is_me %}
-<a href="{{ url_for('delete_profile', next=url_for('index')) }}">Delete profile</a>
+<a href="{{ url_for('user.delete_profile', next=url_for('web.index')) }}">Delete profile</a>
 {% endif %}
     
 <div class="words">

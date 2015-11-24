@@ -1,7 +1,7 @@
 
 <div class="user">
-	<a href={{ url_for('profile', user_id='me') }}><img src="{{ user_pic_url }}"><span>{{ user_name }}</span><div style="clear: both;"></div></a>
-	<a href="{{ url_for('logout', next=request.path) }}"><span>Log out</span></a>
+	<a href={{ url_for('user.profile', user_id='me') }}><img src="{{ user_pic_url }}"><span>{{ user_name }}</span><div style="clear: both;"></div></a>
+	<a href="{{ url_for('user.logout', next=request.path) }}"><span>Log out</span></a>
 	<div style="clear: both;"></div>
 </div>
 

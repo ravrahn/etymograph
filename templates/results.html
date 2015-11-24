@@ -3,7 +3,7 @@
 
     {% if results %}
 		<h2>Search results for "{{ search_str }}":</h2>
-        <p>Can't find what you're looking for? <a href="{{ url_for('add_word') }}">Add word</a></p>
+        <p>Can't find what you're looking for? <a href="{{ url_for('edit.add_word') }}">Add word</a></p>
         <ul>
         {% for word in results %}
             <li><svg id="graph-{{ word['id'] }}" width="200" height="75"></svg></li>
@@ -11,7 +11,7 @@
         </ul>
     {% else %}
         <h2>No results for "{{ search_str }}"</h2>
-        <p>Can't find what you're looking for?<a href="{{ url_for('add_word') }}">Add word</a></p>
+        <p>Can't find what you're looking for?<a href="{{ url_for('edit.add_word') }}">Add word</a></p>
     {% endif %}
 
 

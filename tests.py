@@ -1,5 +1,5 @@
 from flask.ext.testing import TestCase  
-from api import db, app
+from app import db, app
 from model import *
 
 TEST_SQLALCHEMY_DATABASE_URI = "sqlite:///test.db"

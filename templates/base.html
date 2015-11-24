@@ -15,20 +15,20 @@
     <body class="{{ body_class }}">
         <div class="flex-parent">
             <div class="nav">
-                <a class="nav-title" href="{{ url_for('index') }}"><img class="nav-logo" src="{{ url_for('static', filename='img/logo.png') }}"><h1 >Etymograph</h1></a>
+                <a class="nav-title" href="{{ url_for('web.index') }}"><img class="nav-logo" src="{{ url_for('static', filename='img/logo.png') }}"><h1 >Etymograph</h1></a>
                 {% if not no_form %}
                 <div class="nav-search-form">
-                    <form action="{{ url_for('search') }}" method="GET">
+                    <form action="{{ url_for('api.search') }}" method="GET">
                         <!-- {{ search_form.hidden_tag() }} -->
                         {{ search_form.q(class_="typeahead nav-search") }}
                     </form>
                 </div>
                 {% else %}
                 <div class="about">
-                    <span><a href="{{ url_for('show_flagged') }}">View flagged words </a></span>
+                    <span><a href="{{ url_for('web.show_flagged') }}">View flagged words </a></span>
                 </div>
                 <div class="about">
-                    <span><a href="{{ url_for('about') }}">About</a></span>
+                    <span><a href="{{ url_for('web.about') }}">About</a></span>
                 </div>
                 {% endif %}
                 <div class="user-area">

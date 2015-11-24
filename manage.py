@@ -4,7 +4,7 @@ from blessings import Terminal
 from flask.ext.script import Manager  
 from flask.ext.migrate import Migrate, MigrateCommand 
 from model import Word, Rel, db
-from api import app
+from app import app
 
 REL_CONVERTER = { # (name, flip order, directional)
     'etymology': ('root', False, False),

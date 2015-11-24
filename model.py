@@ -1,5 +1,5 @@
 import json
-from api import db
+from app import db
 
 with open('lang_names.json', 'r') as f:
     names = json.load(f)

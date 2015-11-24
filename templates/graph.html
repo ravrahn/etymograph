@@ -16,7 +16,7 @@ var form = '<h2 class="add-title">Add a RELTYPE</h2> \
 	</form>\
 	<svg class="add-root-graph" width="116" height="138"></svg> \
 	<div class="results-container">Type a word above and press enter</div> \
-	<form class="add-root" action="{{ url_for("add_root", next=request.path) }}" method="POST"> \
+	<form class="add-root" action="{{ url_for("edit.add_root", next=request.path) }}" method="POST"> \
 	    {{ form.hidden_tag() }} \
 	    {{ form.root_id() }} \
 	    {{ form.word_id() }} \
@@ -26,8 +26,7 @@ var form = '<h2 class="add-title">Add a RELTYPE</h2> \
 <div style="clear: both;"></div>';
 var next_url = "{{ request.path }}";
 
-var info_url = "{{ url_for('info', word_id=0) }}"
-var search_url = "{{ url_for('search') }}"
+var search_url = "{{ url_for('api.search') }}"
 
 var roots = {{ roots|safe }};
 var descs = {{ descs|safe }};

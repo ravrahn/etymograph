@@ -3,7 +3,7 @@
 {% block content %}
 <div class="add-word-body">
     <h2 align="center">Add a word</h2>
-    <form action="{{ url_for('add_word') }}" method="POST">
+    <form action="{{ url_for('edit.add_word') }}" method="POST">
         <div>{{ form.orig_form(placeholder="Word", class="add-word") }}</div>
         <div class="lang-container">{{ form.lang_name(placeholder="Language", class="add-word") }}
         {{ form.language(readonly=true, placeholder="None", class="add-word") }}</div>

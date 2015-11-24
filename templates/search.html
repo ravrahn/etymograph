@@ -2,7 +2,7 @@
 {% block content %}
     <div class="user_area">{{ user_area()|safe }}</div>
     <div class="flex-center">
-      <form action="{{ url_for('search') }}" method="GET">
+      <form action="{{ url_for('api.search') }}" method="GET">
         <!-- {{ form.hidden_tag() }} -->
         {{ form.q(class_="typeahead") }}
       </form>
