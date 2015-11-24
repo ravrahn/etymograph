@@ -241,15 +241,18 @@ def add_word():
                 abort(400)
             word_data = form.data
             del word_data['lang_name']
-            # add the word to the database
-            word = model.Word(model.get_user(me['id']),
-                word_data['orig_form'],
-                word_data['language'],
-                definition=word_data['definition'],
-                latin_form=word_data['latin_form'],
-                ipa_form=word_data['ipa_form'])
-            model.db.session.add(word)
-            model.db.session.commit()
+            # make sure word doesn't exist
+            word_check = model.Word.query.filter_by(**word_data).first()
+            if word_check is not None:
+                # add the word to the database
+                word = model.Word(model.get_user(me['id']),
+                    word_data['orig_form'],
+                    word_data['language'],
+                    definition=word_data['definition'],
+                    latin_form=word_data['latin_form'],
+                    ipa_form=word_data['ipa_form'])
+                model.db.session.add(word)
+                model.db.session.commit()
             return redirect('/{}'.format(word.id))
 
         langs = sorted([model.names[code] for code in model.names])
@@ -302,7 +305,18 @@ def add_root():
         word = model.get_word(word_id)
         root = model.get_word(root_id)
 
-        if word is not None and root is not None:
+        # missing words
+        check = word is not None and root is not None
+        if check:
+            check = check and root != word
+            # duplicate rel
+            check = check and root not in [rel.root for rel in word.roots]
+            check = check and word not in [rel.desc for rel in root.descs]
+            # circular (A->B->A)
+            check = check and root not in [rel.desc for rel in word.descs]
+            check = check and word not in [rel.root for rel in root.roots]
+
+        if check:
             rel = model.Rel(model.get_user(me['id']), root, word, source)
             model.db.session.add(rel)
             model.db.session.commit()
