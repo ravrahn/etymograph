@@ -320,21 +320,21 @@ def edit_rel(root_id, desc_id):
     if me is not None:
         form = EditRelForm(request.form)
         #get dicts of info about this relationship
-        try:
-            (root, rel, desc) = model.get_rel(root_id, desc_id)
-        except model.RelNotFoundException:
+        rel = model.Rel.query.filter_by(root_id=root_id, desc_id=desc_id).first()
+        if rel is None:
             abort(404)
         if request.method == 'POST':
             if not form.validate():
                 abort(400)
             source = form.source.data
             # edit the relationship the database 
-            model.edit_rel_source(me, root_id, desc_id, source)
+            rel.source = source
+            model.db.session.commit()
             next_url = '/{}'.format(root_id)
             return redirect(next_url)
 
         my_URL = url_for('edit_rel', root_id=root_id, desc_id=desc_id)
-        return render_search_template('edit_rel.html', form=form, root=root, rel=rel, desc=desc, my_URL=my_URL)
+        return render_search_template('edit_rel.html', form=form, root=rel.root.info(), source=rel.source, desc=rel.desc.info(), my_URL=my_URL)
     else:
         abort(403)
 
