@@ -334,7 +334,7 @@ def edit_rel(root_id, desc_id):
             return redirect(next_url)
 
         my_URL = url_for('edit_rel', root_id=root_id, desc_id=desc_id)
-        return render_search_template('edit_rel.html', form=form, root=rel.root.info(), source=rel.source, desc=rel.desc.info(), my_URL=my_URL)
+        return render_search_template('edit_rel.html', form=form, root=rel.root.info(), rel=rel.info(), desc=rel.desc.info(), my_URL=my_URL)
     else:
         abort(403)
 
@@ -352,37 +352,39 @@ def show_graph(word_id):
 
 @app.route('/flagged')
 def show_flagged():
-    words = model.get_flagged_words()
-    rels = model.get_flagged_rels()
+    words = [flag.word.info() for flag in model.WordFlag.query.all()]
+    rels = [flag.rel.info() for flag in model.RelFlag.query.all()]
     return render_search_template('flagged.html', words=words, rels=rels)
 
 @app.route('/flag/<int:word_id>', methods=['POST'])
 def flag(word_id):
-    if not word_id:
-        abort(404) # cannot flag non-existent words.
+    word = model.get_word(word_id)
     me = get_user()
-    if me is not None:
-        try:
-            if me['id']:
-                model.flag(me['id'], word_id)
-            return_url = request.args.get('next')
-            return redirect(return_url)
-        except modelWordNotFoundException:
-            abort(404)
+    if me is not None and word is not None:
+        me_db = model.get_user(me['id'])
+        flag = model.WordFlag(me_db, word)
+        model.db.session.add(flag)
+        model.db.session.commit()
+        return_url = request.args.get('next')
+        return redirect(return_url)
+    else:
+        abort(404)
 
 @app.route('/flag/rel/<int:root_id>/<int:desc_id>', methods=['POST'])
 def flag_rel(root_id, desc_id):
     if not root_id or not desc_id:
         abort(404) # cannot flag non-existent relations.
+    rel = model.Rel.query.filter_by(root_id=root_id, desc_id=desc_id).first()
     me = get_user()
-    if me is not None:
-        try:
-            if me['id']:
-                model.flag_relationship(me['id'], root_id, desc_id)
-            return_url = request.args.get('next') or '/edit/rel/'+str(root_id)+'/'+str(desc_id)
-            return redirect(return_url)
-        except model.WordNotFoundException:
-            abort(404)
+    if me is not None and rel is not None:
+        me_db = model.get_user(me['id'])
+        flag = model.RelFlag(me_db, rel)
+        model.db.session.add(flag)
+        model.db.session.commit()
+        return_url = request.args.get('next') or '/edit/rel/'+str(root_id)+'/'+str(desc_id)
+        return redirect(return_url)
+    else:
+        abort(404)
 
 
 @app.route('/about')

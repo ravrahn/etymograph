@@ -4,7 +4,7 @@
 <div class="flex-inner-content edit-rel">
     <h2>Edit Relationship</h2>
     <svg class="edit-rel-graph" width="278" height="46"></svg>
-    <div>Current source: <em>{{ source }}</em></div>
+    <div>Current source: <em>{{ rel['source'] }}</em></div>
     <form action="{{ my_URL }}" method="POST">
         {{ form.hidden_tag() }}
         <span class="editrel-form">{{ form.source(placeholder="Source", class_="reg-form") }}</span>

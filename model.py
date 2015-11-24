@@ -49,6 +49,7 @@ class Word(db.Model):
         info['latin_form'] = self.latin_form
         info['ipa_form'] = self.ipa_form
         info['lang_name'] = names[self.language]
+        info['flag_count'] = len(self.flags)
         return info
 
     def get_roots(self, depth=None):
@@ -110,6 +111,15 @@ class Rel(db.Model):
 
     def __repr__(self):
         return '<Rel {}->{}>'.format(self.root, self.desc)
+
+    def info(self):
+        info = {}
+        info['root'] = self.root.info()
+        info['desc'] = self.desc.info()
+        info['source'] = self.source
+        info['flag_count'] = len(self.flags)
+        return info
+
 
 class RelFlag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
