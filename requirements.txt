@@ -11,3 +11,4 @@ SQLAlchemy
 Flask-SQLAlchemy
 Flask-Migrate
 Flask-Testing
+Flask-Script
