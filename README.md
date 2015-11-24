@@ -2,10 +2,10 @@
 
 For anyone interested in the origin of words, Etymograph is a website and API that shows etymological data in a structured and easy-to-use way.
 
-#### Things you'll need to have
+### Things you'll need to have
 
-* A UNIX system
-* Python 3 and pip for Python 3
+* Python 3
+* pip for Python 3
 
 ### Things you'll need to do
 * Clone this repository
@@ -14,7 +14,10 @@ For anyone interested in the origin of words, Etymograph is a website and API th
 * Access the site in your browser by navigating to http://localhost:5000/
 
 ### Getting Started
-* First, you need to set up the database. Run `python3 manage.py init`, then `python3 manage.py migrate`, and finally `python3 manage.py upgrade`. This should give you an empty database.
+* To set up the database, run:
+  * `python3 manage.py init`
+  * `python3 manage.py migrate`
+  * `python3 manage.py upgrade`
 * This repository contains an import tool designed to be used with one of the only existing etymological data sets - the [Etymological Wordnet](http://www1.icsi.berkeley.edu/~demelo/etymwn/). To use it, run `python3 manage.py import_tsv <tsv_file>`.
 * The database is slow to import _all_ the data, so it's recommended that you take a subset of it. A good one to try for English speakers might be Old, Middle, and Modern English.
 * To create this subset, download the etymwn TSV file, and use grep to create a file with only the languages you want (for the Englishes, `(ang|enm|eng):` should do the trick). Then, run the import tool on this file.
