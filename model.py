@@ -44,7 +44,6 @@ class Word(db.Model):
         info['id'] = self.id
         info['orig_form'] = self.orig_form
         info['language'] = self.language
-        info['creator'] = self.creator.token
         info['definition'] = self.definition
         info['latin_form'] = self.latin_form
         info['ipa_form'] = self.ipa_form
