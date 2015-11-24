@@ -2,3 +2,4 @@
 *.sw*
 *.db
 migrations
+user_config.py

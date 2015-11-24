@@ -3,6 +3,7 @@ from flask_oauthlib.client import OAuth, OAuthException
 
 from helpers import *
 import model
+import user_config as config
 
 user = Blueprint('user', __name__)
 
@@ -12,8 +13,8 @@ facebook = oauth.remote_app('facebook',
     request_token_url=None,
     access_token_url='/oauth/access_token',
     authorize_url='https://www.facebook.com/dialog/oauth',
-    consumer_key=1490053241290663,
-    consumer_secret='460470cd0827caa33ba93d47d4f7874d',
+    consumer_key=config.FB_KEY,
+    consumer_secret=config.FB_SECRET,
     request_token_params={'scope': 'email'}
 )
 
