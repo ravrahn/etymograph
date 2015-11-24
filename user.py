@@ -43,8 +43,8 @@ def login_authorized():
     me_check = model.get_user(me['id'])
     if not me_check:
         me_db = model.User('facebook', me['id'])
-        db.session.add(me_db)
-        db.session.commit()
+        model.db.session.add(me_db)
+        model.db.session.commit()
 
     return redirect(next_url)
 
