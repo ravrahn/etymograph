@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from word import *
 from flask import Flask, request, json, render_template, redirect, url_for, abort, session, flash
 from flask.ext.sqlalchemy import SQLAlchemy
 from io import StringIO
