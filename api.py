@@ -123,13 +123,21 @@ def get_user(user_id=None):
         return user.data
 
 def request_wants_json():
-    """returns true if the current request has a JSON application type, false otherwise.
-    This helper function from http://flask.pocoo.org/snippets/45/"""
+    '''
+    returns true if the current request has a JSON application type, false otherwise.
+    This helper function from http://flask.pocoo.org/snippets/45/
+    '''
     best = request.accept_mimetypes \
         .best_match(['application/json', 'text/html'])
     return best == 'application/json' and \
         request.accept_mimetypes[best] > \
         request.accept_mimetypes['text/html']
+
+def render_search_template(*args, **kwargs):
+    return render_template(*args, search_form=SearchForm(), no_form=False, **kwargs)
+
+def render_no_search_template(*args, **kwargs):
+    return render_template(*args, search_form=SearchForm(), no_form=True, **kwargs)
 
 @app.route('/index.html') # ET-19
 @app.route('/')
@@ -164,12 +172,6 @@ def search(): # ET-5, ET-19
     else:
         response = json.dumps(results)
         return response
-
-def render_search_template(*args, **kwargs):
-    return render_template(*args, search_form=SearchForm(), no_form=False, **kwargs)
-
-def render_no_search_template(*args, **kwargs):
-    return render_template(*args, search_form=SearchForm(), no_form=True, **kwargs)
 
 @app.route('/<int:word_id>/roots')
 def roots(word_id): # ET-6
@@ -269,15 +271,21 @@ def edit_word(word_id):
                 abort(400)
             word_data = form.data
             del word_data['lang_name']
-            # add the word to the database
-            word_id = model.edit_word(me['id'], word_id, word_data)
+            # edit the word in the database
+            word = model.get_word(word_id)
+            word.orig_form = word_data['orig_form']
+            word.language = word_data['language']
+            word.definition = word_data['definition']
+            word.ipa_form = word_data['ipa_form']
+            word.latin_form = word_data['latin_form']
+            model.db.session.commit()
             return redirect('/{}'.format(word_id))
 
         langs = sorted([model.names[code] for code in model.names])
         lang_lookup = {}
         for code in model.names:
             lang_lookup[model.names[code]] = code
-        word = model.info(word_id)
+        word = model.get_word(word_id).info()
         return render_search_template('editword.html', form=form, langs=langs, lang_lookup=lang_lookup, word=word)
     else:
         abort(403)
