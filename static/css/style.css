@@ -3,10 +3,6 @@
 General styling
  */
 
-html {
-    box-sizing: border-box;
-}
-
 .logo-text {
     font-weight: 600; /* 600 has a good commanding presence without being too obnoxious like 800 or too thing like 400*/
     /* at least for the upperleft position  ~Ryan Spencer*/
@@ -48,9 +44,9 @@ p {
 }
 
 *, *:before, *:after {
+    box-sizing: border-box;
     font-family: 'source-sans-pro', sans-serif;
     font-weight: 300;
-    box-sizing: inherit;
     -moz-font-feature-settings:"kern" 1; 
     -ms-font-feature-settings:"kern" 1; 
     -o-font-feature-settings:"kern" 1; 
@@ -69,25 +65,11 @@ body.index {
     overflow: hidden;
 }
 
-a.login-text {
-    text-decoration: none;
-    font-family: 'source-sans-pro', sans-serif;
-    font-weight: 300;
-    font-size: 0.75em;
-}
-
-a {
-    text-decoration: underline;
-    -webkit-text-decoration-color: #2a2b2b;
-    -moz-text-decoration-color: #2a2b2b;
-    text-decoration-color: #2a2b2b;
-    -webkit-text-decoration-color: #a70200;
-    -moz-text-decoration-color: #a70200;
-    text-decoration-color: #a70200;
-}
-
 a:hover {
-    color: #666;
+    color: #888;
+}
+a:active {
+    color: #ddd;
 }
 
 ::selection {
@@ -197,35 +179,23 @@ Common (non-landing) template flexbox stuff
     float: right;
 }
 
-.user-area a {
-    float: left;
+.user a {
+    display: inline;
     padding-left: 0.5rem;
     margin: 0;
 }
 
-.user-area a img {
-    width: 2rem;
-    height: 2rem;
-    display: block;
-    float: left;
-}
-
-.user-area a span {
-    float: left;
+.user a span {
     padding-left: 0.25rem;
     margin: 0.325rem 0;
 }
 
-.login {
-    color: white;
-    background-color: #3b5998;
-    border-radius: 0.25rem;
-    padding: 0.5rem 0.75rem;
-    margin: 0.125rem 0.5rem;
-}
-
-.login:hover {
-    background-color: rgba(59, 89, 152, 0.75);
+.login-button {
+    height: 2.5rem;
+    padding: 0.5rem;
+    display: inline-block;
+    margin: 0 0.25rem 0 0;
+    float: left;
 }
 
 input.nav-search {

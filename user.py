@@ -22,6 +22,10 @@ facebook = oauth.remote_app('facebook',
 def get_facebook_oauth_token():
     return session.get('oauth_token')
 
+@user.route('/register', methods=['GET', 'POST'])
+def register():
+    pass
+
 @user.route('/login')
 def login():
     return facebook.authorize(callback=url_for('user.login_authorized',
@@ -99,7 +103,7 @@ def user_area():
     else:
         return render_template('loggedout.html')
 
-def get_user(service='facebook', user_id=None):
+def get_user(user_id=None):
     try:
         if user_id is not None:
             user = facebook.get('/{}'.format(user_id))
