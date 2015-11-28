@@ -5,7 +5,6 @@ nose
 sniffer
 wtforms
 flask-wtf
-Flask-OAuthlib
 flask-webtest
 SQLAlchemy
 Flask-SQLAlchemy

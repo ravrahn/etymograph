@@ -1,10 +1,8 @@
 from flask import Blueprint, request, render_template, redirect, url_for, abort, session
-from flask_oauthlib.client import OAuth, OAuthException
 from flask.ext.login import LoginManager, current_user, login_required, login_user, logout_user
 
 from helpers import *
 import model
-import user_config as config
 
 user = Blueprint('user', __name__)
 
@@ -16,21 +14,6 @@ def on_load(state):
 @login_manager.user_loader
 def user_loader(user_id):
     return model.User.query.get(int(user_id))
-
-oauth = OAuth()
-facebook = oauth.remote_app('facebook',
-    base_url='https://graph.facebook.com/',
-    request_token_url=None,
-    access_token_url='/oauth/access_token',
-    authorize_url='https://www.facebook.com/dialog/oauth',
-    consumer_key=config.FB_KEY,
-    consumer_secret=config.FB_SECRET,
-    request_token_params={'scope': 'email'}
-)
-
-@facebook.tokengetter
-def get_facebook_oauth_token():
-    return session.get('oauth_token')
 
 @user.route('/register', methods=['GET', 'POST'])
 def register():
@@ -55,6 +38,8 @@ def register():
 
 @user.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('web.index'))
     form = LoginForm(request.form)
     if request.method == 'POST':
         if not form.validate():
@@ -63,6 +48,7 @@ def login():
         user = model.User.query.filter_by(username=user_data['username']).first()
         if user is not None and user.check_password(user_data['password']):
             login_user(user)
+            return redirect(url_for('web.index'))
         else:
             print(user)
             abort(400)
@@ -72,40 +58,24 @@ def login():
 @user.route('/logout')
 def logout():
     next_url = request.args.get('next') or url_for('web.index')
-    session.clear()
+    logout_user()
     resp = redirect(next_url)
     resp.set_cookie('session', '', expires=0)
     return resp
 
-@user.route('/profile/delete')
-def delete_profile():
-    next_url = request.args.get('next') or url_for('web.index')
-    me = get_user()
-    if me is not None:
-        uid = me['id']
-        success = facebook.delete('/{}/permissions'.format(uid), format=None)
-        if success:
-            return logout()
-    return redirect(next_url)
-
-@user.route('/profile/<user_id>')
+@user.route('/profile/<int:user_id>')
 def profile(user_id):
-    is_me = (user_id == 'me')
-    if is_me:
-        user = get_user()
-    else:
-        user = get_user(user_id=user_id)
-        is_me = (user == get_user())
+    user = get_user(user_id=user_id)
+    is_me = (user == current_user)
     if user == None:
         return abort(400)
-    user_db = model.User.query.filter_by(token=user['id']).first()
-    results = [word.info() for word in user_db.created_words]
+    results = [word.info() for word in user.created_words]
     return render_search_template('profile.html', 
-                            user_name=user['name'], 
-                            body_class="index",
+                            user_name=user.name, 
+                            body_class='index',
                             is_me=is_me, 
                             added_words=results,
-                            title=user['name'])
+                            title=user.name)
 
 def user_area():
     ''' Returns the "user area" - a login button if you're not logged in
@@ -117,14 +87,7 @@ def user_area():
         return render_template('loggedout.html')
 
 def get_user(user_id=None):
-    try:
-        if user_id is not None:
-            user = facebook.get('/{}'.format(user_id))
-        else:
-            user = facebook.get('/me')
-    except OAuthException:
-        return None
-    if user is None:
-        return None
+    if user_id is None:
+        return current_user
     else:
-        return user.data
+        return model.User.query.get(user_id)

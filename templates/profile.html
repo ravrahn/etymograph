@@ -1,11 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-<!-- View profile -->
 
 <h2>{{ user_name }}</h2>
-{% if is_me %}
-<a href="{{ url_for('user.delete_profile', next=url_for('web.index')) }}">Delete profile</a>
-{% endif %}
     
 <div class="words">
 {% if added_words %}

@@ -1,5 +1,5 @@
 <div class="user">
-	<a class="login-button" href="{{ url_for('user.profile', user_id='me') }}"><span>{{ user_name }}</span><div style="clear: both;"></div></a>
+	<a class="login-button" href="{{ url_for('user.profile', user_id=current_user.id) }}"><span>{{ user_name }}</span><div style="clear: both;"></div></a>
 	<a class="login-button" href="{{ url_for('user.logout', next=request.path) }}"><span>Log out</span></a>
 </div>
 
