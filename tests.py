@@ -1,6 +1,6 @@
-from flask.ext.testing import TestCase  
-from app import db, app
+from flask.ext.testing import TestCase
 from model import *
+from app import db, app
 
 TEST_SQLALCHEMY_DATABASE_URI = "sqlite:///test.db"
 
@@ -12,7 +12,7 @@ class MyTest(TestCase):
     def setUp(self):
         db.create_all()
         # create user
-        user = User('facebook', 'test')
+        user = User('test', 'pass', 'John Doe')
         db.session.add(user)
         # create words
         word = Word(user, 'doot', 'en')
@@ -30,7 +30,9 @@ class MyTest(TestCase):
 
     def test_creator(self):
         word = Word.query.filter_by(orig_form='doot').first()
-        assert word.creator.token == 'test'
+        rel = Rel.query.all()[0]
+        assert word.creator.username == 'test'
+        assert rel.creator.username == 'test'
 
     def test_rel(self):
         user = User.query.all()[0]
@@ -39,9 +41,9 @@ class MyTest(TestCase):
         word2 = words[1]
         rel = Rel.query.all()[0]
         assert rel.root == word
-        assert rel in word.roots
+        assert rel in word.descs
         assert rel.desc == word2
-        assert rel in word2.descs
+        assert rel in word2.roots
 
     def test_flags(self):
         user = User.query.all()[0]
@@ -54,10 +56,17 @@ class MyTest(TestCase):
         assert len(word.flags) == 1
         assert len(rel.flags) == 1
 
-    def test_get_all_users(self):  
+    def test_users(self):
+        user = User.query.all()[0]
+        user_id = user.get_id()
+        assert user == User.query.get(int(user_id))
+        assert not user.is_anonymous()
+        assert user.is_active()
+
+    def test_get_all_words(self):  
         words = Word.query.all()
         assert len(words) == 2, 'Expect all words to be returned'
 
-    def test_get_user(self):  
+    def test_get_word(self):  
         word = Word.query.filter_by(orig_form='doot').first()
         assert word.language == 'en', 'Expect the correct word to be returned'

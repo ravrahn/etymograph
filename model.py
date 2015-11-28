@@ -1,4 +1,6 @@
 import json
+from werkzeug.security import generate_password_hash, check_password_hash
+
 from app import db
 
 with open('lang_names.json', 'r') as f:
@@ -6,15 +8,30 @@ with open('lang_names.json', 'r') as f:
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    service = db.Column(db.Enum('facebook'))
-    token = db.Column(db.String)
+    username = db.Column(db.String)
+    name = db.Column(db.String)
+    password = db.Column(db.String)
+    authenticated = db.Column(db.Boolean, default=False)
 
-    def __init__(self, service, token):
-        self.service = service
-        self.token = token
+    def __init__(self, username, password, name):
+        self.username = username
+        self.password = generate_password_hash(password)
+        self.name = name
 
     def __repr__(self):
-        return '<User {}:{}>'.format(self.service, self.token)
+        return '<User {}:{}>'.format(self.username, self.authenticated)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+
+    def is_authenticated(self):
+        return self.authenticated
+    def is_anonymous(self):
+        return False
+    def is_active(self):
+        return True
+    def get_id(self):
+        return str(self.id)
 
 class Word(db.Model):
     id = db.Column(db.Integer, primary_key=True)
