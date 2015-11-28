@@ -17,7 +17,6 @@ var form = '<h2 class="add-title">Add a RELTYPE</h2> \
 	<svg class="add-root-graph" width="116" height="138"></svg> \
 	<div class="results-container">Type a word above and press enter</div> \
 	<form class="add-root" action="{{ url_for("edit.add_root", next=request.path) }}" method="POST"> \
-	    {{ form.hidden_tag() }} \
 	    {{ form.root_id() }} \
 	    {{ form.word_id() }} \
 	    {{ form.source(placeholder="Source") }} \

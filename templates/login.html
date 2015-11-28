@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="add-word-body">
+    <h2 align="center">Log in</h2>
+    <form action="{{ url_for('user.login') }}" method="POST">
+        <div>{{ form.username(placeholder="Username", class="add-word") }}</div>
+        <div>{{ form.password(placeholder="Password", class="add-word") }}</div>
+        <button type="submit" class="add-word-submit">Submit</form>
+    </form>
+</div>
+{% endblock %}

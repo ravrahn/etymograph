@@ -1,22 +1,21 @@
 from flask.ext.wtf import Form
-from wtforms import StringField, BooleanField, IntegerField, TextAreaField, HiddenField
+from wtforms import *
 from wtforms.validators import *
 import re
 
 class SearchForm(Form):
-    # I don't know enough about Python3's unicode and regex to tell if the below will work
-    # Get the field but validate against any white space
     no_spaces = re.compile(r'^\S+$', re.UNICODE)
     q = StringField('search_field', id='search_field',
             validators=[DataRequired(), Regexp(no_spaces)])
 
-""" For later
-class LoginForm(Form): # For later
-   username = StringField('name', validators[DataRequired()])
-   password = StringField('password', validators[DataRequired()])
-   remember_me = BooleanField('remember_me', default=False)
-"""
+class LoginForm(Form):
+    username = StringField('Username', validators=[InputRequired()])
+    password = PasswordField('Password', validators=[InputRequired()])
 
+class RegisterForm(Form):
+    name = StringField('Name', validators=[InputRequired()])
+    username = StringField('Username', validators=[InputRequired()])
+    password = PasswordField('Password', validators=[InputRequired()])
 
 class AddWordForm(Form):
     orig_form = StringField('Word', validators=[InputRequired()])

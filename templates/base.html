@@ -19,7 +19,6 @@
                 {% if not no_form %}
                 <div class="nav-search-form">
                     <form action="{{ url_for('api.search') }}" method="GET">
-                        <!-- {{ search_form.hidden_tag() }} -->
                         {{ search_form.q(class_="typeahead nav-search") }}
                     </form>
                 </div>

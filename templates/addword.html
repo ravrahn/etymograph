@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% from "_formhelpers.html" import render_field %}
 {% block content %}
 <div class="add-word-body">
     <h2 align="center">Add a word</h2>
@@ -10,7 +9,6 @@
         <div>{{ form.ipa_form(placeholder="IPA Transcription", class="add-word") }}
         {{ form.latin_form(placeholder="Latin Transliteration", class="add-word") }}</div>
         <div>{{ form.definition(placeholder="Definition", class="add-word") }}</div>
-        {{ form.hidden_tag() }}
         <button type="submit" class="add-word-submit">Submit</form>
     </form>
 </div>
