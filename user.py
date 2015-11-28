@@ -95,11 +95,10 @@ def user_area():
         or a profile pic and your name if you are'''
     if 'oauth_token' in session:
         me = get_user()
-        pic = get_user_pic()
         # user logged in but information not getting retrieved from fb.
         if 'name' not in me: 
             return render_template('loggedout.html')
-        return render_template('loggedin.html', user_pic_url=pic['url'], user_name=me['name'])
+        return render_template('loggedin.html', user_name=me['name'])
     else:
         return render_template('loggedout.html')
 
@@ -115,7 +114,3 @@ def get_user(user_id=None):
         return None
     else:
         return user.data
-
-def get_user_pic(service='facebook', user_id=None):
-    pic = facebook.get('/me/picture?redirect=false')
-    return pic.data['data']
