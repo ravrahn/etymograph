@@ -1,17 +1,15 @@
 {% extends 'base.html' %}
-{% from "_formhelpers.html" import render_field %}
 {% block content %}
 <div class="flex-inner-content edit-rel">
     <h2>Edit Relationship</h2>
     <svg class="edit-rel-graph" width="278" height="46"></svg>
     <div>Current source: <em>{{ rel['source'] }}</em></div>
     <form action="{{ my_URL }}" method="POST">
-        {{ form.hidden_tag() }}
         <span class="editrel-form">{{ form.source(placeholder="Source", class_="reg-form") }}</span>
         <button type="submit" class="editrel-submit">Submit</form>
     </form>
-    <form action="/flag/rel/{{root['id']}}/{{desc['id']}}" method="POST">
-        <button type="submit" value="flag">Flag relation as incorrect</button>
+    <form action="{{ url_for('edit.flag_rel', root_id=root['id'], desc_id=desc['id']) }}" method="POST">
+        <button type="submit" value="flag">Flag relation as incorrect</button> {{ rel['flag_count'] }} flags
     </form>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>

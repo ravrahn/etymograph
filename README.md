@@ -22,3 +22,5 @@ For anyone interested in the origin of words, Etymograph is a website and API th
 ### Deployment
 * The server will run at http://localhost:5000/ by default.
 * This project is deployed on http://etymograph.com using nginx and uwsgi. If you'd like to do similar, a guide can be found [here](https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uwsgi-and-nginx-on-ubuntu-14-04) - but be prepared to troubleshoot.
+
+[Database schema](http://dbdesigner.net/designer/schema/15899)

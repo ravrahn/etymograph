@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, abort
+from flask import Blueprint, request, redirect, abort, url_for
 from forms import *
 from flask.ext.login import current_user, login_required
 
@@ -116,7 +116,7 @@ def edit_rel(root_id, desc_id):
         next_url = '/{}'.format(root_id)
         return redirect(next_url)
 
-    my_URL = url_for('edit_rel', root_id=root_id, desc_id=desc_id)
+    my_URL = url_for('edit.edit_rel', root_id=root_id, desc_id=desc_id)
     return render_search_template('edit_rel.html', form=form, root=rel.root.info(), rel=rel.info(), desc=rel.desc.info(), my_URL=my_URL, title='Edit Relation')
 
 @edit.route('/flag/<int:word_id>', methods=['POST'])
