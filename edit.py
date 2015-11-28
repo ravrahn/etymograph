@@ -50,7 +50,7 @@ def edit_word(word_id):
         word_data = form.data
         del word_data['lang_name']
         # edit the word in the database
-        word = model.get_word(word_id)
+        word = model.Word.query.get(word_id)
         word.orig_form = word_data['orig_form']
         word.language = word_data['language']
         word.definition = word_data['definition']
@@ -63,7 +63,7 @@ def edit_word(word_id):
     lang_lookup = {}
     for code in model.names:
         lang_lookup[model.names[code]] = code
-    word = model.get_word(word_id).info()
+    word = model.Word.query.get(word_id).info()
     return render_search_template('editword.html', form=form, langs=langs, lang_lookup=lang_lookup, word=word, title='Edit Word')
 
 
@@ -75,8 +75,8 @@ def add_root():
     root_id = int(form.root_id.data)
     source = form.source.data
 
-    word = model.get_word(word_id)
-    root = model.get_word(root_id)
+    word = model.Word.query.get(word_id)
+    root = model.Word.query.get(root_id)
 
     # missing words
     check = word is not None and root is not None
@@ -122,8 +122,8 @@ def edit_rel(root_id, desc_id):
 @edit.route('/flag/<int:word_id>', methods=['POST'])
 @login_required
 def flag(word_id):
-    word = model.get_word(word_id)
-    
+    word = model.Word.query.get(word_id)
+
     if word is not None:
         has_flagged = False
         for flag in word.flags:

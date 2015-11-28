@@ -46,7 +46,7 @@ def roots(word_id): # ET-6
     else:
         depth = None
 
-    word = model.get_word(word_id)
+    word = model.Word.query.get(word_id)
     if word is not None:
         response = json.jsonify(word.get_roots(depth=depth))
         response.status_code = 200
@@ -68,7 +68,7 @@ def descs(word_id): # ET-7
     else:
         depth = None
 
-    word = model.get_word(word_id)
+    word = model.Word.query.get(word_id)
     if word is not None:
         response = json.jsonify(word.get_descs(depth=depth))
         response.status_code = 200
@@ -80,7 +80,7 @@ def descs(word_id): # ET-7
 
 @api.route('/<int:word_id>/info')
 def info(word_id): # ET-20
-    info = model.get_word(word_id).info()
+    info = model.Word.query.get(word_id).info()
     if info is None:
         errDesc = str(e)
         response = json.jsonify({'error': errDesc})

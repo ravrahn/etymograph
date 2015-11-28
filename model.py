@@ -151,6 +151,3 @@ class RelFlag(db.Model):
     def __init__(self, flagger, rel):
         self.rel = rel
         self.flagger = flagger
-
-def get_word(word_id):
-    return Word.query.filter_by(id=word_id).first()

@@ -14,7 +14,7 @@ def index():
 
 @web.route('/<int:word_id>')
 def show_graph(word_id):
-    word = model.get_word(word_id)
+    word = model.Word.query.get(word_id)
     word_roots = word.get_roots()
     word_descs = word.get_descs()
 
