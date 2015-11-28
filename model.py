@@ -152,9 +152,5 @@ class RelFlag(db.Model):
         self.rel = rel
         self.flagger = flagger
 
-
-def get_user(user_id):
-    return User.query.filter_by(token=user_id).first()
-
 def get_word(word_id):
     return Word.query.filter_by(id=word_id).first()
