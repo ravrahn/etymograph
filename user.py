@@ -1,11 +1,21 @@
 from flask import Blueprint, request, render_template, redirect, url_for, abort, session
 from flask_oauthlib.client import OAuth, OAuthException
+from flask.ext.login import LoginManager, current_user, login_required, login_user, logout_user
 
 from helpers import *
 import model
 import user_config as config
 
 user = Blueprint('user', __name__)
+
+login_manager = LoginManager()
+@user.record_once
+def on_load(state):
+    login_manager.setup_app(state.app)
+
+@login_manager.user_loader
+def user_loader(user_id):
+    return model.User.query.get(int(user_id))
 
 oauth = OAuth()
 facebook = oauth.remote_app('facebook',
@@ -24,33 +34,40 @@ def get_facebook_oauth_token():
 
 @user.route('/register', methods=['GET', 'POST'])
 def register():
-    pass
+    form = RegisterForm(request.form)
+    if request.method == 'POST':
+        if not form.validate():
+            abort(400)
+        user_data = form.data
+        # make sure username isn't taken
+        user_check = model.User.query.filter_by(username=user_data['username']).first()
+        if user_check is None:
+            # add the word to the database
+            user = model.User(user_data['username'],
+                user_data['password'],
+                user_data['name'])
+            model.db.session.add(user)
+            model.db.session.commit()
+            return redirect(url_for('user.login'))
+        abort(400)
 
-@user.route('/login')
+    return render_search_template('register.html', form=form, title='Register')
+
+@user.route('/login', methods=['GET', 'POST'])
 def login():
-    return facebook.authorize(callback=url_for('user.login_authorized',
-            next=request.args.get('next') or request.referrer or None, _external=True))
+    form = LoginForm(request.form)
+    if request.method == 'POST':
+        if not form.validate():
+            abort(400)
+        user_data = form.data
+        user = model.User.query.filter_by(username=user_data['username']).first()
+        if user is not None and user.check_password(user_data['password']):
+            login_user(user)
+        else:
+            print(user)
+            abort(400)
 
-@user.route('/login/authorized')
-def login_authorized():
-    next_url = request.args.get('next') or url_for('web.index')
-    resp = facebook.authorized_response()
-    if resp is None:
-        return redirect(next_url)
-
-    if isinstance(resp, OAuthException):
-            return 'Access denied: %s' % resp.message
-
-    session['oauth_token'] = (resp['access_token'], '')
-    me = get_user()
-
-    me_check = model.get_user(me['id'])
-    if not me_check:
-        me_db = model.User('facebook', me['id'])
-        model.db.session.add(me_db)
-        model.db.session.commit()
-
-    return redirect(next_url)
+    return render_search_template('login.html', form=form, title='Log in')
 
 @user.route('/logout')
 def logout():
@@ -92,13 +109,10 @@ def profile(user_id):
 
 def user_area():
     ''' Returns the "user area" - a login button if you're not logged in
-        or a profile pic and your name if you are'''
-    if 'oauth_token' in session:
-        me = get_user()
-        # user logged in but information not getting retrieved from fb.
-        if 'name' not in me: 
-            return render_template('loggedout.html')
-        return render_template('loggedin.html', user_name=me['name'])
+        or your name if you are'''
+    # user logged in but information not getting retrieved from fb.
+    if current_user.is_authenticated: 
+        return render_template('loggedin.html', user_name=current_user.name)
     else:
         return render_template('loggedout.html')
 
