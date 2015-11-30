@@ -290,13 +290,11 @@ ul {
 }
 
 
-
-.flagged-words {
+.flagged-column {
+    width: 22rem;
+    margin-left: 1rem;
+    margin-right: 2.5rem;
     float: left;
-}
-
-.flagged-rels {
-    float: right;
 }
 
 
@@ -382,6 +380,17 @@ g.origin rect {
 .edgePath path {
     stroke: #333;
     stroke-width: 1.5px;
+}
+
+.node-html {
+    background: white;
+    border-radius: 5px;
+    border: 1px solid #999;
+    width: 112px;
+    margin-bottom: 1.5rem;
+}
+.node-html:hover {
+    background-color: #eee;
 }
 
 .node-container {

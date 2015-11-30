@@ -2,11 +2,13 @@
 {% block content %}
 
     {% if results %}
-		<h2>Search results for "{{ search_str }}":</h2>
-        <p>Can't find what you're looking for? <a href="{{ url_for('edit.add_word') }}">Add word</a></p>
+		<h2>{{ results|length }} results for "{{ search_str }}":</h2>
+        <p>Can't find the words? <a href="{{ url_for('edit.add_word') }}">Add them.</a></p>
         <ul>
         {% for word in results %}
-            <li><svg id="graph-{{ word['id'] }}" width="200" height="75"></svg></li>
+            <li><div class="node-html"><a href="{{ url_for('web.show_graph', word_id=word['id']) }}">
+                <div class="node-container"><span class="node-lang-name">{{ word['lang_name'] }}</span><span class="node-label">{{ word['orig_form'] }}</span><div style="clear: none;"></div></div>
+            </a></div></li>
         {% endfor %}
         </ul>
     {% else %}
@@ -14,16 +16,4 @@
         <p>Can't find what you're looking for?<a href="{{ url_for('edit.add_word') }}">Add word</a></p>
     {% endif %}
 
-
-<script>
-/*$('#upleft-search.typeahead').hide();*/
-</script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
-<script src="{{ url_for('static', filename='js/dagre-d3.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/graphLabel.js') }}"></script>
-<script>
-var words = {{ results|safe }};
-</script>
-<script src="{{ url_for('static', filename='js/results.js') }}"></script>
 {% endblock %}
