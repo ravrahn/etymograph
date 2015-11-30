@@ -18,7 +18,7 @@
                 <a class="nav-title" href="{{ url_for('web.index') }}"><img class="nav-logo" src="{{ url_for('static', filename='img/logo.png') }}"><h1 >Etymograph</h1></a>
                 {% if not no_form %}
                 <div class="nav-search-form">
-                    <form action="{{ url_for('api.search') }}" method="GET">
+                    <form action="{{ url_for('web.search') }}" method="GET">
                         {{ search_form.q(class_="typeahead nav-search") }}
                     </form>
                 </div>

@@ -2,6 +2,7 @@ from flask import Blueprint, abort
 from forms import *
 
 from helpers import *
+import helpers
 import model
 
 web = Blueprint('web', __name__)
@@ -23,6 +24,21 @@ def show_graph(word_id):
     else:
         return render_search_template('graph.html', roots=word_roots, descs=word_descs,
             form=AddRootForm(), body_class="graph", add_root_search=SearchForm(), title=word.orig_form)
+
+@web.route('/search')
+def search(): # ET-5, ET-19
+    '''
+    Search for all words that match a particular substring
+    usage: /search?q=<string> or frontend search bar
+    '''
+    query = request.args['q']
+    results = helpers.search(query)
+
+    return render_search_template('results.html',
+        search_str=query,
+        results=results,
+        body_class="search",
+        title='Results for {}'.format(query))
 
 @web.route('/flagged')
 def show_flagged():

@@ -2,7 +2,7 @@
 {% block content %}
 <div class="flex-center" id="landing">
     <!-- <h1 id="title">{{ landing_title }}</h1> -->
-    <form action="{{ url_for('api.search') }}" method="GET">
+    <form action="{{ url_for('web.search') }}" method="GET">
         {{ form.q(class_="typeahead index-search") }}
     </form>
 </div>

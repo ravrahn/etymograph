@@ -13,9 +13,9 @@ app.config.from_object('config')
 db = SQLAlchemy(app)
 
 app.register_blueprint(web)
-app.register_blueprint(api)
 app.register_blueprint(edit)
 app.register_blueprint(user)
+app.register_blueprint(api, url_prefix='/api')
 
 app.jinja_env.globals.update(user_area=user_area)
 

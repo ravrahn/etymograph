@@ -1,8 +1,7 @@
 from flask import Blueprint, request, json
-from forms import *
-from difflib import SequenceMatcher
 
-from helpers import *
+from forms import *
+import helpers
 import model
 
 api = Blueprint('api', __name__)
@@ -14,26 +13,10 @@ def search(): # ET-5, ET-19
     usage: /search?q=<string> or frontend search bar
     '''
     query = request.args['q']
-    results = model.Word.query.filter(model.Word.orig_form.like('%' + query + '%')).all()
-    
-    results = [word.info() for word in results]
+    results = helpers.search(query)
 
-    def sort_alpha(word):
-        m = SequenceMatcher(None, word['orig_form'], query)
-        ratio = m.quick_ratio() + 0.0001 # cheap hack to avoid /0 errors
-        return 1/ratio
-
-    results = sorted(results, key=sort_alpha)
-
-    if not request_wants_json():
-        search_field = SearchForm()
-        return render_search_template('results.html',
-            form=search_field,
-            search_str=query,
-            results=results, body_class="search", title='Results for {}'.format(query))
-    else:
-        response = json.dumps(results)
-        return response
+    response = json.dumps(results)
+    return response
 
 @api.route('/<int:word_id>/roots')
 def roots(word_id): # ET-6
