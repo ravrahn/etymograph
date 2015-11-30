@@ -2,8 +2,7 @@
 {% block content %}
 
     {% if results %}
-		<h2>{{ results_length }} results for "{{ query }}":</h2>
-        <p>Can't find the words? <a href="{{ url_for('edit.add_word') }}">Add them.</a></p>
+		<div class="results-count">{{ results_length }} result{% if results_length > 1 %}s{% endif %} for <em>{{ query }}</em></div>
         <ul class="results">
         {% for word in results %}
             <li><div class="node-html"><a href="{{ url_for('web.show_graph', word_id=word['id']) }}">
@@ -40,11 +39,16 @@
             {% if page != page_count %}
             <td><a href="{{ url_for('web.search', q=query, page=page+1) }}">&rarr;</a></td>
             {% endif %}
+            <td class="add-word-message">Can't find the word you're looking for? <a href="{{ url_for('edit.add_word') }}" class="add-word-link">Add it.</a></td>
             </tr>
         </table>
     {% else %}
-        <h2>No results for "{{ search_str }}"</h2>
-        <p>Can't find what you're looking for?<a href="{{ url_for('edit.add_word') }}">Add word</a></p>
+        <div class="results-count">No results for <em>{{ query }}</em></div>
+        <div class="add-word-message">Can't find the word you're looking for? <a href="{{ url_for('edit.add_word') }}" class="add-word-link">Add it.</a></div>
     {% endif %}
+
+    <script>
+    $('.nav-search').val("{{ query }}");
+    </script>
 
 {% endblock %}

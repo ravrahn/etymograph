@@ -264,26 +264,32 @@ button:disabled {
     background-color: #eee;
 }
 
-/* Results list numbering */
-ul.results {
+
+/* Results list */
+.results-count {
+    padding: 1rem;
+    padding-top: 0;
+}
+
+ul {
     list-style-type: none;
     margin: 0;
     margin-left: 1rem;
-    padding: 0 0 1rem 0;
+    padding: 0;
 }
 
 .pages {
-    margin: 0 1rem 1rem 1rem;
+    margin: 1rem;
 }
 
 .pages td {
+    text-align: center;
     background-color: white;
     border-radius: 0.25rem;
     border: 1px solid #999;
 }
 
 .pages a, .pages span {
-    text-align: center;
     display: inline-block;
     width: 2rem;
     height: 2rem;
@@ -295,9 +301,24 @@ ul.results {
     font-weight: 800;
 }
 
-.pages .ellipsis {
+.pages .ellipsis, .pages .add-word-message {
     border: 1px solid transparent;
     background-color: transparent;
+}
+
+.add-word-message {
+    padding-left: 1rem;
+}
+
+.pages .add-word-link {
+    display: inline;
+    padding: 0.5rem;
+    background-color: white;
+    border: solid 1px #999;
+    border-radius: 0.25rem;
+}
+.add-word-link:hover {
+    background-color: #eee;
 }
 
 
