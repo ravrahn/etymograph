@@ -3,7 +3,7 @@ from forms import *
 from difflib import SequenceMatcher
 import model
 
-def search(query):
+def search(query, page=None, per_page=20):
     results = model.Word.query.filter(model.Word.orig_form.like('%' + query + '%')).all()
     
     results = [word.info() for word in results]
@@ -15,7 +15,12 @@ def search(query):
 
     results = sorted(results, key=sort_alpha)
 
-    return results
+    length = len(results)
+
+    if page is not None and page >= 1:
+        results = results[((page-1)*per_page):(page*per_page)]
+
+    return (results, length)
 
 def render_search_template(*args, **kwargs):
     return render_template(*args, search_form=SearchForm(), no_form=False, **kwargs)

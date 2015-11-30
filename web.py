@@ -1,6 +1,7 @@
-from flask import Blueprint, abort
-from forms import *
+from flask import Blueprint, abort, redirect, url_for
+import math
 
+from forms import *
 from helpers import *
 import helpers
 import model
@@ -31,12 +32,27 @@ def search(): # ET-5, ET-19
     Search for all words that match a particular substring
     usage: /search?q=<string> or frontend search bar
     '''
+    if 'q' not in request.args or request.args['q'] == '':
+        abort(400)
+
     query = request.args['q']
-    results = helpers.search(query)
+
+    if 'page' not in request.args:
+        return redirect(url_for('web.search', q=query, page=1))
+    
+    page = int(request.args['page'])
+    if page < 1:
+        abort(400)
+    per_page = 20
+
+    results = helpers.search(query, page=page, per_page=per_page)
 
     return render_search_template('results.html',
-        search_str=query,
-        results=results,
+        query=query,
+        results=results[0],
+        results_length=results[1],
+        page=page,
+        page_count=int(math.ceil(results[1]/per_page)),
         body_class="search",
         title='Results for {}'.format(query))
 

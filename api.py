@@ -13,7 +13,7 @@ def search(): # ET-5, ET-19
     usage: /search?q=<string> or frontend search bar
     '''
     query = request.args['q']
-    results = helpers.search(query)
+    results = helpers.search(query)[0]
 
     response = json.dumps(results)
     return response

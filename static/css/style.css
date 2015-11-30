@@ -265,28 +265,39 @@ button:disabled {
 }
 
 /* Results list numbering */
-ul {
+ul.results {
     list-style-type: none;
     margin: 0;
     margin-left: 1rem;
-    padding: 0;
-}
-.results li {
-    position: relative;
-    left: 0;
-    margin-bottom: 20px;
-    padding-left: 0.5em;
-    max-height: 2em;
+    padding: 0 0 1rem 0;
 }
 
-.result {
-    font-size: 1.25rem;
+.pages {
+    margin: 0 1rem 1rem 1rem;
 }
 
-.result-lang {
-    display: block;
-    font-size: 0.75rem;
-    font-family: 'minion-pro';
+.pages td {
+    background-color: white;
+    border-radius: 0.25rem;
+    border: 1px solid #999;
+}
+
+.pages a, .pages span {
+    text-align: center;
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    padding: 0.35rem;
+    margin: 0;
+}
+
+.current-page {
+    font-weight: 800;
+}
+
+.pages .ellipsis {
+    border: 1px solid transparent;
+    background-color: transparent;
 }
 
 

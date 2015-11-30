@@ -2,15 +2,46 @@
 {% block content %}
 
     {% if results %}
-		<h2>{{ results|length }} results for "{{ search_str }}":</h2>
+		<h2>{{ results_length }} results for "{{ query }}":</h2>
         <p>Can't find the words? <a href="{{ url_for('edit.add_word') }}">Add them.</a></p>
-        <ul>
+        <ul class="results">
         {% for word in results %}
             <li><div class="node-html"><a href="{{ url_for('web.show_graph', word_id=word['id']) }}">
                 <div class="node-container"><span class="node-lang-name">{{ word['lang_name'] }}</span><span class="node-label">{{ word['orig_form'] }}</span><div style="clear: none;"></div></div>
             </a></div></li>
         {% endfor %}
         </ul>
+        <table class="pages">
+            <tr>
+            {% if page != 1 %}
+            <td><a href="{{ url_for('web.search', q=query, page=page-1) }}">&larr;</a></td>
+            {% endif %}
+
+            {% for i in range(1, page) %}
+            {% if i >= page-3 or i == 1 %}
+            <td><a href="{{ url_for('web.search', q=query, page=i) }}">{{ i }}</a></td>
+            {% endif %}
+            {% if i == page-4 and i != 1 %}
+            <td class="ellipsis"><span>&hellip;</span></td>
+            {% endif %}
+            {% endfor %}
+
+            <td><span class="current-page">{{ page }}</span></td>
+
+            {% for i in range(page+1, page_count+1) %}
+            {% if i <= page+3 or i == page_count %}
+            <td><a href="{{ url_for('web.search', q=query, page=i) }}">{{ i }}</a></td>
+            {% endif %}
+            {% if i == page+4 and i != page_count %}
+            <td class="ellipsis"><span>&hellip;</span></td>
+            {% endif %}
+            {% endfor %}
+
+            {% if page != page_count %}
+            <td><a href="{{ url_for('web.search', q=query, page=page+1) }}">&rarr;</a></td>
+            {% endif %}
+            </tr>
+        </table>
     {% else %}
         <h2>No results for "{{ search_str }}"</h2>
         <p>Can't find what you're looking for?<a href="{{ url_for('edit.add_word') }}">Add word</a></p>
