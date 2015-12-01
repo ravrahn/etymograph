@@ -1,7 +1,8 @@
-from flask import Blueprint, request, render_template, redirect, url_for, abort, session
+from flask import Blueprint, request, redirect, url_for, abort, session
 from flask.ext.login import LoginManager, current_user, login_required, login_user, logout_user
 
-from helpers import *
+from forms import *
+import helpers
 import model
 
 user = Blueprint('user', __name__)
@@ -34,7 +35,7 @@ def register():
             return redirect(url_for('user.login'))
         abort(400)
 
-    return render_search_template('register.html', form=form, title='Register')
+    return helpers.render_search_template('register.html', form=form, title='Register')
 
 @user.route('/login', methods=['GET', 'POST'])
 def login():
@@ -53,7 +54,7 @@ def login():
             print(user)
             abort(400)
 
-    return render_search_template('login.html', form=form, title='Log in')
+    return helpers.render_search_template('login.html', form=form, title='Log in')
 
 @user.route('/logout')
 def logout():
@@ -70,7 +71,7 @@ def profile(user_id):
     if user == None:
         return abort(400)
     results = [word.info() for word in user.created_words]
-    return render_search_template('profile.html', 
+    return helpers.render_search_template('profile.html', 
                             user_name=user.name, 
                             body_class='index',
                             is_me=is_me, 
@@ -82,9 +83,9 @@ def user_area():
         or your name if you are'''
     # user logged in but information not getting retrieved from fb.
     if current_user.is_authenticated: 
-        return render_template('loggedin.html', user_name=current_user.name)
+        return helpers.render_template('loggedin.html', user_name=current_user.name)
     else:
-        return render_template('loggedout.html')
+        return helpers.render_template('loggedout.html')
 
 def get_user(user_id=None):
     if user_id is None:

@@ -3,8 +3,7 @@ from forms import *
 from flask.ext.login import current_user, login_required
 
 
-from helpers import *
-from user import get_user
+import helpers
 import model
 
 edit = Blueprint('edit', __name__)
@@ -38,7 +37,7 @@ def add_word():
     lang_lookup = {}
     for code in model.names:
         lang_lookup[model.names[code]] = code
-    return render_search_template('addword.html', form=form, langs=langs, lang_lookup=lang_lookup, title='Add Word')
+    return helpers.render_search_template('addword.html', form=form, langs=langs, lang_lookup=lang_lookup, title='Add Word')
 
 @edit.route('/edit/word/<int:word_id>', methods=['GET', 'POST'])
 @login_required
@@ -64,7 +63,7 @@ def edit_word(word_id):
     for code in model.names:
         lang_lookup[model.names[code]] = code
     word = model.Word.query.get(word_id).info()
-    return render_search_template('editword.html', form=form, langs=langs, lang_lookup=lang_lookup, word=word, title='Edit Word')
+    return helpers.render_search_template('editword.html', form=form, langs=langs, lang_lookup=lang_lookup, word=word, title='Edit Word')
 
 
 @edit.route('/add/root', methods=['POST'])
@@ -117,7 +116,7 @@ def edit_rel(root_id, desc_id):
         return redirect(next_url)
 
     my_URL = url_for('edit.edit_rel', root_id=root_id, desc_id=desc_id)
-    return render_search_template('edit_rel.html', form=form, root=rel.root.info(), rel=rel.info(), desc=rel.desc.info(), my_URL=my_URL, title='Edit Relation')
+    return helpers.render_search_template('edit_rel.html', form=form, root=rel.root.info(), rel=rel.info(), desc=rel.desc.info(), my_URL=my_URL, title='Edit Relation')
 
 @edit.route('/flag/<int:word_id>', methods=['POST'])
 @login_required

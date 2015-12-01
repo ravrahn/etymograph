@@ -1,6 +1,5 @@
 from flask import Blueprint, request, json
 
-from forms import *
 import helpers
 import model
 
