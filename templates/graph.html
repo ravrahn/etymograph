@@ -4,7 +4,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
 <script src="{{ url_for('static', filename='js/dagre-d3.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/jquery.mousewheel.min.js') }}"></script>
-{# This is where the word info goes (js writes the inner HTML) #}
 <div class="infobar"></div>
 <script src="{{ url_for('static', filename='js/graphLabel.js') }}"></script>
 <script>
@@ -26,6 +25,7 @@ var form = '<h2 class="add-title">Add a RELTYPE</h2> \
 var next_url = "{{ request.path }}";
 
 var search_url = "{{ url_for('api.search') }}"
+var info_url = "{{ url_for('api.info', word_id=0) }}"
 
 var roots = {{ roots|safe }};
 var descs = {{ descs|safe }};

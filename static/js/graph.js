@@ -215,15 +215,13 @@ function makeAddGraph(id, isRoot) {
                 if (ajax !== null) {
                     ajax.abort();
                 }
-                if (q.length >= 3) {
-                    ajax = $.ajax(search_url + '?q=' + q, {
-                        dataType: 'json'
-                    })
-                    .done(function(results) {
-                        makeWordList(results, isRoot);
-                        buildGraph(results[0], isRoot);
-                    });
-                }
+                ajax = $.ajax(search_url + '?q=' + q, {
+                    dataType: 'json'
+                })
+                .done(function(results) {
+                    makeWordList(results, isRoot);
+                    buildGraph(results[0], isRoot);
+                });
             }
         });
 
