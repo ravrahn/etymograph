@@ -35,7 +35,7 @@ class User(db.Model):
 
 class Word(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    orig_form = db.Column(db.String)
+    orig_form = db.Column(db.String, index=True)
     language = db.Column(db.String)
     definition = db.Column(db.String)
     latin_form = db.Column(db.String)
