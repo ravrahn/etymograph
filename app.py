@@ -2,16 +2,16 @@
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 
+app = Flask(__name__)
+app.config.from_object('config')
+db = SQLAlchemy(app)
+
 from helpers import *
 import model
 from web import web
 from api import api
 from edit import edit
 from user import user, user_area
-
-app = Flask(__name__)
-app.config.from_object('config')
-db = SQLAlchemy(app)
 
 app.register_blueprint(web)
 app.register_blueprint(edit)
