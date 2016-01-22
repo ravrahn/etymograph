@@ -3,3 +3,4 @@
 *.db
 migrations
 user_config.py
+docs/_build
