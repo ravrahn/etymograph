@@ -444,12 +444,16 @@ g.origin rect {
 }
 
 .node-label {
-    padding-top: 1rem;
-    line-height: 1em;
+    line-height: 1.25em;
+    height: 1.25em;
+    width: 100%;
     margin: 0;
     display: block;
     font-family: 'minion-pro', serif;
     font-size: 1rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .add-edge path {
