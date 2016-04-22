@@ -7,6 +7,7 @@ def search(query, page=None, per_page=20):
     results = model.Word.query.filter(model.Word.orig_form.like('%' + query + '%')).all()
     
     results = [word.info() for word in results]
+    results = [word for word in results if word['flag_count'] < 5]
 
     def sort_alpha(word):
         m = SequenceMatcher(None, word['orig_form'], query)
