@@ -79,6 +79,7 @@ class Word(db.Model):
         roots = []
         for rel in self.roots:
             roots.append(rel.root.get_roots(depth=depth))
+            roots[-1]['rel_flag_count'] = len(rel.flags)
         info = self.info()
         info['roots'] = roots
         return info
@@ -91,6 +92,7 @@ class Word(db.Model):
         descs = []
         for rel in self.descs:
             descs.append(rel.desc.get_descs(depth=depth))
+            descs[-1]['rel_flag_count'] = len(rel.flags)
         info = self.info()
         info['descs'] = descs
         return info

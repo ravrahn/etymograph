@@ -29,7 +29,8 @@ function addRoot(g, root, parent) {
     g.setEdge(root.id, parent, {
         labelType:'html',
         label: edgeLabel,
-        lineInterpolate: 'basis'
+        lineInterpolate: 'basis',
+        style: 'fill: none; stroke: #' + Math.min(15, (root.rel_flag_count+1)*3).toString(16) + '33;'
     });
     if (root.roots !== undefined) {
         root.roots.forEach(function(r) { addRoot(g, r, root.id) });
@@ -52,7 +53,8 @@ function addDesc(g, desc, parent) {
     g.setEdge(parent, desc.id, {
         labelType:'html',
         label: edgeLabel,
-        lineInterpolate: 'basis'
+        lineInterpolate: 'basis',
+        style: 'fill: none; stroke: #' + Math.min(15, (desc.rel_flag_count+1)*3).toString(16) + '33;'
     });
     if (desc.descs !== undefined) {
         desc.descs.forEach(function(d) { addDesc(g, d, desc.id) });
