@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="add-word-body">
-    <h2 align="center">Register</h2>
+    <h2 align="center">Registeration is currently closed</h2>
+    {#
     <form action="{{ url_for('user.register') }}" method="POST">
         <div>{{ form.name(placeholder="Name", class="add-word") }}</div>
         <div>{{ form.username(placeholder="Username", class="add-word") }}</div>
         <div>{{ form.password(placeholder="Password", class="add-word") }}</div>
         <button type="submit" class="add-word-submit">Submit</form>
     </form>
+    #}
 </div>
 {% endblock %}
